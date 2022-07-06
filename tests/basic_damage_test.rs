@@ -7,38 +7,52 @@ use roxx_builder::builder::attack_mod::damage_position::DamagePosition;
 use roxx_builder::builder::attack_mod::damage_source::DamageSource;
 use roxx_builder::builder::build_mod::build::Build;
 use roxx_builder::builder::item_mod::base_stat_mod::base_stat::BaseStat;
-use roxx_builder::builder::item_mod::base_stat_mod::base_stat::BaseStat::{Chance, DoMulti, DoTerre, Force, Puissance};
+use roxx_builder::builder::item_mod::base_stat_mod::base_stat::BaseStat::{Chance, DoMulti, DoPerArme, DoPerFinaux, DoPerSo, DoTerre, Force, Puissance};
 use roxx_builder::builder::item_mod::item::Item;
-use roxx_builder::builder::item_mod::item_type::ItemType;
+use roxx_builder::builder::item_mod::item_slot::ItemSlot::{SlotAnneau1, SlotAnneau2};
 
 #[test]
 fn base_damage_test_with_and_without_damage() {
     let mut build: Build = Build::new();
-    let mut item: Item = Item::new(ItemType::Anneau);
+    let mut item: Item = Item::default();
     let elem_damage = 10;
     item.stats.insert(BaseStat::DoAir, elem_damage);
 
-    let damage_line = DamageLine { damage_element: DamageElement::DamageAir, value: 10 };
-    let attack: Attack = Attack::new(vec![damage_line], DamageSource::Sort, DamagePosition::Distance);
+    let damage_line = DamageLine { damage_element: DamageElement::DamageAir, min_value: 10 , max_value: 10};
+    let attack: Attack = Attack::new(vec![damage_line],vec![], DamageSource::Sort, DamagePosition::Distance, false, 0);
 
-    let evaluation_before = build.evaluate_attack(&attack);
-    build.add_item(&item);
-    let evaluation_after = build.evaluate_attack(&attack);
+    let evaluation_before = build.evaluate_attack(&attack).0;
+    build.add_item(&item, SlotAnneau1);
+    let evaluation_after = build.evaluate_attack(&attack).0;
 
-    assert_eq!(evaluation_before, attack.damages.get(0).unwrap().value);
-    assert_eq!(evaluation_after, evaluation_before + attack.damages.get(0).unwrap().value)
+    assert_eq!(evaluation_before, attack.damages.get(0).unwrap().min_value);
+    assert_eq!(evaluation_after, evaluation_before + attack.damages.get(0).unwrap().min_value)
 }
 
-fn test_damage(attack: &Attack, build: &Build, expected: i32) {
-    assert_eq!(build.evaluate_attack(attack), expected)
+fn test_min_damage(attack: &Attack, build: &Build, expected: i32) {
+    assert_eq!(build.evaluate_attack(attack).0, expected)
+}
+
+fn test_damage_so_100_terre_melee(build: &Build, expected: i32) {
+    test_min_damage(&Attack::new(vec![DamageLine::new_fix(DamageElement::DamageTerre, 100)], vec![], DamageSource::Sort, DamagePosition::Melee, false, 0), build, expected);
 }
 
 #[test]
 fn damage_with_stats_eau() {
-    test_damage(&Attack::new(vec![DamageLine { damage_element: DamageElement::DamageEau, value: 15 }], DamageSource::Sort, DamagePosition::Distance), &Build::new_with(HashMap::from([(Chance, 300)])), 60);
+    test_min_damage(&Attack::new(vec![DamageLine::new_fix(DamageElement::DamageEau, 15 )], vec![], DamageSource::Sort, DamagePosition::Distance, false, 0), &Build::new_with(HashMap::from([(Chance, 300)])), 60);
 }
 
 #[test]
 fn damage_with_stats_and_damage_and_puissance_and_do_multi_terre() {
-    test_damage(&Attack::new(vec![DamageLine { damage_element: DamageElement::DamageTerre, value: 80 }], DamageSource::Sort, DamagePosition::Distance), &Build::new_with(HashMap::from([(Force, 1200), (DoTerre, 120), (Puissance, 300), (DoMulti, 20)])), 1420);
+    test_min_damage(&Attack::new(vec![DamageLine::new_fix(DamageElement::DamageTerre, 80 )], vec![], DamageSource::Sort, DamagePosition::Distance, false, 0), &Build::new_with(HashMap::from([(Force, 1200), (DoTerre, 120), (Puissance, 300), (DoMulti, 20)])), 1420);
+}
+
+#[test]
+fn damage_with_multiple_items() {
+    test_damage_so_100_terre_melee(&Build::new_with_items(HashMap::from([(SlotAnneau1, &Item::new_with_stats(HashMap::from([(Force, 300)]))), (SlotAnneau2, &Item::new_with_stats(HashMap::from([(Force, 600), (DoTerre, 200), (DoPerSo, 10), (DoPerFinaux, 10), (DoPerArme, 30)])))])), 1452);
+}
+
+#[test]
+fn damage_with_same_spot_items() {
+    test_damage_so_100_terre_melee(&Build::new_with_items(HashMap::from([(SlotAnneau1, &Item::new_with_stats(HashMap::from([(Force, 300)]))), (SlotAnneau1, &Item::new_with_stats(HashMap::from([(Force, 600), (DoTerre, 200), (DoPerSo, 10), (DoPerFinaux, 10), (DoPerArme, 30)])))])), 1089);
 }
