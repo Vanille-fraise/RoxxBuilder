@@ -1,8 +1,9 @@
 use crate::builder::attack_mod::damage_line::DamageLine;
 use crate::builder::attack_mod::damage_position::DamagePosition;
 use crate::builder::attack_mod::damage_source::DamageSource;
+use serde::{Serialize, Deserialize};
 
-#[allow(dead_code)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Attack {
     pub damages: Vec<DamageLine>,
     pub crit_damages: Vec<DamageLine>,
@@ -10,11 +11,11 @@ pub struct Attack {
     pub damage_position: DamagePosition,
     pub piege: bool,
     pub can_crit: bool,
-    pub base_crit: i32,
+    pub base_crit: i64,
 }
 
 impl Attack {
-    pub fn new(damages: Vec<DamageLine>, crit_damages: Vec<DamageLine>, damage_source: DamageSource, damage_position: DamagePosition, can_crit: bool, base_crit: i32) -> Self {
+    pub fn new(damages: Vec<DamageLine>, crit_damages: Vec<DamageLine>, damage_source: DamageSource, damage_position: DamagePosition, can_crit: bool, base_crit: i64) -> Self {
         Attack {
             damages,
             crit_damages,

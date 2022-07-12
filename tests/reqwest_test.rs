@@ -1,8 +1,7 @@
 use reqwest;
 use std::fs::File;
 use std::io::prelude::*;
-
-static PRINT: bool = false;
+use roxx_builder::builder::data_mod::data_loader::DataLoader;
 
 async fn simple_request(url: String) -> Result<String, reqwest::Error> {
     Ok(reqwest::get(url).await?.text().await?)
@@ -12,7 +11,6 @@ async fn simple_request(url: String) -> Result<String, reqwest::Error> {
 async fn google_request_ok() {
     let res = simple_request("https://www.google.fr/".to_string()).await;
     assert!(res.is_ok());
-    if PRINT { print!("Request content:\n{:?}", res.unwrap()) };
 }
 
 #[actix_rt::test]
@@ -31,4 +29,10 @@ async fn request_image_and_save_it() {
     let file = File::create("tests/test_files/turtle_image.png");
     assert!(file.is_ok());
     assert!(file.unwrap().write(&*unwrapped2_res).is_ok());
+}
+
+#[actix_rt::test]
+async fn one_item_api_test() {
+    let res = DataLoader::create_files_from_dofus_db_api("resource/data/call_to_api/one_item".to_string()).await;
+    assert!(res.is_ok())
 }

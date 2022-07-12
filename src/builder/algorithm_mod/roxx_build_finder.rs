@@ -9,11 +9,11 @@ pub struct RoxxBuildFinder<'a> {
 
 #[allow(dead_code)]
 impl RoxxBuildFinder<'_> {
-    pub fn find_build(&mut self, attack: &Attack, calc_type: DamageCalculation) -> i32 {
+    pub fn find_build(&mut self, attack: &Attack, calc_type: DamageCalculation) -> i64 {
         // let mut best_build: Option<&Build> = None;
-        let mut best_evaluation: i32 = -1;
-        let mut cur_eval: i32;
-        for build in self.build_generator.iter() {
+        let mut best_evaluation: i64 = -1;
+        let mut cur_eval: i64;
+        for build in self.build_generator.next_build() {
             let att = build.evaluate_attack(attack);
             cur_eval = match calc_type {
                 DamageCalculation::Minimized => { att.0 }

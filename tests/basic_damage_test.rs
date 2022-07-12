@@ -29,11 +29,11 @@ fn base_damage_test_with_and_without_damage() {
     assert_eq!(evaluation_after, evaluation_before + attack.damages.get(0).unwrap().min_value)
 }
 
-fn test_min_damage(attack: &Attack, build: &Build, expected: i32) {
+fn test_min_damage(attack: &Attack, build: &Build, expected: i64) {
     assert_eq!(build.evaluate_attack(attack).0, expected)
 }
 
-fn test_damage_so_100_terre_melee(build: &Build, expected: i32) {
+fn test_damage_so_100_terre_melee(build: &Build, expected: i64) {
     test_min_damage(&Attack::new(vec![DamageLine::new_fix(DamageElement::DamageTerre, 100)], vec![], DamageSource::Sort, DamagePosition::Melee, false, 0), build, expected);
 }
 

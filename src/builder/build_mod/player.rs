@@ -1,4 +1,4 @@
 #[derive(Debug, PartialEq, Eq, Hash, Copy, Clone)]
 pub struct Player {
-    pub lvl: u32,
+    pub lvl: u64,
 }

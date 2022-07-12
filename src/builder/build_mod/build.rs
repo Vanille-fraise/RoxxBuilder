@@ -18,7 +18,7 @@ use crate::builder::item_mod::item_type::ItemType;
 #[derive(PartialEq)]
 pub struct Build<'a> {
     pub items: HashMap<ItemSlot, &'a Item>,
-    pub stats: HashMap<BaseStat, i32>,
+    pub stats: HashMap<BaseStat, i64>,
     player: Option<Player>,
 }
 
@@ -71,16 +71,16 @@ impl<'a> Build<'a> {
         true
     }
 
-    pub fn evaluate_attack(&self, attack: &Attack) -> (i32, i32, i32) {
+    pub fn evaluate_attack(&self, attack: &Attack) -> (i64, i64, i64) {
         (self.calculate_one_attack(attack, Min),
          self.calculate_one_attack(attack, Average),
          self.calculate_one_attack(attack, Max))
     }
 
-    fn calculate_one_attack(&self, attack: &Attack, calc_type: DamageCalculation) -> i32 {
-        let mut damage: i32 = 0;
+    fn calculate_one_attack(&self, attack: &Attack, calc_type: DamageCalculation) -> i64 {
+        let mut damage: i64 = 0;
         for damage_line in &attack.damages {
-            let value = match calc_type {
+            let value:i64 = match calc_type {
                 Minimized => { damage_line.min_value }
                 Min => { damage_line.min_value }
                 Average => { damage_line.min_value + damage_line.max_value / 2 }
@@ -100,8 +100,8 @@ impl<'a> Build<'a> {
         damage
     }
 
-    fn one_value_damage(&self, stat: BaseStat, damage: BaseStat, damage_value: i32, attack: &Attack, calc_type: DamageCalculation) -> i32 {
-        let mut cur_damage = 0;
+    fn one_value_damage(&self, stat: BaseStat, damage: BaseStat, damage_value: i64, attack: &Attack, calc_type: DamageCalculation) -> i64 {
+        let mut cur_damage:i64 = 0;
         cur_damage += self.stats.get(&damage).unwrap_or(&0) + self.stats.get(&BaseStat::DoMulti).unwrap_or(&0);
         cur_damage += ((self.stats.get(&stat).unwrap_or(&0) + self.stats.get(&BaseStat::Puissance).unwrap_or(&0)) / 100 + 1) * damage_value;
         if attack.piege {
@@ -129,7 +129,7 @@ impl<'a> Build<'a> {
         }
     }
 
-    pub fn new_with(stats: HashMap<BaseStat, i32>) -> Self {
+    pub fn new_with(stats: HashMap<BaseStat, i64>) -> Self {
         Build { items: HashMap::new(), stats, player: None }
     }
 

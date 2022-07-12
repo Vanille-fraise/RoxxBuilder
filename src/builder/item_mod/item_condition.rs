@@ -4,6 +4,6 @@ use serde::{Deserialize, Serialize};
 #[repr(u8)]
 #[derive(Debug, PartialEq, Eq, Hash, Copy, Clone, Serialize, Deserialize)]
 pub enum ItemCondition {
-    MoreStatThan(BaseStat, i32),
-    LessStatThan(BaseStat, i32),
+    MoreStatThan(BaseStat, i64),
+    LessStatThan(BaseStat, i64),
 }

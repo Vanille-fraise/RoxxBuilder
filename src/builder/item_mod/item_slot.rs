@@ -1,4 +1,4 @@
-use crate::builder::item_mod::item_slot::ItemSlot::{SlotAmulette, SlotAnneau1, SlotAnneau2, SlotArme, SlotBottes, SlotBouclier, SlotCape, SlotCeinture, SlotChapeau, SlotDofus2, SlotDofus3, SlotDofus4, SlotDofus5, SlotDofus6, SlotDofusPrysmaradite};
+use crate::builder::item_mod::item_slot::ItemSlot::{SlotAmulette, SlotAnneau1, SlotAnneau2, SlotArme, SlotBottes, SlotBouclier, SlotCape, SlotCeinture, SlotChapeau, SlotDofus2, SlotDofus3, SlotDofus4, SlotDofus5, SlotDofus6, SlotDofusPrysmaradite, SlotFamilierMonture};
 use crate::builder::item_mod::item_type::ItemType;
 use serde::{Deserialize, Serialize};
 use strum_macros::EnumIter;
@@ -22,6 +22,7 @@ pub enum ItemSlot {
     SlotDofus5,
     SlotDofus6,
     SlotArme,
+    SlotFamilierMonture,
 }
 
 impl ItemSlot {
@@ -37,7 +38,25 @@ impl ItemSlot {
             ItemType::Dofus => { vec![SlotDofusPrysmaradite, SlotDofus2, SlotDofus3, SlotDofus2, SlotDofus4, SlotDofus5, SlotDofus6] }
             ItemType::Trophee => { vec![SlotDofusPrysmaradite, SlotDofus2, SlotDofus3, SlotDofus2, SlotDofus4, SlotDofus5, SlotDofus6] }
             ItemType::Prysmaradite => { vec![SlotDofusPrysmaradite] }
-            ItemType::Arme => { vec![SlotArme] }
+            ItemType::Familier => { vec![SlotFamilierMonture] }
+            ItemType::Dragodinde => { vec![SlotFamilierMonture] }
+            ItemType::Montilier => { vec![SlotFamilierMonture] }
+            ItemType::Muldo => { vec![SlotFamilierMonture] }
+            ItemType::Volkorne => { vec![SlotFamilierMonture] }
+            ItemType::Arc => { vec![SlotArme] }
+            ItemType::Baguette => { vec![SlotArme] }
+            ItemType::Baton => { vec![SlotArme] }
+            ItemType::Dague => { vec![SlotArme] }
+            ItemType::Epee => { vec![SlotArme] }
+            ItemType::Marteau => { vec![SlotArme] }
+            ItemType::Pelle => { vec![SlotArme] }
+            ItemType::Hache => { vec![SlotArme] }
+            ItemType::Outil => { vec![SlotArme] }
+            ItemType::Pioche => { vec![SlotArme] }
+            ItemType::Faux => { vec![SlotArme] }
+            ItemType::PierreDAme => { vec![SlotArme] }
+            ItemType::FiletDeCapture => { vec![SlotArme] }
+            ItemType::ArmeMagique => { vec![SlotArme] }
         }
     }
 }

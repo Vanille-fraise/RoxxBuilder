@@ -13,9 +13,6 @@ pub struct BuildGenerator<'a> {
 
 #[allow(dead_code)]
 impl<'a> BuildGenerator<'a> {
-    pub fn iter(&self) -> BuildIterator {
-        BuildIterator { build_generator: self }
-    } // unused for now
 
     pub fn new(items_to_build: Vec<&'a Item>) -> Self {
         let mut bg = BuildGenerator {
@@ -55,19 +52,5 @@ impl<'a> BuildGenerator<'a> {
             }
         }
         return None;
-    }
-}
-
-#[allow(dead_code)]
-pub struct BuildIterator<'a> {
-    build_generator: &'a BuildGenerator<'a>,
-}
-
-impl<'a> Iterator for BuildIterator<'a> {
-    // unused
-    type Item = &'a Build<'a>;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        todo!()
     }
 }

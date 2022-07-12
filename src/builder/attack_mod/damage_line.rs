@@ -1,13 +1,15 @@
 use crate::builder::attack_mod::damage_element::DamageElement;
+use serde::{Serialize, Deserialize};
 
+#[derive(Serialize, Deserialize, Debug)]
 pub struct DamageLine {
     pub damage_element: DamageElement,
-    pub min_value: i32,
-    pub max_value: i32,
+    pub min_value: i64,
+    pub max_value: i64,
 }
 
 impl DamageLine {
-    pub fn new(damage_element:DamageElement, min_value:i32, max_value: i32) -> Self {
+    pub fn new(damage_element:DamageElement, min_value:i64, max_value: i64) -> Self {
         DamageLine {
             damage_element,
             min_value,
@@ -15,7 +17,7 @@ impl DamageLine {
         }
     }
 
-    pub fn new_fix(damage_element:DamageElement, value:i32) -> Self{
+    pub fn new_fix(damage_element:DamageElement, value:i64) -> Self{
         DamageLine {
             damage_element,
             min_value: value,
