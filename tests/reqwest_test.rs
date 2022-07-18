@@ -33,6 +33,6 @@ async fn request_image_and_save_it() {
 
 #[actix_rt::test]
 async fn first_items_api_test() {
-    let res = DataLoader::create_files_from_dofus_db_api_with_call_limit("tests/test_files/small_call_test/".to_string(), 120).await;
+    let res = DataLoader::create_files_from_dofus_db_api_with_call_limit("tests/test_files/small_convert_test/".to_string(), 120).await;
     assert!(res.is_ok());
 }

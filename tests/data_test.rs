@@ -36,7 +36,23 @@ fn small_file_load_test() -> Result<(), Box<dyn Error>> {
 }
 
 #[test]
-fn save_data_container() {}
+fn save_data_container() -> Result<(), Box<dyn Error>> {
+    let container = DataLoader::from_api_response_files("tests/test_files/small_convert_test".to_string())?;
+    assert!(DataLoader::save_data_container("tests/test_files/containers/data_container_small".to_string(), container).is_ok());
+    Ok(())
+}
 
 #[test]
-fn load_data_container() {}
+fn load_small_data_container() {
+    let container = DataLoader::from_data_container_file("tests/test_files/containers/data_container_small_to_read".to_string());
+    assert!(container.is_ok());
+    assert_eq!(container.unwrap().items.len(), 150)
+}
+
+#[test]
+fn load_whole_data_container() {
+    let container = DataLoader::from_data_container_file("tests/test_files/containers/whole_data_container_to_read".to_string());
+    assert!(container.is_ok());
+    assert_eq!(container.unwrap().items.len(), 18401)
+}
+
