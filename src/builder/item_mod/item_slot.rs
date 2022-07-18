@@ -57,6 +57,7 @@ impl ItemSlot {
             ItemType::PierreDAme => { vec![SlotArme] }
             ItemType::FiletDeCapture => { vec![SlotArme] }
             ItemType::ArmeMagique => { vec![SlotArme] }
+            _ => {vec![]}
         }
     }
 }

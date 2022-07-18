@@ -1,4 +1,8 @@
+use std::error::Error;
 use serde::{Deserialize, Serialize};
+use roxx_builder::builder::data_mod::data_loader::DataLoader;
+use roxx_builder::builder::item_mod::item::Item;
+use roxx_builder::builder::item_mod::item_type::ItemType;
 
 
 #[derive(PartialEq, Eq, Deserialize, Serialize, Debug)]
@@ -13,3 +17,26 @@ fn small_json_test() {
     let parsed: TestJson = serde_json::from_str(json_str).unwrap();
     assert_eq!("TestJson { id: 10, name: \"testwork\" }", format!("{:?}", parsed));
 }
+
+#[test]
+fn one_item_creation_from_json_test() -> Result<(), Box<dyn Error>> {
+    let value: serde_json::Value = serde_json::from_str(std::fs::read_to_string("tests/test_files/first")?.as_str())?;
+    let item_val = &value["data"][0];
+    let created_item = Item::from_serde_value(item_val);
+    assert_eq!(created_item.item_type, ItemType::Epee);
+    assert_eq!(created_item.name, "Epée de Boisaille");
+    Ok(())
+}
+
+#[test]
+fn small_file_load_test() -> Result<(), Box<dyn Error>> {
+    let container = DataLoader::from_api_response_files("tests/test_files/small_convert_test".to_string())?;
+    assert_eq!(container.items.len(), 150);
+    Ok(())
+}
+
+#[test]
+fn save_data_container() {}
+
+#[test]
+fn load_data_container() {}

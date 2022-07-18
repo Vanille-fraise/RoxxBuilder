@@ -20,9 +20,9 @@ pub struct Item {
 }
 
 impl Item {
-    pub fn from_serde_value(values: serde_json::Value) -> Self {
+    pub fn from_serde_value(values: &serde_json::Value) -> Self {
         Item {
-            item_type: num::FromPrimitive::from_u64(values["typeId"].as_u64().unwrap_or(0)).unwrap(),
+            item_type: num::FromPrimitive::from_u64(values["typeId"].as_u64().unwrap_or(0)).unwrap_or(ItemType::Unknown),
             stats: Default::default(),
             name: values["name"]["fr"].as_str().unwrap_or("No Name").to_string(),
             lvl: values["level"].as_u64().unwrap_or(1),

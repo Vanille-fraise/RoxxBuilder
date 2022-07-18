@@ -7,6 +7,7 @@ use num_derive::FromPrimitive;
 #[repr(u8)]
 #[derive(Debug, PartialEq, Eq, Hash, Copy, Clone, EnumIter, Deserialize, Serialize, Display, FromPrimitive)]
 pub enum ItemType {
+    Unknown=0,
     Amulette = 1,
     Arc = 2,
     Baguette = 3,
