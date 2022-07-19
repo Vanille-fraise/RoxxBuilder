@@ -45,7 +45,7 @@ impl<'a> BuildGenerator<'a> {
                     self.cur_build.remove_item(t);
                     continue 'main_loop;
                 } else {
-                    let could_equip = self.cur_build.add_item(self.organized_items.get(t).unwrap().get(*i).unwrap(), t.clone());
+                    let could_equip = self.cur_build.add_item(self.organized_items.get(t).unwrap().get(*i).unwrap(), t.clone(), false);
                     *i += 1;
                     if !could_equip { continue 'cannot_equip_loop; } else { return Some(&self.cur_build); }
                 }

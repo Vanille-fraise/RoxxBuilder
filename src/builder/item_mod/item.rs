@@ -15,7 +15,7 @@ pub struct Item {
     pub name: String,
     pub lvl: u64,
     pub set_id: i64,
-    pub conditions: Vec<ItemCondition>,
+    pub conditions: ItemCondition,
     pub id: u64,
 }
 
@@ -27,7 +27,7 @@ impl Item {
             name: values["name"]["fr"].as_str().unwrap_or("No Name").to_string(),
             lvl: values["level"].as_u64().unwrap_or(1),
             set_id: values["itemSetId"].as_i64().unwrap_or(-1),
-            conditions: vec![],
+            conditions: ItemCondition::from_dofus_db_str(values["criteria"].as_str().unwrap_or("")),
             id: values["id"].as_u64().unwrap_or(0)
         }
     }
@@ -38,7 +38,7 @@ impl Item {
             name: "No name".to_string(),
             lvl: 200,
             set_id: 0,
-            conditions: vec![],
+            conditions: ItemCondition::None,
             id: random(),
         }
     }
@@ -47,7 +47,7 @@ impl Item {
         item.stats = stats;
         item
     }
-    pub fn new(item_type: ItemType, stats: HashMap<BaseStat, i64>, name: String, lvl: u64, set_id: i64, conditions: Vec<ItemCondition>, item_id: u64) -> Self {
+    pub fn new(item_type: ItemType, stats: HashMap<BaseStat, i64>, name: String, lvl: u64, set_id: i64, conditions: ItemCondition, item_id: u64) -> Self {
         Item {
             item_type,
             stats,

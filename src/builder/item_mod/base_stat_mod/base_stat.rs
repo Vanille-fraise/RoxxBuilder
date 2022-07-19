@@ -67,3 +67,20 @@ pub enum BaseStat {
     Prospection = 48,
     RenvoiDo = 50,
 }
+
+impl BaseStat {
+    pub fn from_str_repr(cond_str: &str) -> Option<Self> {
+
+        match cond_str.to_ascii_lowercase().as_str() {
+            "cs" => { Some(BaseStat::Force) }
+            "cw" => { Some(BaseStat::Sagesse) }
+            "cv" => { Some(BaseStat::Vitalite) }
+            "ca" => { Some(BaseStat::Agilite) }
+            "ci" => { Some(BaseStat::Intelligence) }
+            "cc" => { Some(BaseStat::Chance) }
+            "cp" => { Some(BaseStat::PA) }
+            "cm" => { Some(BaseStat::PM) }
+            _ => None
+        }
+    }
+}

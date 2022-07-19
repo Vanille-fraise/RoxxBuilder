@@ -10,7 +10,6 @@ use crate::builder::attack_mod::damage_source::DamageSource;
 use crate::builder::build_mod::player::Player;
 use crate::builder::item_mod::item::Item;
 use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat;
-use crate::builder::item_mod::item_condition::ItemCondition;
 use crate::builder::item_mod::item_slot::ItemSlot;
 use crate::builder::item_mod::item_type::ItemType;
 
@@ -24,39 +23,35 @@ pub struct Build<'a> {
 
 #[allow(dead_code)]
 impl<'a> Build<'a> {
-    pub fn add_item(&mut self, item: &'a Item, item_slot: ItemSlot) -> bool {
-        if !self.can_equip(item) { return false; }
-        if self.items.get(&item_slot) != None {
-            self.remove_item(&item_slot);
-        }
-        self.items.insert(item_slot, item);
-        for stat in &item.stats {
-            *self.stats.entry(*stat.0).or_insert(0) += stat.1;
-        }
-        true
+    pub fn add_item(&mut self, item: &'a Item, item_slot: ItemSlot, force: bool) -> bool {
+        if force || self.evaluate_item(item, &item_slot) {
+            if self.items.get(&item_slot) != None {
+                self.remove_item(&item_slot);
+            }
+            self.items.insert(item_slot, item);
+            for stat in &item.stats {
+                *self.stats.entry(*stat.0).or_insert(0) += stat.1;
+            }
+            true
+        } else { false }
     }
 
-    fn can_equip(&self, item: &'a Item) -> bool {
+    fn evaluate_item(&self, item: &'a Item, slot: &ItemSlot) -> bool {
         if let Some(player) = self.player {
             if player.lvl < item.lvl { return false; }
         }
-        if !(item.set_id == 0 && item.item_type == ItemType::Anneau) {
+        if item.set_id > 0 || item.item_type != ItemType::Anneau {
             for it in &self.items {
                 if it.1.id == item.id { return false; }
             }
         }
-        for cond in &item.conditions {
-            match cond {
-                ItemCondition::MoreStatThan(stat, val) => {
-                    if self.stats.get(&stat).unwrap_or(&0) + item.stats.get(&stat).unwrap_or(&0) <= *val {
-                        return false;
-                    }
-                }
-                ItemCondition::LessStatThan(stat, val) => {
-                    if self.stats.get(&stat).unwrap_or(&0) + item.stats.get(&stat).unwrap_or(&0) >= *val {
-                        return false;
-                    }
-                }
+        item.conditions.evaluate(self, item, self.items.get(slot))
+    }
+
+    pub fn evaluate_build(&self) -> bool {
+        for (slot, item) in &self.items {
+            if !self.evaluate_item(item, slot) {
+                return false;
             }
         }
         true
@@ -80,7 +75,7 @@ impl<'a> Build<'a> {
     fn calculate_one_attack(&self, attack: &Attack, calc_type: DamageCalculation) -> i64 {
         let mut damage: i64 = 0;
         for damage_line in &attack.damages {
-            let value:i64 = match calc_type {
+            let value: i64 = match calc_type {
                 Minimized => { damage_line.min_value }
                 Min => { damage_line.min_value }
                 Average => { damage_line.min_value + damage_line.max_value / 2 }
@@ -101,7 +96,7 @@ impl<'a> Build<'a> {
     }
 
     fn one_value_damage(&self, stat: BaseStat, damage: BaseStat, damage_value: i64, attack: &Attack, calc_type: DamageCalculation) -> i64 {
-        let mut cur_damage:i64 = 0;
+        let mut cur_damage: i64 = 0;
         cur_damage += self.stats.get(&damage).unwrap_or(&0) + self.stats.get(&BaseStat::DoMulti).unwrap_or(&0);
         cur_damage += ((self.stats.get(&stat).unwrap_or(&0) + self.stats.get(&BaseStat::Puissance).unwrap_or(&0)) / 100 + 1) * damage_value;
         if attack.piege {
@@ -136,7 +131,7 @@ impl<'a> Build<'a> {
     pub fn new_with_items(items: HashMap<ItemSlot, &'a Item>) -> Self {
         let mut build = Build { items: Default::default(), stats: Default::default(), player: None };
         for data in items {
-            build.add_item(data.1, data.0);
+            build.add_item(data.1, data.0, false);
         }
         build
     }
