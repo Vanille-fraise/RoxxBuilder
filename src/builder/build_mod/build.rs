@@ -12,6 +12,7 @@ use crate::builder::item_mod::item::Item;
 use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat;
 use crate::builder::item_mod::item_slot::ItemSlot;
 use crate::builder::item_mod::item_type::ItemType;
+use crate::builder::item_mod::set::Set;
 
 #[allow(dead_code)]
 #[derive(PartialEq)]
@@ -19,21 +20,46 @@ pub struct Build<'a> {
     pub items: HashMap<ItemSlot, &'a Item>,
     pub stats: HashMap<BaseStat, i64>,
     player: Option<Player>,
+    pub sets: HashMap<i64 /* id */, usize>,
 }
 
 #[allow(dead_code)]
 impl<'a> Build<'a> {
     pub fn add_item(&mut self, item: &'a Item, item_slot: ItemSlot, force: bool) -> bool {
+        self.add_item_with_set(item, item_slot, force, None)
+    }
+
+    pub fn add_item_with_set(&mut self, item: &'a Item, item_slot: ItemSlot, force: bool, set: Option<&Set>) -> bool {
         if force || self.evaluate_item(item, &item_slot) {
             if self.items.get(&item_slot) != None {
                 self.remove_item(&item_slot);
             }
             self.items.insert(item_slot, item);
-            for stat in &item.stats {
-                *self.stats.entry(*stat.0).or_insert(0) += stat.1;
+            self.add_or_remove_stats(&item.stats, true);
+            if item.set_id > 0 {
+                if let Some(s) = set {
+                    let mut i = 0;
+                    if self.sets.contains_key(&item.set_id) {
+                        i = *self.sets.entry(item.set_id).or_insert(0);
+                        self.add_or_remove_stats(&s.bonus[i], false); // remove the old bonus
+                        i += 1;
+                        *self.sets.entry(item.set_id).or_insert(0) += 1;
+                    }
+                    self.add_or_remove_stats(&s.bonus[i], true); // add the new one
+                }
             }
             true
         } else { false }
+    }
+
+    fn add_or_remove_stats(&mut self, stats: &HashMap<BaseStat, i64>, add: bool) {
+        for stat in stats {
+            if add {
+                *self.stats.entry(*stat.0).or_insert(0) += stat.1;
+            } else {
+                *self.stats.entry(*stat.0).or_insert(0) -= stat.1;
+            }
+        }
     }
 
     fn evaluate_item(&self, item: &'a Item, slot: &ItemSlot) -> bool {
@@ -60,9 +86,16 @@ impl<'a> Build<'a> {
     pub fn remove_item(&mut self, item_slot: &ItemSlot) -> bool {
         if !self.items.contains_key(&item_slot) { return false; }
         let item = self.items.remove(&item_slot).unwrap();
-        for stat in &item.stats {
-            *self.stats.get_mut(&stat.0).unwrap_or(&mut 0) -= stat.1;
+        if item.set_id > 0 {
+            if let Some(i) = self.sets.get_mut(&item.set_id) {
+                if i > &mut 0 {
+                    *i -= 1;
+                } else {
+                    self.sets.remove(&item.set_id);
+                }
+            }
         }
+        self.add_or_remove_stats(&item.stats, false);
         true
     }
 
@@ -121,15 +154,16 @@ impl<'a> Build<'a> {
             items: HashMap::new(),
             stats: HashMap::new(),
             player: None,
+            sets: Default::default(),
         }
     }
 
     pub fn new_with(stats: HashMap<BaseStat, i64>) -> Self {
-        Build { items: HashMap::new(), stats, player: None }
+        Build { items: HashMap::new(), stats, player: None, sets: Default::default() }
     }
 
     pub fn new_with_items(items: HashMap<ItemSlot, &'a Item>) -> Self {
-        let mut build = Build { items: Default::default(), stats: Default::default(), player: None };
+        let mut build = Build { items: Default::default(), stats: Default::default(), player: None, sets: Default::default() };
         for data in items {
             build.add_item(data.1, data.0, false);
         }

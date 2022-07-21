@@ -19,7 +19,7 @@ pub enum ItemCondition {
 }
 
 impl ItemCondition {
-    pub fn from_dofus_db_str(cond_str: &str) -> Self { // nasty function grrr
+    pub fn from_dofus_db_str(cond_str: &str) -> Self { // nasty function grrr, todo: add a line to check for not more than 2 bonus set
         if cond_str.contains('&') {
             let split: Vec<&str> = cond_str.splitn(2, '&').collect();
             return ItemCondition::And(Box::new(ItemCondition::from_dofus_db_str(split[0])), Box::new(ItemCondition::from_dofus_db_str(split[1])));
@@ -56,7 +56,7 @@ impl ItemCondition {
             ItemCondition::And(c1, c2) => { c1.evaluate(build, item, old_item) && c2.evaluate(build, item, old_item) }
             ItemCondition::Or(c1, c2) => { c1.evaluate(build, item, old_item) || c2.evaluate(build, item, old_item) }
             ItemCondition::None => { true }
-            ItemCondition::SetBonusLessThan(_) => { true /* todo to complete when set bonus will be up to date */ }
+            ItemCondition::SetBonusLessThan(val) => { &(build.sets.iter().fold(0, |acc, (_, v)| -> usize { acc + v }) as i64) < val } // todo: le changer et le mettre en accord avec dofus api db et le set du build, todo: remove le set quand tu remove d'item
 
             ItemCondition::MoreStatThan(stat, val) => { &ItemCondition::eval(build, item, old_item, stat) > val }
             ItemCondition::LessStatThan(stat, val) => { &ItemCondition::eval(build, item, old_item, stat) < val }

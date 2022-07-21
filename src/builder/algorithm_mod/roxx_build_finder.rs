@@ -9,7 +9,7 @@ pub struct RoxxBuildFinder<'a> {
 
 #[allow(dead_code)]
 impl RoxxBuildFinder<'_> {
-    pub fn find_build(&mut self, attack: &Attack, calc_type: DamageCalculation) -> i64 {
+    pub fn find_build(&mut self, attack: &Attack, calc_type: DamageCalculation) -> i64 { // todo: change this shitty function and make it return the values and the build in a struct
         // let mut best_build: Option<&Build> = None;
         let mut best_evaluation: i64 = -1;
         let mut cur_eval: i64;

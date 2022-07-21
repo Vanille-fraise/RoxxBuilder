@@ -17,7 +17,7 @@ fn test_nb_build(mut bg: BuildGenerator, expected_count: i32) {
 
 #[test]
 fn no_item_builds() {
-    let bg = BuildGenerator::new(NO_ITEM.clone());
+    let bg = BuildGenerator::new_with_items(NO_ITEM.clone());
     test_nb_build(bg, 0);
 }
 
@@ -26,7 +26,7 @@ fn one_anneau_item_builds() {
     let mut loc_items = NO_ITEM.clone();
     let item = Item::new_from_type(Anneau);
     loc_items.push(&item);
-    let bg = BuildGenerator::new(loc_items);
+    let bg = BuildGenerator::new_with_items(loc_items);
     test_nb_build(bg, 3);
 }
 
@@ -35,7 +35,7 @@ fn one_ceinture_item_builds() {
     let mut loc_items = NO_ITEM.clone();
     let item = Item::new_from_type(Ceinture);
     loc_items.push(&item);
-    let bg = BuildGenerator::new(loc_items);
+    let bg = BuildGenerator::new_with_items(loc_items);
     test_nb_build(bg, 1);
 }
 
@@ -46,7 +46,7 @@ fn two_items_builds() {
     let item2 = Item::new_from_type(Cape);
     loc_items.push(&item1);
     loc_items.push(&item2);
-    let bg = BuildGenerator::new(loc_items);
+    let bg = BuildGenerator::new_with_items(loc_items);
     test_nb_build(bg, 3);
 }
 
@@ -57,7 +57,7 @@ fn two_items_same_spot_builds() {
     let item2 = Item::new_from_type(Ceinture);
     loc_items.push(&item1);
     loc_items.push(&item2);
-    let bg = BuildGenerator::new(loc_items);
+    let bg = BuildGenerator::new_with_items(loc_items);
     test_nb_build(bg, 2);
 }
 
@@ -68,7 +68,7 @@ fn prisma_items_builds() {
     let item2 = Item::new_from_type(Cape);
     loc_items.push(&item1);
     loc_items.push(&item2);
-    let bg = BuildGenerator::new(loc_items);
+    let bg = BuildGenerator::new_with_items(loc_items);
     test_nb_build(bg, 3);
 }
 
@@ -79,6 +79,6 @@ fn dofus_items_builds() {
     let item2 = Item::new_from_type(Cape);
     loc_items.push(&item1);
     loc_items.push(&item2);
-    let bg = BuildGenerator::new(loc_items);
+    let bg = BuildGenerator::new_with_items(loc_items);
     test_nb_build(bg, 13);
 }

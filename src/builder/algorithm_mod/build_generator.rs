@@ -3,27 +3,45 @@ use crate::builder::build_mod::build::Build;
 use crate::builder::item_mod::item::Item;
 use strum::IntoEnumIterator;
 use crate::builder::item_mod::item_slot::ItemSlot;
+use crate::builder::item_mod::set::Set;
 
 pub struct BuildGenerator<'a> {
     items: Vec<&'a Item>,
     organized_items: HashMap<ItemSlot, Vec<&'a Item>>,
+    sets: Vec<&'a Set>,
+    organized_sets: HashMap<i64, &'a Set>,
     cur_build: Build<'a>,
-    pub items_i: HashMap<ItemSlot, usize>,
+    items_i: HashMap<ItemSlot, usize>,
 }
 
 #[allow(dead_code)]
 impl<'a> BuildGenerator<'a> {
-
-    pub fn new(items_to_build: Vec<&'a Item>) -> Self {
+    pub fn new_with_items(items_to_build: Vec<&'a Item>) -> Self {
         let mut bg = BuildGenerator {
             items: items_to_build.clone(),
             organized_items: HashMap::new(),
+            sets: vec![],
+            organized_sets: Default::default(),
             cur_build: Build::new(),
             items_i: HashMap::new(),
         };
         bg.instantiate();
         bg
     }
+
+    pub fn new(items_to_build: Vec<&'a Item>, sets: Vec<&'a Set>) -> Self {
+        let mut bg = BuildGenerator {
+            items: items_to_build.clone(),
+            organized_items: HashMap::new(),
+            sets,
+            organized_sets: Default::default(),
+            cur_build: Build::new(),
+            items_i: HashMap::new(),
+        };
+        bg.instantiate();
+        bg
+    }
+
 
     fn instantiate(&mut self) {
         for item_slot in ItemSlot::iter() {
@@ -35,9 +53,12 @@ impl<'a> BuildGenerator<'a> {
                 self.organized_items.get_mut(&slot).unwrap().push(item);
             }
         }
+        for set in &self.sets {
+            self.organized_sets.insert(set.id, set);
+        }
     }
 
-    pub fn next_build(&mut self) -> Option<&Build> {
+    pub fn next_build(&mut self) -> Option<&Build> { // todo: change it to not skip unequipped item
         'main_loop: for (t, i) in self.items_i.iter_mut() {
             'cannot_equip_loop: loop {
                 if *i >= self.organized_items.get(t).unwrap().len() {
