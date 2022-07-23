@@ -12,12 +12,11 @@ use crate::builder::item_mod::item::Item;
 use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat;
 use crate::builder::item_mod::item_slot::ItemSlot;
 use crate::builder::item_mod::item_type::ItemType;
-use crate::builder::item_mod::set::Set;
 
 #[allow(dead_code)]
 #[derive(PartialEq)]
 pub struct Build<'a> {
-    pub items: HashMap<ItemSlot, &'a Item>,
+    pub items: HashMap<ItemSlot, &'a Item<'a>>,
     pub stats: HashMap<BaseStat, i64>,
     player: Option<Player>,
     pub sets: HashMap<i64 /* id */, usize>,
@@ -26,28 +25,13 @@ pub struct Build<'a> {
 #[allow(dead_code)]
 impl<'a> Build<'a> {
     pub fn add_item(&mut self, item: &'a Item, item_slot: ItemSlot, force: bool) -> bool {
-        self.add_item_with_set(item, item_slot, force, None)
-    }
-
-    pub fn add_item_with_set(&mut self, item: &'a Item, item_slot: ItemSlot, force: bool, set: Option<&Set>) -> bool {
         if force || self.evaluate_item(item, &item_slot) {
             if self.items.get(&item_slot) != None {
                 self.remove_item(&item_slot);
             }
             self.items.insert(item_slot, item);
             self.add_or_remove_stats(&item.stats, true);
-            if item.set_id > 0 {
-                if let Some(s) = set {
-                    let mut i = 0;
-                    if self.sets.contains_key(&item.set_id) {
-                        i = *self.sets.entry(item.set_id).or_insert(0);
-                        self.add_or_remove_stats(&s.bonus[i], false); // remove the old bonus
-                        i += 1;
-                        *self.sets.entry(item.set_id).or_insert(0) += 1;
-                    }
-                    self.add_or_remove_stats(&s.bonus[i], true); // add the new one
-                }
-            }
+            self.manage_set(item, true);
             true
         } else { false }
     }
@@ -86,17 +70,38 @@ impl<'a> Build<'a> {
     pub fn remove_item(&mut self, item_slot: &ItemSlot) -> bool {
         if !self.items.contains_key(&item_slot) { return false; }
         let item = self.items.remove(&item_slot).unwrap();
-        if item.set_id > 0 {
-            if let Some(i) = self.sets.get_mut(&item.set_id) {
-                if i > &mut 0 {
-                    *i -= 1;
+        self.manage_set(item, false);
+        self.add_or_remove_stats(&item.stats, false);
+        true
+    }
+
+    fn manage_set(&mut self, item: &Item, add: bool) {
+        if item.set_id <= 0 { return; }
+        if let Some(s) = item.set {
+            let mut i = 0;
+            if add {
+                if self.sets.contains_key(&item.set_id) {
+                    i = *self.sets.get(&item.set_id).unwrap();
+                    self.add_or_remove_stats(&s.bonus[i], false); // remove the old bonus
+                    i += 1;
+                    *self.sets.entry(item.set_id).or_insert(0) += 1;
                 } else {
+                    self.sets.insert(item.set_id, 0);
+                }
+                self.add_or_remove_stats(&s.bonus[i], true); // add the new one
+            } else if self.sets.contains_key(&item.set_id) {
+                let mut key = *self.sets.get(&item.set_id).unwrap();
+                if key > 0 {
+                    self.add_or_remove_stats(&s.bonus[key], false);
+                    key -= 1;
+                    self.add_or_remove_stats(&s.bonus[key], true);
+                    *self.sets.entry(item.set_id).or_insert(0) -= 1;
+                } else {
+                    self.add_or_remove_stats(&s.bonus[key], false);
                     self.sets.remove(&item.set_id);
                 }
             }
         }
-        self.add_or_remove_stats(&item.stats, false);
-        true
     }
 
     pub fn evaluate_attack(&self, attack: &Attack) -> (i64, i64, i64) {

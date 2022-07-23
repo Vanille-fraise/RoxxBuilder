@@ -56,8 +56,7 @@ impl ItemCondition {
             ItemCondition::And(c1, c2) => { c1.evaluate(build, item, old_item) && c2.evaluate(build, item, old_item) }
             ItemCondition::Or(c1, c2) => { c1.evaluate(build, item, old_item) || c2.evaluate(build, item, old_item) }
             ItemCondition::None => { true }
-            ItemCondition::SetBonusLessThan(val) => { &(build.sets.iter().fold(0, |acc, (_, v)| -> usize { acc + v }) as i64) < val } // todo: le changer et le mettre en accord avec dofus api db et le set du build, todo: remove le set quand tu remove d'item
-
+            ItemCondition::SetBonusLessThan(val) => { &(build.sets.iter().fold(0, |acc, (_, v)| -> usize { acc + v }) as i64) < val }
             ItemCondition::MoreStatThan(stat, val) => { &ItemCondition::eval(build, item, old_item, stat) > val }
             ItemCondition::LessStatThan(stat, val) => { &ItemCondition::eval(build, item, old_item, stat) < val }
             ItemCondition::MoreAdditionalStatThan(stat, val) => { &ItemCondition::eval(build, item, old_item, stat) > val }

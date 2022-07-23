@@ -5,21 +5,28 @@ use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat;
 use serde::{Deserialize, Serialize};
 use crate::builder::item_mod::item_condition::ItemCondition;
 use crate::builder::item_mod::item_type::ItemType::Amulette;
+use crate::builder::item_mod::set::Set;
+extern crate serde;
+extern crate serde_json;
+
 extern crate num;
 
 
 #[derive(PartialEq, Eq, Deserialize, Serialize, Debug)]
-pub struct Item {
+pub struct Item<'a> {
     pub item_type: ItemType,
     pub stats: HashMap<BaseStat, i64>,
     pub name: String,
     pub lvl: u64,
     pub set_id: i64,
+    #[serde(skip_deserializing)]
+    #[serde(default)]
+    pub set: Option<&'a Set>,
     pub conditions: ItemCondition,
     pub id: u64,
 }
 
-impl Item {
+impl<'a> Item<'a> {
     pub fn from_serde_value(values: &serde_json::Value) -> Self {
         Item {
             item_type: num::FromPrimitive::from_u64(values["typeId"].as_u64().unwrap_or(0)).unwrap_or(ItemType::Unknown),
@@ -27,8 +34,9 @@ impl Item {
             name: values["name"]["fr"].as_str().unwrap_or("No Name").to_string(),
             lvl: values["level"].as_u64().unwrap_or(1),
             set_id: values["itemSetId"].as_i64().unwrap_or(-1),
+            set: None,
             conditions: ItemCondition::from_dofus_db_str(values["criteria"].as_str().unwrap_or("")),
-            id: values["id"].as_u64().unwrap_or(0)
+            id: values["id"].as_u64().unwrap_or(0),
         }
     }
     pub fn default() -> Self {
@@ -38,6 +46,7 @@ impl Item {
             name: "No name".to_string(),
             lvl: 200,
             set_id: 0,
+            set: None,
             conditions: ItemCondition::None,
             id: random(),
         }
@@ -47,13 +56,14 @@ impl Item {
         item.stats = stats;
         item
     }
-    pub fn new(item_type: ItemType, stats: HashMap<BaseStat, i64>, name: String, lvl: u64, set_id: i64, conditions: ItemCondition, item_id: u64) -> Self {
+    pub fn new(item_type: ItemType, stats: HashMap<BaseStat, i64>, name: String, lvl: u64, set_id: i64, conditions: ItemCondition, item_id: u64, set: Option<&'a Set>) -> Self {
         Item {
             item_type,
             stats,
             name,
             lvl,
             set_id,
+            set,
             conditions,
             id: item_id,
         }

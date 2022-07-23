@@ -37,7 +37,7 @@ impl DataLoader {
         Ok(())
     }
 
-    pub fn from_api_response_files(path: String) -> Result<DataContainer, std::io::Error> {
+    pub fn from_api_response_files<'a>(path: String) -> Result<DataContainer<'a>, std::io::Error> {
         let mut container = DataContainer::new();
         let dir = std::fs::read_dir(path)?;
         for entry in dir {
@@ -56,7 +56,7 @@ impl DataLoader {
         Ok(())
     }
 
-    pub fn from_data_container_file(path: String) -> Result<DataContainer, std::io::Error> {
+    pub fn from_data_container_file<'a>(path: String) -> Result<DataContainer<'a>, std::io::Error> {
         let container: DataContainer = serde_json::from_str(std::fs::read_to_string(path.as_str())?.as_str())?;
 
         return Ok(container);

@@ -6,8 +6,8 @@ use crate::builder::item_mod::item_slot::ItemSlot;
 use crate::builder::item_mod::set::Set;
 
 pub struct BuildGenerator<'a> {
-    items: Vec<&'a Item>,
-    organized_items: HashMap<ItemSlot, Vec<&'a Item>>,
+    items: Vec<&'a Item<'a>>,
+    organized_items: HashMap<ItemSlot, Vec<&'a Item<'a>>>,
     sets: Vec<&'a Set>,
     organized_sets: HashMap<i64, &'a Set>,
     cur_build: Build<'a>,
@@ -44,6 +44,9 @@ impl<'a> BuildGenerator<'a> {
 
 
     fn instantiate(&mut self) {
+        for set in &self.sets {
+            self.organized_sets.insert(set.id, set);
+        }
         for item_slot in ItemSlot::iter() {
             self.organized_items.insert(item_slot, vec![]);
             self.items_i.insert(item_slot, 0);
@@ -52,9 +55,6 @@ impl<'a> BuildGenerator<'a> {
             for slot in ItemSlot::corresponding_to_item_type(&(*item).item_type) {
                 self.organized_items.get_mut(&slot).unwrap().push(item);
             }
-        }
-        for set in &self.sets {
-            self.organized_sets.insert(set.id, set);
         }
     }
 
