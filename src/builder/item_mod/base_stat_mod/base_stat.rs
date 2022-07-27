@@ -1,8 +1,12 @@
+use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
+use num_derive::FromPrimitive;
+
+extern crate num;
 
 #[repr(u8)]
 #[allow(dead_code)]
-#[derive(PartialEq, Eq, Hash, Copy, Clone, Deserialize, Serialize, Debug)]
+#[derive(PartialEq, Eq, Hash, Copy, Clone, Deserialize, Serialize, Debug, FromPrimitive)]
 pub enum BaseStat {
     // my_item[effects][i][characteristic]
     PA = 1,
@@ -66,11 +70,14 @@ pub enum BaseStat {
     Initiative = 44,
     Prospection = 48,
     RenvoiDo = 50,
+
+    Carac29 = 29, // idk what that is but some item has it
+
+    Unknown = 254,
 }
 
 impl BaseStat {
     pub fn from_str_repr(cond_str: &str) -> Option<Self> {
-
         match cond_str.to_ascii_lowercase().as_str() {
             "cs" => { Some(BaseStat::Force) }
             "cw" => { Some(BaseStat::Sagesse) }
@@ -82,5 +89,15 @@ impl BaseStat {
             "cm" => { Some(BaseStat::PM) }
             _ => None
         }
+    }
+
+    pub fn from_effects_json_value(value: &serde_json::Value) -> HashMap<BaseStat, i64> {
+        let m: HashMap<BaseStat, i64> = value.as_array().unwrap_or(&mut vec![]).iter().filter(|v| { v["characteristic"].as_i64().unwrap_or(-1) > 0 }).map(|v| {
+            let stat: BaseStat = num::FromPrimitive::from_i64(v["characteristic"].as_i64().unwrap()).unwrap_or(BaseStat::Unknown);
+            let to = v["to"].as_i64().unwrap_or(0);
+            (stat, to)
+        }).collect();
+
+        m
     }
 }

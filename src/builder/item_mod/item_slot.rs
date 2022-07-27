@@ -5,9 +5,9 @@ use strum_macros::EnumIter;
 
 #[allow(dead_code)]
 #[repr(u8)]
-#[derive(Debug, PartialEq, Eq, Hash, Copy, Clone, Deserialize, Serialize, EnumIter, Display)]
+#[derive(Debug, PartialEq, Eq, Hash, Copy, Clone, Deserialize, Serialize, EnumIter, Display, PartialOrd, Ord)]
 pub enum ItemSlot {
-    SlotAmulette,
+    SlotAmulette=1,
     SlotAnneau1,
     SlotAnneau2,
     SlotBottes,
@@ -35,8 +35,8 @@ impl ItemSlot {
             ItemType::Cape => { vec![SlotCape] }
             ItemType::Ceinture => { vec![SlotCeinture] }
             ItemType::Chapeau => { vec![SlotChapeau] }
-            ItemType::Dofus => { vec![SlotDofusPrysmaradite, SlotDofus2, SlotDofus3, SlotDofus2, SlotDofus4, SlotDofus5, SlotDofus6] }
-            ItemType::Trophee => { vec![SlotDofusPrysmaradite, SlotDofus2, SlotDofus3, SlotDofus2, SlotDofus4, SlotDofus5, SlotDofus6] }
+            ItemType::Dofus => { vec![SlotDofusPrysmaradite, SlotDofus2, SlotDofus3, SlotDofus4, SlotDofus5, SlotDofus6] }
+            ItemType::Trophee => { vec![SlotDofusPrysmaradite, SlotDofus2, SlotDofus3, SlotDofus4, SlotDofus5, SlotDofus6] }
             ItemType::Prysmaradite => { vec![SlotDofusPrysmaradite] }
             ItemType::Familier => { vec![SlotFamilierMonture] }
             ItemType::Dragodinde => { vec![SlotFamilierMonture] }

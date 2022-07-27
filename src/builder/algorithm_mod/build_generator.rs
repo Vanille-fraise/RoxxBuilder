@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections:: HashMap;
 use crate::builder::build_mod::build::Build;
 use crate::builder::item_mod::item::Item;
 use strum::IntoEnumIterator;
@@ -58,20 +58,21 @@ impl<'a> BuildGenerator<'a> {
         }
     }
 
-    pub fn next_build(&mut self) -> Option<&Build> { // todo: change it to not skip unequipped item
-        'main_loop: for (t, i) in self.items_i.iter_mut() {
-            'cannot_equip_loop: loop {
-                if *i >= self.organized_items.get(t).unwrap().len() {
+    pub fn next_build(&mut self) -> Option<&Build> {
+        'main_loop: loop {
+            for (t, i) in self.items_i.iter_mut() {
+                if *i == self.organized_items.get(t).unwrap().len() {
                     *i = 0;
                     self.cur_build.remove_item(t);
-                    continue 'main_loop;
                 } else {
-                    let could_equip = self.cur_build.add_item(self.organized_items.get(t).unwrap().get(*i).unwrap(), t.clone(), false);
+                    self.cur_build.add_item(self.organized_items.get(t).unwrap().get(*i).unwrap(), t.clone(), true);
                     *i += 1;
-                    if !could_equip { continue 'cannot_equip_loop; } else { return Some(&self.cur_build); }
+                    return if self.cur_build.evaluate_build() {
+                        Some(&self.cur_build)
+                    } else { continue 'main_loop };
                 }
             }
+            return None;
         }
-        return None;
     }
 }

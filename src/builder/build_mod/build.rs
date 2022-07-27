@@ -10,11 +10,12 @@ use crate::builder::attack_mod::damage_source::DamageSource;
 use crate::builder::build_mod::player::Player;
 use crate::builder::item_mod::item::Item;
 use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat;
+use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat::Critique;
 use crate::builder::item_mod::item_slot::ItemSlot;
 use crate::builder::item_mod::item_type::ItemType;
 
 #[allow(dead_code)]
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug)]
 pub struct Build<'a> {
     pub items: HashMap<ItemSlot, &'a Item<'a>>,
     pub stats: HashMap<BaseStat, i64>,
@@ -52,7 +53,7 @@ impl<'a> Build<'a> {
         }
         if item.set_id > 0 || item.item_type != ItemType::Anneau {
             for it in &self.items {
-                if it.1.id == item.id { return false; }
+                if it.0 != slot && it.1.id == item.id { return false; }
             }
         }
         item.conditions.evaluate(self, item, self.items.get(slot))
@@ -104,27 +105,31 @@ impl<'a> Build<'a> {
         }
     }
 
-    pub fn evaluate_attack(&self, attack: &Attack) -> (i64, i64, i64) {
-        (self.calculate_one_attack(attack, Min),
-         self.calculate_one_attack(attack, Average),
-         self.calculate_one_attack(attack, Max))
+    pub fn evaluate_attack(&self, attack: &Attack) -> (i64, i64, i64) { // todo: if the non crit damage could be higher than the crit damage
+        let crit_chance = min(max(attack.base_crit + self.stats.get(&Critique).unwrap_or(&0), 0), 100);
+        let min_eval = self.calculate_one_attack(attack, Min, attack.can_crit && crit_chance >= 100);
+        let max_eval = self.calculate_one_attack(attack, Max, attack.can_crit && crit_chance > 0);
+        let average_eval_low = self.calculate_one_attack(attack, Average, attack.can_crit && crit_chance >= 100);
+        let average_eval_up = self.calculate_one_attack(attack, Average, attack.can_crit && crit_chance > 0);
+        (min_eval, (average_eval_low * (100 - crit_chance) + average_eval_up * crit_chance) / 100, max_eval)
     }
 
-    fn calculate_one_attack(&self, attack: &Attack, calc_type: DamageCalculation) -> i64 {
+    fn calculate_one_attack(&self, attack: &Attack, calc_type: DamageCalculation, make_crit: bool) -> i64 {
         let mut damage: i64 = 0;
-        for damage_line in &attack.damages {
+        let damage_lines = if make_crit { &attack.crit_damages } else { &attack.damages };
+        for damage_line in damage_lines {
             let value: i64 = match calc_type {
                 Minimized => { damage_line.min_value }
                 Min => { damage_line.min_value }
-                Average => { damage_line.min_value + damage_line.max_value / 2 }
+                Average => { (damage_line.min_value + damage_line.max_value) / 2 }
                 Max => { damage_line.max_value }
             };
             match damage_line.damage_element {
-                DamageElement::DamageAir => damage += self.one_value_damage(BaseStat::Agilite, BaseStat::DoAir, value, attack, calc_type),
-                DamageElement::DamageTerre => damage += self.one_value_damage(BaseStat::Force, BaseStat::DoTerre, value, attack, calc_type),
-                DamageElement::DamageEau => damage += self.one_value_damage(BaseStat::Chance, BaseStat::DoEau, value, attack, calc_type),
-                DamageElement::DamageFeu => damage += self.one_value_damage(BaseStat::Intelligence, BaseStat::DoFeu, value, attack, calc_type),
-                DamageElement::DamageNeutre => damage += self.one_value_damage(BaseStat::Force, BaseStat::DoNeutre, value, attack, calc_type),
+                DamageElement::DamageAir => damage += self.one_value_damage(BaseStat::Agilite, BaseStat::DoAir, value, attack, make_crit),
+                DamageElement::DamageTerre => damage += self.one_value_damage(BaseStat::Force, BaseStat::DoTerre, value, attack, make_crit),
+                DamageElement::DamageEau => damage += self.one_value_damage(BaseStat::Chance, BaseStat::DoEau, value, attack, make_crit),
+                DamageElement::DamageFeu => damage += self.one_value_damage(BaseStat::Intelligence, BaseStat::DoFeu, value, attack, make_crit),
+                DamageElement::DamageNeutre => damage += self.one_value_damage(BaseStat::Force, BaseStat::DoNeutre, value, attack, make_crit),
             }
         };
         damage = damage * (100 + self.stats.get(&if attack.damage_source == DamageSource::Sort { BaseStat::DoPerSo } else { BaseStat::DoPerArme }).unwrap_or(&0)) / 100;
@@ -133,7 +138,7 @@ impl<'a> Build<'a> {
         damage
     }
 
-    fn one_value_damage(&self, stat: BaseStat, damage: BaseStat, damage_value: i64, attack: &Attack, calc_type: DamageCalculation) -> i64 {
+    fn one_value_damage(&self, stat: BaseStat, damage: BaseStat, damage_value: i64, attack: &Attack, make_crit: bool) -> i64 {
         let mut cur_damage: i64 = 0;
         cur_damage += self.stats.get(&damage).unwrap_or(&0) + self.stats.get(&BaseStat::DoMulti).unwrap_or(&0);
         cur_damage += ((self.stats.get(&stat).unwrap_or(&0) + self.stats.get(&BaseStat::Puissance).unwrap_or(&0)) / 100 + 1) * damage_value;
@@ -142,10 +147,8 @@ impl<'a> Build<'a> {
             cur_damage += self.stats.get(&BaseStat::PuissancePiege).unwrap_or(&0) / 100 * damage_value;
         }
 
-        if attack.can_crit && calc_type != Minimized {
-            let mut crit_chance = max(min(attack.base_crit + self.stats.get(&BaseStat::Critique).unwrap_or(&0), 100), 0);
-            if calc_type == Max && crit_chance > 0 { crit_chance = 100; } else if calc_type == Min && crit_chance < 100 { crit_chance = 0; }
-            cur_damage += self.stats.get(&BaseStat::DoCri).unwrap_or(&0) * crit_chance / 100;
+        if make_crit {
+            cur_damage += self.stats.get(&BaseStat::DoCri).unwrap_or(&0);
         }
 
         cur_damage *= self.stats.get(&BaseStat::DoPerFinaux).unwrap_or(&0) / 100 + 1;
@@ -188,6 +191,21 @@ impl<'a> Build<'a> {
         }
         sb.append("]");
         sb.string().unwrap_or("No item".to_string())
+    }
+    
+    pub fn duplicate(&self) -> Build<'a> {
+        Build{
+            items: self.items.clone(),
+            stats: self.stats.clone(),
+            player: self.player.clone(),
+            sets: self.sets.clone(),
+        }
+    }
+
+    pub fn get_item_id(&self) -> Vec<(i64, ItemSlot)> {
+        let mut res = vec![];
+        self.items.iter().for_each(|(slt, itm)| {res.push((itm.id, slt.clone()))});
+        res
     }
 }
 

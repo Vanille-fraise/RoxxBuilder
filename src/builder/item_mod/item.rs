@@ -23,20 +23,20 @@ pub struct Item<'a> {
     #[serde(default)]
     pub set: Option<&'a Set>,
     pub conditions: ItemCondition,
-    pub id: u64,
+    pub id: i64,
 }
 
 impl<'a> Item<'a> {
     pub fn from_serde_value(values: &serde_json::Value) -> Self {
         Item {
             item_type: num::FromPrimitive::from_u64(values["typeId"].as_u64().unwrap_or(0)).unwrap_or(ItemType::Unknown),
-            stats: Default::default(),
+            stats: BaseStat::from_effects_json_value(&values["effects"]), // todo: add stats
             name: values["name"]["fr"].as_str().unwrap_or("No Name").to_string(),
             lvl: values["level"].as_u64().unwrap_or(1),
             set_id: values["itemSetId"].as_i64().unwrap_or(-1),
             set: None,
             conditions: ItemCondition::from_dofus_db_str(values["criteria"].as_str().unwrap_or("")),
-            id: values["id"].as_u64().unwrap_or(0),
+            id: values["id"].as_i64().unwrap_or(0),
         }
     }
     pub fn default() -> Self {
@@ -56,7 +56,7 @@ impl<'a> Item<'a> {
         item.stats = stats;
         item
     }
-    pub fn new(item_type: ItemType, stats: HashMap<BaseStat, i64>, name: String, lvl: u64, set_id: i64, conditions: ItemCondition, item_id: u64, set: Option<&'a Set>) -> Self {
+    pub fn new(item_type: ItemType, stats: HashMap<BaseStat, i64>, name: String, lvl: u64, set_id: i64, conditions: ItemCondition, item_id: i64, set: Option<&'a Set>) -> Self {
         Item {
             item_type,
             stats,
@@ -71,6 +71,12 @@ impl<'a> Item<'a> {
     pub fn new_from_type(item_type: ItemType) -> Self {
         let mut item = Item::default();
         item.item_type = item_type;
+        item
+    }
+
+    pub fn empty() ->  Self {
+        let mut item = Self::default();
+        item.name = "No item".to_string();
         item
     }
 }
