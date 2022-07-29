@@ -1,4 +1,4 @@
-use std::collections:: HashMap;
+use std::collections::HashMap;
 use crate::builder::build_mod::build::Build;
 use crate::builder::item_mod::item::Item;
 use strum::IntoEnumIterator;
@@ -69,7 +69,7 @@ impl<'a> BuildGenerator<'a> {
                     *i += 1;
                     return if self.cur_build.evaluate_build() {
                         Some(&self.cur_build)
-                    } else { continue 'main_loop };
+                    } else { continue 'main_loop; };
                 }
             }
             return None;

@@ -6,6 +6,7 @@ use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat;
 pub struct Set {
     pub id: i64,
     pub bonus: Vec<HashMap<BaseStat, i64>>,
+    name: String,
 }
 
 impl Set {
@@ -13,6 +14,15 @@ impl Set {
         Set {
             id,
             bonus,
+            name: "No name".to_string(),
+        }
+    }
+
+    pub fn from_serde_value(values: &serde_json::Value) -> Self {
+        Set {
+            id: values["id"].as_i64().unwrap_or(-1),
+            bonus: values["effects"].as_array().unwrap_or(&vec![]).iter().map(BaseStat::from_effects_json_value).collect(),
+            name: values["name"].as_str().unwrap_or("No name found").to_string(),
         }
     }
 }

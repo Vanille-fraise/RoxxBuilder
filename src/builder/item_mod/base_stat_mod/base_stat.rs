@@ -1,3 +1,4 @@
+use std::cmp::max;
 use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 use num_derive::FromPrimitive;
@@ -95,7 +96,8 @@ impl BaseStat {
         let m: HashMap<BaseStat, i64> = value.as_array().unwrap_or(&mut vec![]).iter().filter(|v| { v["characteristic"].as_i64().unwrap_or(-1) > 0 }).map(|v| {
             let stat: BaseStat = num::FromPrimitive::from_i64(v["characteristic"].as_i64().unwrap()).unwrap_or(BaseStat::Unknown);
             let to = v["to"].as_i64().unwrap_or(0);
-            (stat, to)
+            let from = v["from"].as_i64().unwrap_or(0);
+            (stat, max(to, from))
         }).collect();
 
         m

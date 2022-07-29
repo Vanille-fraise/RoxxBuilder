@@ -12,10 +12,11 @@ use roxx_builder::builder::item_mod::item_slot::ItemSlot::SlotCeinture;
 use roxx_builder::builder::item_mod::item_type::ItemType;
 
 
-static PRINT: bool = true;
+static PRINT: bool = false;
 
-#[test]
-fn basic_build_test() { // todo: complete later
+// #[test] remove the commentary when you want to execute it (it takes about 40sec)
+#[allow(dead_code)]
+fn basic_build_test() {
     let res_container = DataLoader::from_data_container_file("tests/test_files/containers/data_container_small_to_read".to_string());
     assert!(res_container.is_ok());
     let mut container = res_container.unwrap();
