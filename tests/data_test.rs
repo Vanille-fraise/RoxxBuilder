@@ -5,7 +5,7 @@ use roxx_builder::builder::item_mod::item::Item;
 use roxx_builder::builder::item_mod::item_type::ItemType;
 
 
-const RELOAD: bool = true;
+const RELOAD: bool = false;
 
 #[derive(PartialEq, Eq, Deserialize, Serialize, Debug)]
 struct TestJson {

@@ -2,12 +2,13 @@ use std::cmp::max;
 use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 use num_derive::FromPrimitive;
+use strum_macros::EnumIter;
 
 extern crate num;
 
 #[repr(u8)]
 #[allow(dead_code)]
-#[derive(PartialEq, Eq, Hash, Copy, Clone, Deserialize, Serialize, Debug, FromPrimitive)]
+#[derive(PartialEq, Eq, Hash, Copy, Clone, Deserialize, Serialize, Debug, FromPrimitive, EnumIter, PartialOrd, Ord)]
 pub enum BaseStat {
     // my_item[effects][i][characteristic]
     PA = 1,
@@ -99,7 +100,6 @@ impl BaseStat {
             let from = v["from"].as_i64().unwrap_or(0);
             (stat, max(to, from))
         }).collect();
-
         m
     }
 }

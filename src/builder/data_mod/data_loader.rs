@@ -11,10 +11,6 @@ use crate::builder::item_mod::set::Set;
 pub struct DataLoader;
 
 impl DataLoader {
-    pub async fn create_items_files_from_dofus_db_api(path: String) -> Result<(), Box<dyn Error>> {
-        return DataLoader::create_files_from_dofus_db_api_with_call_limit(path, -1, "items".to_string()).await;
-    }
-
     pub async fn create_files_from_dofus_db_api_with_call_limit(path: String, limit: i64, api_section: String) -> Result<(), Box<dyn Error>> {
         std::fs::create_dir_all(&path)?;
 
@@ -36,6 +32,20 @@ impl DataLoader {
             i += 1;
         }
         Ok(())
+    }
+
+    pub async fn get_total_dofus_db_api(api_sections: Vec<String>) -> Result<Vec<i64>, Box<dyn Error>> {
+        let mut res = vec![];
+        let client_builder = reqwest::Client::builder();
+        let client = client_builder.build()?;
+        for api_section in api_sections {
+            let response = client.get(format!("https://api.dofusdb.fr/{}?$limit=0&$skip=0", api_section)).send().await?;
+            let body_text = response.text().await?;
+            let val: serde_json::Value = serde_json::from_str(body_text.as_str())?;
+            let total: i64 = val["total"].as_i64().unwrap_or(-1);
+            res.push(total);
+        };
+        Ok(res)
     }
 
     pub fn from_api_response_files<'a>(files_path: Option<String>, sets_path: Option<String>) -> Result<DataContainer<'a>, std::io::Error> {

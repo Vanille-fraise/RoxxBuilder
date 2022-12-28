@@ -11,14 +11,15 @@ use crate::builder::item_mod::set::Set;
 #[allow(dead_code)]
 pub struct RoxxBuildFinder<'a> {
     data: &'a DataContainer<'a>,
+    estimator: Option<fn(container: &DataContainer, attack: &Attack) -> Vec<&'a Item<'a>>>,
 }
 
 #[allow(dead_code)]
 impl<'a> RoxxBuildFinder<'a> {
     pub fn find_build(&self, attack: &Attack, calc_type: DamageCalculation) -> Option<DamageEval> { // well, could improve it
-        let data_ref: Vec<&Item> = self.data.items.iter().collect();
+        let item_ref: Vec<&Item> = self.data.items.iter().collect();
         let set_ref: Vec<&Set> = self.data.sets.iter().collect();
-        let mut bg = BuildGenerator::new(data_ref, set_ref);
+        let mut bg = BuildGenerator::new(item_ref, set_ref);
         let mut best_eval: (i64, i64, i64) = (i64::MIN, i64::MIN, i64::MIN);
         let mut best_build_id = vec![];
         let mut nb_evaluated_builds = 0;
@@ -48,7 +49,8 @@ impl<'a> RoxxBuildFinder<'a> {
 
     pub fn new(data: &'a DataContainer<'a>) -> Self {
         RoxxBuildFinder {
-            data
+            data,
+            estimator: None
         }
     }
 }

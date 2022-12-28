@@ -7,11 +7,11 @@ use roxx_builder::builder::item_mod::item_type::ItemType::{Anneau, Cape, Ceintur
 use roxx_builder::builder::item_mod::set::Set;
 
 static NO_ITEM: Vec<&Item> = Vec::new();
-static PRINT: bool = false;
+static PRINT: bool = true;
 
 fn test_nb_build(mut bg: BuildGenerator, expected_count: i32) {
     let mut count = 0;
-    if PRINT {print!("\nBuildgen:\n");}
+    if PRINT {print!("\nBuild generated:\n");}
     while let Some(build) = bg.next_build() {
         count += 1;
         if PRINT {print!("{}\n", build.to_string());}
