@@ -51,10 +51,10 @@ impl ItemCondition {
         ItemCondition::None
     }
 
-    pub fn evaluate(&self, build: &Build, item: &Item, old_item: Option<&&Item>) -> bool {
+    pub fn evaluate_soft_cond(&self, build: &Build, item: &Item, old_item: Option<&&Item>) -> bool {
         match self { // todo make a diff between additional and normal stats
-            ItemCondition::And(c1, c2) => { c1.evaluate(build, item, old_item) && c2.evaluate(build, item, old_item) }
-            ItemCondition::Or(c1, c2) => { c1.evaluate(build, item, old_item) || c2.evaluate(build, item, old_item) }
+            ItemCondition::And(c1, c2) => { c1.evaluate_soft_cond(build, item, old_item) && c2.evaluate_soft_cond(build, item, old_item) }
+            ItemCondition::Or(c1, c2) => { c1.evaluate_soft_cond(build, item, old_item) || c2.evaluate_soft_cond(build, item, old_item) }
             ItemCondition::None => { true }
             ItemCondition::SetBonusLessThan(val) => { &(build.sets.iter().fold(0, |acc, (_, v)| -> usize { acc + v }) as i64) < val }
             ItemCondition::MoreStatThan(stat, val) => { &ItemCondition::eval(build, item, old_item, stat) > val }

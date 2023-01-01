@@ -45,7 +45,7 @@ impl<'a> Item<'a> {
             stats: HashMap::new(),
             name: "No name".to_string(),
             lvl: 200,
-            set_id: 0,
+            set_id: -1,
             set: None,
             conditions: ItemCondition::None,
             id: random(),

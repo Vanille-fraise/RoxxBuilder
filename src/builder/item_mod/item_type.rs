@@ -31,7 +31,7 @@ pub enum ItemType {
     PierreDAme = 83,
     Dragodinde = 97,
     FiletDeCapture = 99,
-    // ??? 102 ??? supposément dans le slot d'arme: suggéstion arbalète
+    // ??? 102 ??? supposément dans le slot d'arme: suggestion arbalète
     ArmeMagique = 114,
     Montilier = 121,
     Trophee = 151,

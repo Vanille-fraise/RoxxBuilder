@@ -20,7 +20,7 @@ fn small_split_test() {
 #[test]
 fn no_condition_add_test() {
     let mut build = Build::new();
-    assert!(build.add_item(&Item::default(), ItemSlot::SlotAnneau1, false));
+    assert!(build.add_item(&Item::default(), ItemSlot::SlotAnneau1));
 }
 
 #[test]
@@ -31,9 +31,9 @@ fn same_ring_add_test() {
     let mut ring2 = Item::default();
     ring2.set_id = 1;
     ring2.id = ring.id;
-    assert!(build.add_item(&ring, ItemSlot::SlotAnneau1, false));
+    assert!(build.add_item(&ring, ItemSlot::SlotAnneau1));
     assert_eq!(ring.id, ring2.id);
-    assert_eq!(build.add_item(&ring2, ItemSlot::SlotAnneau2, false), false);
+    assert_eq!(build.add_item(&ring2, ItemSlot::SlotAnneau2), false);
 }
 
 #[test]
@@ -43,29 +43,30 @@ fn same_set_not_same_ring_test() {
     ring.set_id = 1;
     let mut ring2 = Item::default();
     ring2.set_id = 1;
-    assert!(build.add_item(&ring, ItemSlot::SlotAnneau1, false));
+    assert!(build.add_item(&ring, ItemSlot::SlotAnneau1));
     assert_ne!(ring.id, ring2.id);
     assert_eq!(ring.set_id, ring2.set_id);
-    assert!(build.add_item(&ring2, ItemSlot::SlotAnneau2, false));
+    assert!(build.add_item(&ring2, ItemSlot::SlotAnneau2));
 }
 
-fn condition_anneau1_equip_test(condition: ItemCondition, stats: HashMap<BaseStat, i64>, expected: bool) {
+fn condition_anneau1_valid_build_test(condition: ItemCondition, stats: HashMap<BaseStat, i64>, expected: bool) {
     let mut build = Build::new_with(stats);
     let mut item = Item::default();
     item.conditions = condition;
-    assert_eq!(build.add_item(&item, ItemSlot::SlotAnneau1, false), expected);
+    build.add_item(&item, ItemSlot::SlotAnneau1);
+    assert_eq!(build.evaluate_soft_cond_build(), expected);
 }
 
 #[test]
 fn more_stat_than_good_test() {
     let condition = ItemCondition::MoreStatThan(BaseStat::Force, 50);
-    condition_anneau1_equip_test(condition, HashMap::from([(BaseStat::Force, 100)]), true)
+    condition_anneau1_valid_build_test(condition, HashMap::from([(BaseStat::Force, 100)]), true)
 }
 
 #[test]
 fn more_stat_than_fail_test() {
     let condition = ItemCondition::MoreStatThan(BaseStat::Force, 200);
-    condition_anneau1_equip_test(condition, HashMap::from([(BaseStat::Force, 100)]), false)
+    condition_anneau1_valid_build_test(condition, HashMap::from([(BaseStat::Force, 100)]), false)
 }
 
 #[test]
@@ -81,9 +82,9 @@ fn or_condition_good_test() {
     let condition = ItemCondition::Or(Box::new(condition1),Box::new( condition2));
     let stats = HashMap::from([(BaseStat::Force, 300), (BaseStat::Agilite, -100)]);
 
-    condition_anneau1_equip_test(condition1_test, stats1, false);
-    condition_anneau1_equip_test(condition2_test, stats2, true);
-    condition_anneau1_equip_test(condition, stats, true);
+    condition_anneau1_valid_build_test(condition1_test, stats1, false);
+    condition_anneau1_valid_build_test(condition2_test, stats2, true);
+    condition_anneau1_valid_build_test(condition, stats, true);
 }
 
 #[test]
@@ -99,9 +100,9 @@ fn or_condition_fail_test() {
     let condition = ItemCondition::Or(Box::new(condition1),Box::new( condition2));
     let stats = HashMap::from([(BaseStat::Force, 50), (BaseStat::Agilite, -100)]);
 
-    condition_anneau1_equip_test(condition1_test, stats1, false);
-    condition_anneau1_equip_test(condition2_test, stats2, false);
-    condition_anneau1_equip_test(condition, stats, false);
+    condition_anneau1_valid_build_test(condition1_test, stats1, false);
+    condition_anneau1_valid_build_test(condition2_test, stats2, false);
+    condition_anneau1_valid_build_test(condition, stats, false);
 }
 
 #[test]
@@ -117,9 +118,9 @@ fn and_condition_good_test() {
     let condition = ItemCondition::And(Box::new(condition1),Box::new( condition2));
     let stats = HashMap::from([(BaseStat::Force, 200), (BaseStat::Agilite, -100)]);
 
-    condition_anneau1_equip_test(condition1_test, stats1, true);
-    condition_anneau1_equip_test(condition2_test, stats2, true);
-    condition_anneau1_equip_test(condition, stats, true);
+    condition_anneau1_valid_build_test(condition1_test, stats1, true);
+    condition_anneau1_valid_build_test(condition2_test, stats2, true);
+    condition_anneau1_valid_build_test(condition, stats, true);
 }
 
 #[test]
@@ -135,9 +136,9 @@ fn and_condition_fail_test() {
     let condition = ItemCondition::And(Box::new(condition1),Box::new( condition2));
     let stats = HashMap::from([(BaseStat::Force, 300), (BaseStat::Agilite, -100)]);
 
-    condition_anneau1_equip_test(condition1_test, stats1, false);
-    condition_anneau1_equip_test(condition2_test, stats2, true);
-    condition_anneau1_equip_test(condition, stats, false);
+    condition_anneau1_valid_build_test(condition1_test, stats1, false);
+    condition_anneau1_valid_build_test(condition2_test, stats2, true);
+    condition_anneau1_valid_build_test(condition, stats, false);
 }
 
 // ==============================================================================================

@@ -9,10 +9,11 @@ pub struct DamageEval<'a> {
     pub build: Build<'a>,
     pub build_evaluated: i64,
     pub search_time: Duration,
+    pub spares: i64,
 }
 
 impl<'a> DamageEval<'a> {
-    pub fn new(eval: (i64, i64, i64), build: Build<'a>, build_evaluated: i64, search_time: Duration) -> Self {
+    pub fn new(eval: (i64, i64, i64), build: Build<'a>, build_evaluated: i64, search_time: Duration, spares: i64) -> Self {
         DamageEval {
             min: eval.0,
             average: eval.1,
@@ -20,6 +21,7 @@ impl<'a> DamageEval<'a> {
             build,
             build_evaluated,
             search_time,
+            spares,
         }
     }
 }

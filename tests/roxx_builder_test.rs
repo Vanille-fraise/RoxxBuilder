@@ -24,15 +24,15 @@ fn basic_build_test() {
     let best_id = 123456;
     best_item.id = best_id;
     best_item.stats.insert(BaseStat::Agilite, 1000);
-    container.items.push(best_item);
     container.items.push(bad_item1);
+    container.items.push(best_item);
+
     container.items.push(bad_item2);
     container.clear_unknown_type();
-    let roxx_builder = RoxxBuildFinder::new(&container);
+    let mut roxx_builder = RoxxBuildFinder::new(&container);
     let spell = Attack::new(vec![DamageLine::new(DamageAir, 14, 24)], vec![DamageLine::new(DamageAir, 19, 29)], Sort, Distance, true, 20);
-    let evaluation = roxx_builder.find_build(&spell, Max);
-    assert!(evaluation.is_some());
-    let ev = evaluation.unwrap();
+    roxx_builder.calc_type = Max;
+    let ev = roxx_builder.find_build(&spell);
     if PRINT { println!("Nb build tested: {} | Nb items in container: {} | Time: {}s", ev.build_evaluated, container.items.len(), ev.search_time.as_secs()); }
     assert_eq!(ev.build.items.get(&SlotCeinture).unwrap().id, best_id);
 }

@@ -22,7 +22,7 @@ fn base_damage_test_with_and_without_damage() {
     let attack: Attack = Attack::new(vec![damage_line], vec![], DamageSource::Sort, DamagePosition::Distance, false, 0);
 
     let evaluation_before = build.evaluate_attack(&attack).0;
-    build.add_item(&item, SlotAnneau1, false);
+    build.add_item(&item, SlotAnneau1);
     let evaluation_after = build.evaluate_attack(&attack).0;
 
     assert_eq!(evaluation_before, attack.damages.get(0).unwrap().min_value);

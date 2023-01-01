@@ -7,7 +7,7 @@ use roxx_builder::builder::item_mod::item_type::ItemType::{Anneau, Cape, Ceintur
 use roxx_builder::builder::item_mod::set::Set;
 
 static NO_ITEM: Vec<&Item> = Vec::new();
-static PRINT: bool = true;
+static PRINT: bool = false;
 
 fn test_nb_build(mut bg: BuildGenerator, expected_count: i32) {
     let mut count = 0;
@@ -89,7 +89,8 @@ fn prisma_items_builds() {
 }
 
 #[test]
-fn one_dofus_items_builds() {
+fn
+one_dofus_items_builds() {
     let mut loc_items = vec![];
     let item1 = Item::new_from_type(Dofus);
     loc_items.push(&item1);

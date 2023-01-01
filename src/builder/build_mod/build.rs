@@ -25,8 +25,8 @@ pub struct Build<'a> {
 
 #[allow(dead_code)]
 impl<'a> Build<'a> {
-    pub fn add_item(&mut self, item: &'a Item, item_slot: ItemSlot, force: bool) -> bool {
-        if force || self.evaluate_item(item, &item_slot) {
+    pub fn add_item(&mut self, item: &'a Item, item_slot: ItemSlot) -> bool {
+        if self.evaluate_hard_cond_and_compatibility_item(item, &item_slot) {
             if self.items.get(&item_slot) != None {
                 self.remove_item(&item_slot);
             }
@@ -47,7 +47,7 @@ impl<'a> Build<'a> {
         }
     }
 
-    fn evaluate_item(&self, item: &'a Item, slot: &ItemSlot) -> bool {
+    fn evaluate_hard_cond_and_compatibility_item(&self, item: &'a Item, slot: &ItemSlot) -> bool {
         if let Some(player) = self.player {
             if player.lvl < item.lvl { return false; }
         }
@@ -56,14 +56,17 @@ impl<'a> Build<'a> {
                 if it.0 != slot && it.1.id == item.id { return false; }
             }
         }
-        item.conditions.evaluate(self, item, self.items.get(slot))
+        return true;
     }
 
-    pub fn evaluate_build(&self) -> bool {
-        for (slot, item) in &self.items {
-            if !self.evaluate_item(item, slot) {
+    pub fn evaluate_soft_cond_build(&self) -> bool {
+        /* for (slot, item) in &self.items {
+            if !self.evaluate_hard_cond_and_compatibility_item(item, slot) {
                 return false;
             }
+        } */
+        for (slot, item) in &self.items {
+            if !item.conditions.evaluate_soft_cond(self, item, self.items.get(slot)) { return false; }
         }
         true
     }
@@ -173,7 +176,7 @@ impl<'a> Build<'a> {
     pub fn new_with_items(items: HashMap<ItemSlot, &'a Item>) -> Self {
         let mut build = Build { items: Default::default(), stats: Default::default(), player: None, sets: Default::default() };
         for data in items {
-            build.add_item(data.1, data.0, false);
+            build.add_item(data.1, data.0);
         }
         build
     }
@@ -192,9 +195,9 @@ impl<'a> Build<'a> {
         sb.append("]");
         sb.string().unwrap_or("No item".to_string())
     }
-    
+
     pub fn duplicate(&self) -> Build<'a> {
-        Build{
+        Build {
             items: self.items.clone(),
             stats: self.stats.clone(),
             player: self.player.clone(),
@@ -204,7 +207,7 @@ impl<'a> Build<'a> {
 
     pub fn get_item_id(&self) -> Vec<(i64, ItemSlot)> {
         let mut res = vec![];
-        self.items.iter().for_each(|(slt, itm)| {res.push((itm.id, slt.clone()))});
+        self.items.iter().for_each(|(slt, itm)| { res.push((itm.id, slt.clone())) });
         res
     }
 }

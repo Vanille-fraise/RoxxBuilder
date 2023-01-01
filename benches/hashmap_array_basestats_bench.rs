@@ -73,15 +73,15 @@ fn add_base_stats_vec(nb_stats: u32, nb_loops: u32) {
 fn bench_stats(c: &mut Criterion) {
     let mut group = c.benchmark_group("Stats");
     for val in [
-        (2, 10000), (8, 10000), (40, 10000), (120, 10000)].iter()
+        (8, 1000), (40, 1000), (120, 1000), (240,1000), ].iter()
     {
-        group.bench_with_input(BenchmarkId::new("HashMap", val.0 + val.1), val,
+        group.bench_with_input(BenchmarkId::new("HashMap", format!("Nb stats: {} - Nb iteration: {}", val.0, val.1)), val,
                                |b, val| b.iter(|| add_base_stats_hashmap(val.0, val.1)));
-        group.bench_with_input(BenchmarkId::new("BTree", val.0 + val.1), val,
+        group.bench_with_input(BenchmarkId::new("BTree", format!("Nb stats: {} - Nb iteration: {}", val.0, val.1)), val,
                                |b, val| b.iter(|| add_base_stats_btree(val.0, val.1)));
-        group.bench_with_input(BenchmarkId::new("Array", val.0 + val.1), val,
+        group.bench_with_input(BenchmarkId::new("Array", format!("Nb stats: {} - Nb iteration: {}", val.0, val.1)), val,
                                |b, val| b.iter(|| add_base_stats_array(val.0, val.1)));
-        group.bench_with_input(BenchmarkId::new("Vector", val.0 + val.1), val,
+        group.bench_with_input(BenchmarkId::new("Vector", format!("Nb stats: {} - Nb iteration: {}", val.0, val.1)), val,
                                |b, val| b.iter(|| add_base_stats_vec(val.0, val.1)));
     }
     group.finish();
