@@ -17,7 +17,7 @@ impl DataLoader {
         let client = client_builder.build()?;
         let response = client.get(format!("https://api.dofusdb.fr/{}?$limit=0&$skip=0", api_section)).send().await?;
         let body_text = response.text().await?;
-        let val: serde_json::Value = serde_json::from_str(body_text.as_str())?;
+        let val: Value = serde_json::from_str(body_text.as_str())?;
         let mut total: i64 = val["total"].as_i64().unwrap_or(-1);
         total = if limit < 0 { total } else { min(total, limit) };
         let mut i = 0;
@@ -40,7 +40,7 @@ impl DataLoader {
         for api_section in api_sections {
             let response = client.get(format!("https://api.dofusdb.fr/{}?$limit=0&$skip=0", api_section)).send().await?;
             let body_text = response.text().await?;
-            let val: serde_json::Value = serde_json::from_str(body_text.as_str())?;
+            let val: Value = serde_json::from_str(body_text.as_str())?;
             let total: i64 = val["total"].as_i64().unwrap_or(-1);
             res.push(total);
         };

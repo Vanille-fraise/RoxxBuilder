@@ -83,7 +83,7 @@ impl<'a> BuildGenerator<'a> {
             self.last_pushed_item =
                 if item.item_type == ItemType::Anneau
                 { ItemSlot::SlotAnneau2 } else if vec![ItemType::Dofus, ItemType::Prysmaradite, ItemType::Trophee].contains(&item.item_type)
-                { ItemSlot::SlotDofusPrysmaradite } else { slots[0] };
+                { SlotDofusPrysmaradite } else { slots[0] };
             return true;
         }
     }
