@@ -52,7 +52,8 @@ impl ItemCondition {
     }
 
     pub fn evaluate_soft_cond(&self, build: &Build, item: &Item, old_item: Option<&&Item>) -> bool {
-        match self { // todo make a diff between additional and normal stats
+        match self {
+            // todo make a diff between additional and normal stats
             ItemCondition::And(c1, c2) => { c1.evaluate_soft_cond(build, item, old_item) && c2.evaluate_soft_cond(build, item, old_item) }
             ItemCondition::Or(c1, c2) => { c1.evaluate_soft_cond(build, item, old_item) || c2.evaluate_soft_cond(build, item, old_item) }
             ItemCondition::None => { true }
@@ -67,9 +68,9 @@ impl ItemCondition {
     }
 
     fn eval(build: &Build, cur_item: &Item, old_item: Option<&&Item>, stat: &BaseStat) -> i64 {
-        let mut res = *build.stats.get(stat).unwrap_or(&0) + *cur_item.stats.get(stat).unwrap_or(&0);
+        let mut res = build.stats.get_stat(stat) + cur_item.stats.get_stat(stat);
         if let Some(itm) = old_item {
-            res -= *itm.stats.get(stat).unwrap_or(&0);
+            res -= itm.stats.get_stat(stat);
         }
         res
     }

@@ -5,9 +5,10 @@ use roxx_builder::builder::attack_mod::damage_line::DamageLine;
 use roxx_builder::builder::build_mod::build::Build;
 use roxx_builder::builder::item_mod::base_stat_mod::base_stat::BaseStat;
 use roxx_builder::builder::item_mod::base_stat_mod::base_stat::BaseStat::{Agilite, Chance, DoAir, DoCri, Intelligence};
+use roxx_builder::builder::item_mod::stats::Stats;
 
 fn test_crit(build_stats: HashMap<BaseStat, i64>, attack_lines: Vec<DamageLine>, crit_attack_lines: Vec<DamageLine>, crit_chance: i64, expected_damage: (i64, i64, i64)) {
-    let build = Build::new_with(build_stats);
+    let build = Build::new_with_stats(Stats::from_map_stats(build_stats.iter()));
     let mut attack = Attack::default();
     attack.can_crit = true;
     attack.damages = attack_lines;

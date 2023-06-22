@@ -1,81 +1,85 @@
-use std::cmp::max;
-use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 use num_derive::FromPrimitive;
 use strum_macros::EnumIter;
 
 extern crate num;
 
-#[repr(u8)]
+#[repr(usize)]
 #[allow(dead_code)]
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Deserialize, Serialize, Debug, FromPrimitive, EnumIter, PartialOrd, Ord)]
 pub enum BaseStat {
     // my_item[effects][i][characteristic]
-    PA = 1,
-    PM = 23,
-    Po = 19,
-    Invo = 26,
+    PA = 0,
+    PM,
+    Po,
+    Invo,
 
-    Force = 10,
-    Chance = 13,
-    Agilite = 14,
-    Intelligence = 15,
-    Puissance = 25,
-    PuissancePiege = 69,
-    Sagesse = 12,
-    Vitalite = 11,
+    Force,
+    Chance,
+    Agilite,
+    Intelligence,
+    Puissance,
+    PuissancePiege,
+    Sagesse,
+    Vitalite,
 
-    DoMulti = 16,
-    DoPiege = 70,
-    DoEau = 90,
-    DoAir = 91,
-    DoFeu = 89,
-    DoTerre = 88,
-    DoNeutre = 92,
-    DoCri = 86,
-    DoPou = 84,
-    DoPerMelee = 125,
-    DoPerDist = 120,
-    DoPerArme = 122,
-    DoPerSo = 123,
-    DoPerFinaux = 255, // seems like its not a stat
+    DoMulti,
+    DoPiege,
+    DoEau,
+    DoAir,
+    DoFeu,
+    DoTerre,
+    DoNeutre,
+    DoCri,
+    DoPou,
 
-    Critique = 18,
+    Tacle,
+    Fuite,
+    EsqPA,
+    EsqPM,
+    RetPA,
+    RetPM,
 
-    Tacle = 79,
-    Fuite = 78,
-    EsqPA = 27,
-    EsqPM = 28,
-    RetPA = 82,
-    RetPM = 83,
+    RePerEau,
+    RePerNeutre,
+    RePerFeu,
+    RePerAir,
+    RePerTerre,
 
-    RePerEau = 35,
-    RePerNeutre = 37,
-    RePerFeu = 34,
-    RePerAir = 36,
-    RePerTerre = 33,
+    ReFixEau,
+    ReFixNeutre,
+    ReFixFeu,
+    ReFixAir,
+    ReFixTerre,
+    ReCri,
+    RePou,
 
-    ReFixEau = 56,
-    ReFixNeutre = 58,
-    ReFixFeu = 55,
-    ReFixAir = 57,
-    ReFixTerre = 54,
-    ReCri = 87,
-    RePou = 85,
+    RePerDist,
+    RePerMelee,
+    RePerSo,
+    RePerArme,
 
-    RePerDist = 121,
-    RePerMelee = 124,
-    RePerSo = 141,
-    RePerArme = 142,
+    Soin,
+    Initiative,
+    Prospection,
+    RenvoiDo,
 
-    Soin = 49,
-    Initiative = 44,
-    Prospection = 48,
-    RenvoiDo = 50,
+    Carac29,
+    // idk what that is but some item has it
+    Unknown,
 
-    Carac29 = 29, // idk what that is but some item has it
+    //created Roxx values
 
-    Unknown = 254,
+    // brutality for non-critical hit
+    BrutaliteRetenue,
+    // brutality for critical hit
+    BrutaliteSevere,
+    Critique,
+    DoPerMelee,
+    DoPerDist,
+    DoPerArme,
+    DoPerSo,
+    DoPerFinaux, // seems like its not a stat
 }
 
 impl BaseStat {
@@ -93,13 +97,145 @@ impl BaseStat {
         }
     }
 
-    pub fn from_effects_json_value(value: &serde_json::Value) -> HashMap<BaseStat, i64> {
-        let m: HashMap<BaseStat, i64> = value.as_array().unwrap_or(&mut vec![]).iter().filter(|v| { v["characteristic"].as_i64().unwrap_or(-1) > 0 }).map(|v| {
-            let stat: BaseStat = num::FromPrimitive::from_i64(v["characteristic"].as_i64().unwrap()).unwrap_or(BaseStat::Unknown);
-            let to = v["to"].as_i64().unwrap_or(0);
-            let from = v["from"].as_i64().unwrap_or(0);
-            (stat, max(to, from))
-        }).collect();
-        m
+    pub fn from_dofus_db_val(val: i64) -> BaseStat {
+        match val {
+            1 => BaseStat::PA,
+            23 => BaseStat::PM,
+            19 => BaseStat::Po,
+            26 => BaseStat::Invo,
+
+            10 => BaseStat::Force,
+            13 => BaseStat::Chance,
+            14 => BaseStat::Agilite,
+            15 => BaseStat::Intelligence,
+            25 => BaseStat::Puissance,
+            69 => BaseStat::PuissancePiege,
+            12 => BaseStat::Sagesse,
+            11 => BaseStat::Vitalite,
+
+            16 => BaseStat::DoMulti,
+            70 => BaseStat::DoPiege,
+            90 => BaseStat::DoEau,
+            91 => BaseStat::DoAir,
+            89 => BaseStat::DoFeu,
+            88 => BaseStat::DoTerre,
+            92 => BaseStat::DoNeutre,
+            86 => BaseStat::DoCri,
+            84 => BaseStat::DoPou,
+            125 => BaseStat::DoPerMelee,
+            120 => BaseStat::DoPerDist,
+            122 => BaseStat::DoPerArme,
+            123 => BaseStat::DoPerSo,
+            255 => BaseStat::DoPerFinaux, // seems like its not a stat
+
+            18 => BaseStat::Critique,
+
+            79 => BaseStat::Tacle,
+            78 => BaseStat::Fuite,
+            27 => BaseStat::EsqPA,
+            28 => BaseStat::EsqPM,
+            82 => BaseStat::RetPA,
+            83 => BaseStat::RetPM,
+
+            35 => BaseStat::RePerEau,
+            37 => BaseStat::RePerNeutre,
+            34 => BaseStat::RePerFeu,
+            36 => BaseStat::RePerAir,
+            33 => BaseStat::RePerTerre,
+
+            56 => BaseStat::ReFixEau,
+            58 => BaseStat::ReFixNeutre,
+            55 => BaseStat::ReFixFeu,
+            57 => BaseStat::ReFixAir,
+            54 => BaseStat::ReFixTerre,
+            87 => BaseStat::ReCri,
+            85 => BaseStat::RePou,
+
+            121 => BaseStat::RePerDist,
+            124 => BaseStat::RePerMelee,
+            141 => BaseStat::RePerSo,
+            142 => BaseStat::RePerArme,
+
+            49 => BaseStat::Soin,
+            44 => BaseStat::Initiative,
+            48 => BaseStat::Prospection,
+            50 => BaseStat::RenvoiDo,
+
+            29 => BaseStat::Carac29, // idk what that is but some item has it
+
+            _ => BaseStat::Unknown
+        }
+    }
+
+    pub fn into_dofus_db_val(self) -> i64 {
+        match self {
+            BaseStat::PA => 1,
+            BaseStat::PM => 23,
+            BaseStat::Po => 19,
+            BaseStat::Invo => 26,
+
+            BaseStat::Force => 10,
+            BaseStat::Chance => 13,
+            BaseStat::Agilite => 14,
+            BaseStat::Intelligence => 15,
+            BaseStat::Puissance => 25,
+            BaseStat::PuissancePiege => 69,
+            BaseStat::Sagesse => 12,
+            BaseStat::Vitalite => 11,
+
+            BaseStat::DoMulti => 16,
+            BaseStat::DoPiege => 70,
+            BaseStat::DoEau => 90,
+            BaseStat::DoAir => 91,
+            BaseStat::DoFeu => 89,
+            BaseStat::DoTerre => 88,
+            BaseStat::DoNeutre => 92,
+            BaseStat::DoCri => 86,
+            BaseStat::DoPou => 84,
+            BaseStat::DoPerMelee => 125,
+            BaseStat::DoPerDist => 120,
+            BaseStat::DoPerArme => 122,
+            BaseStat::DoPerSo => 123,
+            BaseStat::DoPerFinaux => 255, // seems like its not a stat
+
+            BaseStat::Critique => 18,
+
+            BaseStat::Tacle => 79,
+            BaseStat::Fuite => 78,
+            BaseStat::EsqPA => 27,
+            BaseStat::EsqPM => 28,
+            BaseStat::RetPA => 82,
+            BaseStat::RetPM => 83,
+
+            BaseStat::RePerEau => 35,
+            BaseStat::RePerNeutre => 37,
+            BaseStat::RePerFeu => 34,
+            BaseStat::RePerAir => 36,
+            BaseStat::RePerTerre => 33,
+
+            BaseStat::ReFixEau => 56,
+            BaseStat::ReFixNeutre => 58,
+            BaseStat::ReFixFeu => 55,
+            BaseStat::ReFixAir => 57,
+            BaseStat::ReFixTerre => 54,
+            BaseStat::ReCri => 87,
+            BaseStat::RePou => 85,
+
+            BaseStat::RePerDist => 121,
+            BaseStat::RePerMelee => 124,
+            BaseStat::RePerSo => 141,
+            BaseStat::RePerArme => 142,
+
+            BaseStat::Soin => 49,
+            BaseStat::Initiative => 44,
+            BaseStat::Prospection => 48,
+            BaseStat::RenvoiDo => 50,
+
+            BaseStat::Carac29 => 29, // idk what that is but some item has it
+
+            BaseStat::Unknown => 254,
+            BaseStat::BrutaliteRetenue => 200,
+            BaseStat::BrutaliteSevere => 201,
+        }
     }
 }

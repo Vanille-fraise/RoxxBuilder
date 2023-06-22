@@ -4,7 +4,6 @@ use std::fs::{File};
 use std::io::{Write};
 use serde_json::{Value};
 use crate::builder::data_mod::data_container::DataContainer;
-use crate::builder::item_mod::item::Item;
 use std::path::Path;
 use crate::builder::item_mod::set::Set;
 
@@ -79,17 +78,17 @@ impl DataLoader {
 
     fn add_data(data_container: &mut DataContainer, json_str: String, item: bool) {
         let dt = serde_json::from_str(json_str.as_str());
-        if dt.is_ok() {
-            let item_list_json: Value = dt.unwrap();
-            let item_list = &item_list_json["data"].as_array();
-            if let Some(itm_lst) = item_list {
-                for itm in *itm_lst {
-                    if item {
-                        data_container.items.push(Item::from_serde_value(itm))
-                    } else {
-                        data_container.sets.push(Set::from_serde_value(itm))
-                    }
-                }
+        if dt.is_err() { return; }
+        let item_list_json: Value = dt.unwrap();
+        let opt_item_list = item_list_json["data"].as_array();
+        if opt_item_list.is_none() { return; }
+        let mut item_list = opt_item_list.unwrap().to_owned();
+        while item_list.len() > 0 {
+            let obj = item_list.pop().unwrap();
+            if item {
+                data_container.add_item_from_value(obj);
+            } else {
+                data_container.sets.push(Set::from_serde_value(&obj));
             }
         }
     }

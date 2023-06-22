@@ -3,6 +3,7 @@ use crate::builder::attack_mod::attack::Attack;
 use crate::builder::item_mod::item::Item;
 use crate::builder::item_mod::set::Set;
 use serde::{Serialize, Deserialize};
+use serde_json::Value;
 use crate::builder::item_mod::item_type::ItemType;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -41,5 +42,17 @@ impl<'a> DataContainer<'a> {
                 item.set = Some(cur_set);
             }
         }
+    }
+
+    pub fn add_item(&mut self, item: Item<'a>){
+        self.items.push(item);
+    }
+    pub fn add_item_from_value(&mut self, value: Value){
+        let item = Item::from_serde_value(&value);
+        self.items.push(item);
+    }
+
+    pub fn add_set(&mut self, set: Set){
+        self.sets.push(set);
     }
 }

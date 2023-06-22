@@ -6,6 +6,7 @@ use roxx_builder::builder::item_mod::base_stat_mod::base_stat::BaseStat;
 use roxx_builder::builder::item_mod::item::Item;
 use roxx_builder::builder::item_mod::item_condition::ItemCondition;
 use roxx_builder::builder::item_mod::item_slot::ItemSlot;
+use roxx_builder::builder::item_mod::stats::Stats;
 
 #[test]
 fn small_split_test() {
@@ -50,7 +51,7 @@ fn same_set_not_same_ring_test() {
 }
 
 fn condition_anneau1_valid_build_test(condition: ItemCondition, stats: HashMap<BaseStat, i64>, expected: bool) {
-    let mut build = Build::new_with(stats);
+    let mut build = Build::new_with_stats(Stats::from_map_stats(stats.iter()));
     let mut item = Item::default();
     item.conditions = condition;
     build.add_item(&item, ItemSlot::SlotAnneau1);

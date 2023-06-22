@@ -23,7 +23,7 @@ fn basic_build_test() {
     let (mut best_item, bad_item1, bad_item2) = (Item::new_from_type(ItemType::Ceinture), Item::new_from_type(ItemType::Ceinture), Item::new_from_type(ItemType::Ceinture));
     let best_id = 123456;
     best_item.id = best_id;
-    best_item.stats.insert(BaseStat::Agilite, 1000);
+    best_item.stats.set_stat(&BaseStat::Agilite, 1000);
     container.items.push(bad_item1);
     container.items.push(best_item);
 
@@ -34,5 +34,5 @@ fn basic_build_test() {
     roxx_builder.calc_type = Max;
     let ev = roxx_builder.find_build(&spell);
     if PRINT { println!("Nb build tested: {} | Nb items in container: {} | Time: {}s", ev.build_evaluated, container.items.len(), ev.search_time.as_secs()); }
-    assert_eq!(ev.build.items.get(&SlotCeinture).unwrap().id, best_id);
+    assert_eq!(ev.build.items[SlotCeinture as usize].id, best_id);
 }

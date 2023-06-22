@@ -9,12 +9,11 @@ pub struct DataManager<'a> {
 }
 
 #[allow(dead_code)]
-
 static mut DATA_MANAGER: DataManager = DataManager { reload: false, path: "resource/data/" };
 
 #[allow(dead_code)]
 impl<'a> DataManager<'a> {
-    async fn get_data() -> DataContainer<'a> {
+    async fn retrive_data() -> DataContainer<'a> {
         let folder_api_call = "call_to_api";
         let folder_data_container = "data_container";
         unsafe {

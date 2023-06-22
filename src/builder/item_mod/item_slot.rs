@@ -2,7 +2,9 @@ use crate::builder::item_mod::item_slot::ItemSlot::{SlotAmulette, SlotAnneau1, S
 use crate::builder::item_mod::item_type::ItemType;
 use serde::{Deserialize, Serialize};
 use strum_macros::{EnumCount as EnumCountMacro, EnumIter};
+
 extern crate num;
+
 use num_derive::FromPrimitive;
 
 #[repr(usize)]
@@ -12,7 +14,6 @@ pub enum ItemSlot {
     SlotBottes,
     SlotBouclier,
     SlotCape,
-    SlotDofus6,
     SlotArme,
     SlotFamilierMonture,
     SlotCeinture,
@@ -23,6 +24,7 @@ pub enum ItemSlot {
     SlotDofus3,
     SlotDofus4,
     SlotDofus5,
+    SlotDofus6,
     SlotDofusPrysmaradite,
 }
 
@@ -58,7 +60,7 @@ impl ItemSlot {
             ItemType::PierreDAme => { vec![SlotArme] }
             ItemType::FiletDeCapture => { vec![SlotArme] }
             ItemType::ArmeMagique => { vec![SlotArme] }
-            _ => { vec![] }
+            ItemType::Unknown => { vec![] }
         }
     }
 }

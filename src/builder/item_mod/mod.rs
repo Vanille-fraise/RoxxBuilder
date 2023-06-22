@@ -4,3 +4,4 @@ pub mod base_stat_mod;
 pub mod item_slot;
 pub mod item_condition;
 pub mod set;
+pub mod stats;
