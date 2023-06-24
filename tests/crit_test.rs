@@ -11,11 +11,13 @@ fn test_crit(build_stats: HashMap<BaseStat, i64>, attack_lines: Vec<DamageLine>,
     let build = Build::new_with_stats(Stats::from_map_stats(build_stats.iter()));
     let mut attack = Attack::default();
     attack.can_crit = true;
-    attack.damages = attack_lines;
-    attack.crit_damages = crit_attack_lines;
+    attack.set_damages(attack_lines);
+    attack.set_crit_damages(crit_attack_lines);
     attack.base_crit = crit_chance;
-
-    assert_eq!(build.evaluate_attack(&attack), expected_damage)
+    assert_eq!(build.evaluate_build_damage(&attack), expected_damage.0);
+    assert_eq!(build.evaluate_build_damage(&attack), expected_damage.0);
+    assert_eq!(build.evaluate_build_damage(&attack), expected_damage.0);
+    // this is not right, can have issue cause brutality is computed based on average
 }
 
 #[test]

@@ -1,16 +1,11 @@
-use std::cmp::{max, min};
 use std::collections::HashMap;
 use string_builder::Builder;
 use crate::builder::attack_mod::attack::Attack;
-use crate::builder::attack_mod::damage_calculation::DamageCalculation;
 use crate::builder::attack_mod::damage_calculation::DamageCalculation::{Average, Max, Min, Minimized};
-use crate::builder::attack_mod::damage_element::DamageElement;
-use crate::builder::attack_mod::damage_position::DamagePosition;
-use crate::builder::attack_mod::damage_source::DamageSource;
 use crate::builder::build_mod::player::Player;
 use crate::builder::item_mod::item::Item;
 use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat;
-use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat::Critique;
+use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat::{BrutaliteRetenue, BrutaliteSevere, Critique};
 use crate::builder::item_mod::item;
 use crate::builder::item_mod::item_slot::ItemSlot;
 use crate::builder::item_mod::item_type::ItemType;
@@ -99,58 +94,23 @@ impl<'a> Build<'a> {
         }
     }
 
-    pub fn evaluate_attack(&self, attack: &Attack) -> (i64, i64, i64) { // todo: if the non crit damage could be higher than the crit damage
-        let crit_chance = min(max(attack.base_crit + self.stats.get_stat(&Critique), 0), 100);
-        let min_eval = self.calculate_one_attack(attack, Min, attack.can_crit && crit_chance >= 100);
-        let max_eval = self.calculate_one_attack(attack, Max, attack.can_crit && crit_chance > 0);
-        let average_eval_low = self.calculate_one_attack(attack, Average, attack.can_crit && crit_chance >= 100);
-        let average_eval_up = self.calculate_one_attack(attack, Average, attack.can_crit && crit_chance > 0);
-        (min_eval, (average_eval_low * (100 - crit_chance) + average_eval_up * crit_chance) / 100, max_eval)
-    }
-
-    fn calculate_one_attack(&self, attack: &Attack, calc_type: DamageCalculation, make_crit: bool) -> i64 {
-        let mut damage: i64 = 0;
-        let damage_lines = if make_crit { &attack.crit_damages } else { &attack.damages };
-        for damage_line in damage_lines {
-            let value: i64 = match calc_type {
-                Minimized => { damage_line.min_value }
-                Min => { damage_line.min_value }
-                Average => { (damage_line.min_value + damage_line.max_value) / 2 }
-                Max => { damage_line.max_value }
-            };
-            match damage_line.damage_element {
-                DamageElement::DamageAir => damage += self.one_value_damage(BaseStat::Agilite, BaseStat::DoAir, value, attack, make_crit),
-                DamageElement::DamageTerre => damage += self.one_value_damage(BaseStat::Force, BaseStat::DoTerre, value, attack, make_crit),
-                DamageElement::DamageEau => damage += self.one_value_damage(BaseStat::Chance, BaseStat::DoEau, value, attack, make_crit),
-                DamageElement::DamageFeu => damage += self.one_value_damage(BaseStat::Intelligence, BaseStat::DoFeu, value, attack, make_crit),
-                DamageElement::DamageNeutre => damage += self.one_value_damage(BaseStat::Force, BaseStat::DoNeutre, value, attack, make_crit),
-            }
+    pub fn evaluate_build_damage(&self, attack: &Attack) -> i64 {
+        let crit = match (attack.damage_calculation(), attack.can_crit) {
+            (_, false) | (Minimized, true) => 0,
+            (Min, true) => if self.stats.get_stat(&Critique) < 100 { 0 } else { 100 },
+            (Average, true) => self.stats.get_stat(&Critique),
+            (Max, true) => if self.stats.get_stat(&Critique) > 0 { 100 } else { 0 },
         };
-        damage = damage * (100 + self.stats.get_stat(&if attack.damage_source == DamageSource::Sort { BaseStat::DoPerSo } else { BaseStat::DoPerArme })) / 100;
-        damage = damage * (100 + self.stats.get_stat(&if attack.damage_position == DamagePosition::Distance { BaseStat::DoPerDist } else { BaseStat::DoPerMelee })) / 100;
-        damage = damage * (100 + self.stats.get_stat(&BaseStat::DoPerFinaux)) / 100;
+        let mut damage: i64 = match crit {
+            0 => self.stats.get_stat(&BrutaliteRetenue),
+            100 => self.stats.get_stat(&BrutaliteSevere),
+            _ => (self.stats.get_stat(&Critique) * crit + self.stats.get_stat(&BrutaliteRetenue) * (100 - crit)) / 100,
+        };
+        damage += attack.brutality_damage();
+        damage *= (100 + self.stats.get_stat(&BaseStat::BrutaliteLocalisee)) * (100 + self.stats.get_stat(&BaseStat::DoPerFinaux)) * (100 + self.stats.get_stat(&BaseStat::BrutaliteMystique));
+        damage /= 100 * 100 * 100;
         damage
     }
-
-    fn one_value_damage(&self, stat: BaseStat, damage: BaseStat, damage_value: i64, attack: &Attack, make_crit: bool) -> i64 {
-        let mut cur_damage: i64 = 0;
-        cur_damage += self.stats.get_stat(&damage) + self.stats.get_stat(&BaseStat::DoMulti);
-        cur_damage += ((self.stats.get_stat(&stat) + self.stats.get_stat(&BaseStat::Puissance)) / 100 + 1) * damage_value;
-        if attack.piege {
-            cur_damage += self.stats.get_stat(&BaseStat::DoPiege);
-            cur_damage += self.stats.get_stat(&BaseStat::PuissancePiege) / 100 * damage_value;
-        }
-
-        if make_crit {
-            cur_damage += self.stats.get_stat(&BaseStat::DoCri);
-        }
-
-        cur_damage *= self.stats.get_stat(&BaseStat::DoPerFinaux) / 100 + 1;
-        cur_damage *= self.stats.get_stat(if attack.damage_position == DamagePosition::Distance { &BaseStat::DoPerDist } else { &BaseStat::DoPerMelee }) / 100 + 1;
-        cur_damage *= self.stats.get_stat(if attack.damage_source == DamageSource::Sort { &BaseStat::DoPerSo } else { &BaseStat::DoPerArme }) / 100 + 1;
-        cur_damage
-    }
-
     pub fn new() -> Self {
         Build {
             items: item::EMPTY_ITEMS.each_ref(),

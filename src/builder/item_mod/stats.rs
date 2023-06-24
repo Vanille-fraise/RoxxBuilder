@@ -4,21 +4,24 @@ use serde::{Deserialize, Serialize};
 extern crate serde;
 
 use serde_big_array::BigArray;
+use crate::builder::attack_mod::attack::Attack;
+use crate::builder::attack_mod::damage_calculation::DamageCalculation;
+use crate::builder::attack_mod::damage_element::DamageElement;
 use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat;
 
 #[derive(PartialEq, Eq, Deserialize, Serialize, Debug, Clone)]
 pub struct Stats {
     #[serde(with = "BigArray")]
-    base_stats: [i64; 49],
-    brutality_stats: [i64; 8],
+    base_stats: [i64; 53],
+    brutality_stats: [i64; 6],
 }
 
 impl Stats {
     pub const fn new_empty() -> Self {
         Stats {
-            base_stats: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            base_stats: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            brutality_stats: [0, 0, 0, 0, 0, 0, 0, 0],
+            brutality_stats: [0, 0, 0, 0, 0, 0],
         }
     }
     pub fn from_effects_json_value(value: &serde_json::Value) -> Self {
@@ -84,5 +87,39 @@ impl Stats {
             stats.set_stat(&stat.clone(), *val);
         }
         return stats;
+    }
+
+    pub fn reset_brutality(&mut self, attack: &Attack, calc_type: &DamageCalculation) {
+        let lines_no_crit: Vec<(&DamageElement, i64)> = match calc_type {
+            DamageCalculation::Minimized => { attack.damages().iter().map(|l| { (&l.damage_element, l.min_value) }).collect() }
+            DamageCalculation::Min => { attack.damages().iter().map(|l| { (&l.damage_element, l.min_value) }).collect() }
+            DamageCalculation::Average => { attack.damages().iter().map(|l| { (&l.damage_element, (l.min_value + l.max_value) / 2) }).collect() }
+            DamageCalculation::Max => { attack.damages().iter().map(|l| { (&l.damage_element, l.max_value) }).collect() }
+        };
+        let lines_crit: Vec<(&DamageElement, i64)> = match calc_type {
+            DamageCalculation::Minimized => { attack.crit_damages().iter().map(|l| { (&l.damage_element, l.min_value) }).collect() }
+            DamageCalculation::Min => { attack.crit_damages().iter().map(|l| { (&l.damage_element, l.min_value) }).collect() }
+            DamageCalculation::Average => { attack.crit_damages().iter().map(|l| { (&l.damage_element, (l.min_value + l.max_value) / 2) }).collect() }
+            DamageCalculation::Max => { attack.crit_damages().iter().map(|l| { (&l.damage_element, l.max_value) }).collect() }
+        };
+        let lines_no_crit_len = lines_no_crit.len();
+        for (i, line) in [lines_no_crit, lines_crit].concat().iter().enumerate() {
+            let mut cur_brut = 0;
+            cur_brut += self.get_stat(&line.0.damage_based_on()) * 100;
+            cur_brut += self.get_stat(&line.0.stat_based_on()) * line.1;
+            cur_brut += self.get_stat(&BaseStat::DoMulti) * 100;
+            cur_brut += self.get_stat(&BaseStat::Puissance) * line.1;
+            if attack.piege {
+                cur_brut += self.get_stat(&BaseStat::DoPiege) * 100;
+                cur_brut += self.get_stat(&BaseStat::PuissancePiege) * line.1;
+            }
+            // no crit line
+            if i < lines_no_crit_len {
+                self.set_stat(&BaseStat::BrutaliteRetenue, self.get_stat(&BaseStat::BrutaliteRetenue) + cur_brut / 100);
+            } else {
+                cur_brut += self.get_stat(&BaseStat::DoCri) * 100;
+                self.set_stat(&BaseStat::BrutaliteRetenue, self.get_stat(&BaseStat::BrutaliteRetenue) + cur_brut / 100);
+            }
+        }
     }
 }

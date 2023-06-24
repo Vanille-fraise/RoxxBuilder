@@ -11,14 +11,14 @@ use crate::builder::item_mod::stats::Stats;
 pub struct ItemEstimator;
 
 impl ItemEstimator {
-    pub fn roxx_based_estimation<'a>(container: &'a DataContainer, attack: &'a Attack) -> Vec<&'a Item<'a>> {
+    pub fn roxx_based_estimation<'a>(container: &'a DataContainer, attack: &Attack) -> Vec<&'a Item<'a>> {
         let mut res = vec![];
         let mut build = Build::new_with_stats(Stats::from_map_stats(HashMap::from([(BaseStat::Puissance, 1400i64), (BaseStat::DoMulti, 160)]).iter()));
         let mut estimations = vec![];
         let used_slot = ItemSlot::SlotDofusPrysmaradite;
         for itm in &container.items {
             build.add_item(itm, used_slot.clone());
-            estimations.push((build.evaluate_attack(attack).1, itm));
+            estimations.push((build.evaluate_build_damage(attack), itm));
             build.remove_item(&used_slot);
         }
         estimations.sort_by(|e1, e2| e2.0.cmp(&e1.0));

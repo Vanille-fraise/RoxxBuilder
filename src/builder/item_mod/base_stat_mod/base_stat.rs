@@ -68,17 +68,21 @@ pub enum BaseStat {
     // idk what that is but some item has it
     Unknown,
 
+    DoPerMelee,
+    DoPerDist,
+    DoPerArme,
+    DoPerSo,
     //created Roxx values
 
     // brutality for non-critical hit
     BrutaliteRetenue,
     // brutality for critical hit
     BrutaliteSevere,
+    // brutality for do dist or do melee
+    BrutaliteLocalisee,
+    // brutality for do so or do arme
+    BrutaliteMystique,
     Critique,
-    DoPerMelee,
-    DoPerDist,
-    DoPerArme,
-    DoPerSo,
     DoPerFinaux, // seems like its not a stat
 }
 
@@ -236,6 +240,8 @@ impl BaseStat {
             BaseStat::Unknown => 254,
             BaseStat::BrutaliteRetenue => 200,
             BaseStat::BrutaliteSevere => 201,
+            BaseStat::BrutaliteLocalisee => 202,
+            BaseStat::BrutaliteMystique => 203,
         }
     }
 }

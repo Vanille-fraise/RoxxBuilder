@@ -12,38 +12,45 @@ use crate::builder::item_mod::set::Set;
 
 #[allow(dead_code)]
 pub struct RoxxBuildFinder<'a> {
-    data: &'a DataContainer<'a>,
+    data: DataContainer<'a>,
     pub estimator: Option<fn(container: &'a DataContainer, attack: &'a Attack) -> Vec<&'a Item<'a>>>,
     pub time_limit: u128,
     pub calc_type: DamageCalculation,
+    attack: &'a Attack,
+    pub track_data: bool,
 }
 
 #[allow(dead_code)]
 impl<'a> RoxxBuildFinder<'a> {
-    pub fn find_build(&self, attack: &'a Attack) -> DamageEval { // well, could improve it
+    pub fn find_build(&'a self) -> DamageEval { // well, could improve it
+        let now = Instant::now();
         let item_ref: Vec<&Item> = if let Some(f) = self.estimator
-        { f(self.data, attack) } else { self.data.items.iter().collect() };
+        { f(&self.data, &self.attack) } else { self.data.items.iter().collect() };
         let set_ref: Vec<&Set> = self.data.sets.iter().collect();
         let mut bg = BuildGenerator::new(item_ref, set_ref);
-        let mut best_eval: (i64, i64, i64) = (i64::MIN, i64::MIN, i64::MIN);
+        let mut best_eval = i64::MIN;
         let mut best_build_id: [i64; 16] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
         let mut nb_evaluated_builds = 0;
         let mut spares = 0;
-        let now = Instant::now();
-        let mut seen: HashSet<i128> = HashSet::new();
+        let mut seen: HashSet<String> = HashSet::new();
         while let Some(build) = bg.next_build() {
-            let eval = build.evaluate_attack(attack);
+            let eval = build.evaluate_build_damage(&self.attack);
+            if self.track_data {
+                let ids_sum = build.items.iter().map(|i| { i.id.to_string() }).fold("".to_string(), |mut s1, s2| {
+                    s1.push_str(&s2);
+                    s1
+                });
+                if !seen.insert(ids_sum) { spares += 1; }
+            }
             nb_evaluated_builds += 1;
-            let ids_sum: i128 = build.items.iter().map(|i| i.id as i128).sum();
-            if !seen.insert(ids_sum) { spares += 1; }
-            if (self.calc_type == DamageCalculation::Min && eval.0 > best_eval.0)
-                || (self.calc_type == DamageCalculation::Minimized && eval.0 > best_eval.0)
-                || (self.calc_type == DamageCalculation::Average && eval.1 > best_eval.1)
-                || (self.calc_type == DamageCalculation::Max && eval.2 > best_eval.2) {
+            if eval > best_eval {
                 best_eval = eval;
                 best_build_id = build.get_item_id();
             }
-            if now.elapsed().as_nanos() > self.time_limit { break; }
+            if self.time_limit > 0 && nb_evaluated_builds % 2048 == 0
+                && now.elapsed().as_nanos() > self.time_limit {
+                break;
+            }
         }
         let mut final_build = Build::new();
         let fin_item_id = bg.get_last_item_id();
@@ -62,12 +69,33 @@ impl<'a> RoxxBuildFinder<'a> {
         return DamageEval::new(best_eval, final_build, nb_evaluated_builds, now.elapsed(), spares, fin_item);
     }
 
-    pub fn new(data: &'a DataContainer<'a>) -> Self {
+    pub fn new(mut data: DataContainer<'a>, attack: &'a Attack) -> Self {
+        data.reset_brutality(attack, &DamageCalculation::Average);
         RoxxBuildFinder {
             data,
             estimator: None,
-            time_limit: 3 * 1_000_000_000, // en_nano
+            time_limit: 180 * 1_000_000_000, // en_nano
             calc_type: DamageCalculation::Average,
+            attack,
+            track_data: true,
         }
+    }
+
+    pub fn set_attack(&mut self, attack: &'a Attack) {
+        self.set_brutality_estimation(attack, self.calc_type);
+    }
+
+    pub fn set_calc_type(&mut self, calc_type: DamageCalculation) {
+        self.set_brutality_estimation(self.attack, calc_type);
+    }
+
+    pub fn set_brutality_estimation(&mut self, attack: &'a Attack, calc_type: DamageCalculation) {
+        self.attack = attack;
+        self.calc_type = calc_type;
+        self.data.reset_brutality(attack, &self.calc_type);
+    }
+
+    pub fn get_data_container(&self) -> &DataContainer {
+        &self.data
     }
 }
