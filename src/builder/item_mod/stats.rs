@@ -31,7 +31,7 @@ impl Stats {
             let stat = BaseStat::from_dofus_db_val(v["characteristic"].as_i64().unwrap());
             let to = v["to"].as_i64().unwrap_or(0);
             let from = v["from"].as_i64().unwrap_or(0);
-            stats.base_stats[stat as usize] = max(to, from);
+            stats.set_stat(&stat, max(to, from));
         });
         stats
     }
@@ -110,7 +110,6 @@ impl Stats {
             } else {
                 self.set_stat(&BaseStat::BrutaliteRetenue, self.get_stat(&BaseStat::BrutaliteRetenue) + cur_brut / 100);
             }
-            println!("Brutality {}: {}", if is_crit { "crit" } else { "no crit" }, cur_brut / 100);
         }
         self.set_stat(&BaseStat::BrutaliteLocalisee, self.get_stat(
             if attack.damage_position == DamagePosition::Distance { &DoPerDist } else { &DoPerMelee }));

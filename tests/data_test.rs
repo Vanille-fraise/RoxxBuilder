@@ -1,11 +1,13 @@
 use std::error::Error;
 use serde::{Deserialize, Serialize};
 use roxx_builder::builder::data_mod::data_loader::DataLoader;
+use roxx_builder::builder::data_mod::data_manager::DataManager;
 use roxx_builder::builder::item_mod::item::Item;
 use roxx_builder::builder::item_mod::item_type::ItemType;
 
 
 const RELOAD: bool = true;
+const MAKE_API_CALL: bool = false;
 
 #[derive(PartialEq, Eq, Deserialize, Serialize, Debug)]
 struct TestJson {
@@ -56,11 +58,15 @@ fn load_small_data_container() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-#[test]
-fn load_whole_data_container() -> Result<(), Box<dyn Error>> {
+#[actix_rt::test]
+async fn load_whole_data_container() -> Result<(), Box<dyn Error>> {
+    if MAKE_API_CALL {
+        let api_container = DataManager::retrieve_data().await;
+        assert!(DataLoader::save_data_container("tests/test_files/containers/whole_data_container_to_read".to_string(), api_container).is_ok());
+    }
     if RELOAD {
-        let container = DataLoader::from_api_response_files(Some("tests/test_files/full_api_calls".to_string()), None)?;
-        assert!(DataLoader::save_data_container("tests/test_files/containers/whole_data_container_to_read".to_string(), container).is_ok());
+        let brut_file_container = DataLoader::from_api_response_files(Some("tests/test_files/full_api_calls".to_string()), None)?;
+        assert!(DataLoader::save_data_container("tests/test_files/containers/whole_data_container_to_read".to_string(), brut_file_container).is_ok());
     }
     let container = DataLoader::from_data_container_file("tests/test_files/containers/whole_data_container_to_read".to_string());
     assert!(container.is_ok());
@@ -85,3 +91,5 @@ fn small_set_gen_from_files() -> Result<(), Box<dyn Error>> {
     assert_eq!(container.unwrap().sets.len(), 150);
     Ok(())
 }
+
+

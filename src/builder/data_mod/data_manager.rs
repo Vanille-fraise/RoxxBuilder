@@ -2,22 +2,19 @@ use std::path::Path;
 use crate::builder::data_mod::data_container::DataContainer;
 use crate::builder::data_mod::data_loader::DataLoader;
 
-#[allow(dead_code)]
 pub struct DataManager<'a> {
     reload: bool,
     path: &'a str,
 }
 
-#[allow(dead_code)]
-static mut DATA_MANAGER: DataManager = DataManager { reload: false, path: "resource/data/" };
+static mut DATA_MANAGER: DataManager = DataManager { reload: true, path: "resource/data/" };
 
-#[allow(dead_code)]
+
 impl<'a> DataManager<'a> {
-    async fn retrive_data() -> DataContainer<'a> {
+    pub async fn retrieve_data() -> DataContainer<'a> {
         let folder_api_call = "call_to_api";
         let folder_data_container = "data_container";
         unsafe {
-
             let res_dc = DataLoader::from_data_container_file(Path::new(DATA_MANAGER.path).join(folder_data_container).to_string_lossy().to_string());
             let mut dc = res_dc.unwrap_or(
                 DataLoader::from_api_response_files(Some(Path::new(DATA_MANAGER.path).join(folder_api_call).join("items").to_string_lossy().to_string()),
