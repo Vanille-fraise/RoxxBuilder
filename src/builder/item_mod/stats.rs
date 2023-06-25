@@ -5,9 +5,10 @@ extern crate serde;
 
 use serde_big_array::BigArray;
 use crate::builder::attack_mod::attack::Attack;
-use crate::builder::attack_mod::damage_calculation::DamageCalculation;
-use crate::builder::attack_mod::damage_element::DamageElement;
+use crate::builder::attack_mod::damage_position::DamagePosition;
+use crate::builder::attack_mod::damage_source::DamageSource;
 use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat;
+use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat::{DoPerArme, DoPerDist, DoPerMelee, DoPerSo};
 
 #[derive(PartialEq, Eq, Deserialize, Serialize, Debug, Clone)]
 pub struct Stats {
@@ -89,37 +90,39 @@ impl Stats {
         return stats;
     }
 
-    pub fn reset_brutality(&mut self, attack: &Attack, calc_type: &DamageCalculation) {
-        let lines_no_crit: Vec<(&DamageElement, i64)> = match calc_type {
-            DamageCalculation::Minimized => { attack.damages().iter().map(|l| { (&l.damage_element, l.min_value) }).collect() }
-            DamageCalculation::Min => { attack.damages().iter().map(|l| { (&l.damage_element, l.min_value) }).collect() }
-            DamageCalculation::Average => { attack.damages().iter().map(|l| { (&l.damage_element, (l.min_value + l.max_value) / 2) }).collect() }
-            DamageCalculation::Max => { attack.damages().iter().map(|l| { (&l.damage_element, l.max_value) }).collect() }
-        };
-        let lines_crit: Vec<(&DamageElement, i64)> = match calc_type {
-            DamageCalculation::Minimized => { attack.crit_damages().iter().map(|l| { (&l.damage_element, l.min_value) }).collect() }
-            DamageCalculation::Min => { attack.crit_damages().iter().map(|l| { (&l.damage_element, l.min_value) }).collect() }
-            DamageCalculation::Average => { attack.crit_damages().iter().map(|l| { (&l.damage_element, (l.min_value + l.max_value) / 2) }).collect() }
-            DamageCalculation::Max => { attack.crit_damages().iter().map(|l| { (&l.damage_element, l.max_value) }).collect() }
-        };
-        let lines_no_crit_len = lines_no_crit.len();
-        for (i, line) in [lines_no_crit, lines_crit].concat().iter().enumerate() {
+    pub fn reset_brutality(&mut self, attack: &Attack) {
+        self.set_stat(&BaseStat::BrutaliteRetenue, 0);
+        self.set_stat(&BaseStat::BrutaliteSevere, 0);
+        let all_lines = attack.get_every_damage_lines();
+        for (elem, damage, is_crit) in all_lines {
             let mut cur_brut = 0;
-            cur_brut += self.get_stat(&line.0.damage_based_on()) * 100;
-            cur_brut += self.get_stat(&line.0.stat_based_on()) * line.1;
+            cur_brut += self.get_stat(&elem.damage_based_on()) * 100;
+            cur_brut += self.get_stat(&elem.stat_based_on()) * damage;
             cur_brut += self.get_stat(&BaseStat::DoMulti) * 100;
-            cur_brut += self.get_stat(&BaseStat::Puissance) * line.1;
+            cur_brut += self.get_stat(&BaseStat::Puissance) * damage;
             if attack.piege {
                 cur_brut += self.get_stat(&BaseStat::DoPiege) * 100;
-                cur_brut += self.get_stat(&BaseStat::PuissancePiege) * line.1;
+                cur_brut += self.get_stat(&BaseStat::PuissancePiege) * damage;
             }
-            // no crit line
-            if i < lines_no_crit_len {
-                self.set_stat(&BaseStat::BrutaliteRetenue, self.get_stat(&BaseStat::BrutaliteRetenue) + cur_brut / 100);
-            } else {
+            if is_crit {
                 cur_brut += self.get_stat(&BaseStat::DoCri) * 100;
+                self.set_stat(&BaseStat::BrutaliteSevere, self.get_stat(&BaseStat::BrutaliteSevere) + cur_brut / 100);
+            } else {
                 self.set_stat(&BaseStat::BrutaliteRetenue, self.get_stat(&BaseStat::BrutaliteRetenue) + cur_brut / 100);
             }
+            println!("Brutality {}: {}", if is_crit { "crit" } else { "no crit" }, cur_brut / 100);
         }
+        self.set_stat(&BaseStat::BrutaliteLocalisee, self.get_stat(
+            if attack.damage_position == DamagePosition::Distance { &DoPerDist } else { &DoPerMelee }));
+        self.set_stat(&BaseStat::BrutaliteMystique, self.get_stat(
+            if attack.damage_source == DamageSource::Sort { &DoPerSo } else { &DoPerArme }));
+    }
+
+    pub fn base_stats(&self) -> [i64; 53] {
+        self.base_stats
+    }
+
+    pub fn brutality_stats(&self) -> [i64; 6] {
+        self.brutality_stats
     }
 }

@@ -15,7 +15,7 @@ pub struct RoxxBuildFinder<'a> {
     data: DataContainer<'a>,
     pub estimator: Option<fn(container: &'a DataContainer, attack: &'a Attack) -> Vec<&'a Item<'a>>>,
     pub time_limit: u128,
-    pub calc_type: DamageCalculation,
+    calc_type: DamageCalculation,
     attack: &'a Attack,
     pub track_data: bool,
 }
@@ -23,7 +23,6 @@ pub struct RoxxBuildFinder<'a> {
 #[allow(dead_code)]
 impl<'a> RoxxBuildFinder<'a> {
     pub fn find_build(&'a self) -> DamageEval { // well, could improve it
-        let now = Instant::now();
         let item_ref: Vec<&Item> = if let Some(f) = self.estimator
         { f(&self.data, &self.attack) } else { self.data.items.iter().collect() };
         let set_ref: Vec<&Set> = self.data.sets.iter().collect();
@@ -33,21 +32,24 @@ impl<'a> RoxxBuildFinder<'a> {
         let mut nb_evaluated_builds = 0;
         let mut spares = 0;
         let mut seen: HashSet<String> = HashSet::new();
+        let now = Instant::now();
         while let Some(build) = bg.next_build() {
             let eval = build.evaluate_build_damage(&self.attack);
             if self.track_data {
-                let ids_sum = build.items.iter().map(|i| { i.id.to_string() }).fold("".to_string(), |mut s1, s2| {
+                let ids_concat = build.items.iter().map(|i| { i.id.to_string() }).fold("".to_string(), |mut s1, s2| {
                     s1.push_str(&s2);
                     s1
                 });
-                if !seen.insert(ids_sum) { spares += 1; }
+                if !seen.insert(ids_concat.clone()) {
+                    spares += 1;
+                }
             }
             nb_evaluated_builds += 1;
             if eval > best_eval {
                 best_eval = eval;
                 best_build_id = build.get_item_id();
             }
-            if self.time_limit > 0 && nb_evaluated_builds % 2048 == 0
+            if self.time_limit > 0 && nb_evaluated_builds % 256 == 0
                 && now.elapsed().as_nanos() > self.time_limit {
                 break;
             }
@@ -70,7 +72,7 @@ impl<'a> RoxxBuildFinder<'a> {
     }
 
     pub fn new(mut data: DataContainer<'a>, attack: &'a Attack) -> Self {
-        data.reset_brutality(attack, &DamageCalculation::Average);
+        data.reset_brutality(attack);
         RoxxBuildFinder {
             data,
             estimator: None,
@@ -92,7 +94,7 @@ impl<'a> RoxxBuildFinder<'a> {
     pub fn set_brutality_estimation(&mut self, attack: &'a Attack, calc_type: DamageCalculation) {
         self.attack = attack;
         self.calc_type = calc_type;
-        self.data.reset_brutality(attack, &self.calc_type);
+        self.data.reset_brutality(attack);
     }
 
     pub fn get_data_container(&self) -> &DataContainer {

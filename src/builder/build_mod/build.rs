@@ -1,5 +1,8 @@
+use std::cmp::{max, min};
 use std::collections::HashMap;
+use num_traits::FromPrimitive;
 use string_builder::Builder;
+use strum::IntoEnumIterator;
 use crate::builder::attack_mod::attack::Attack;
 use crate::builder::attack_mod::damage_calculation::DamageCalculation::{Average, Max, Min, Minimized};
 use crate::builder::build_mod::player::Player;
@@ -97,16 +100,15 @@ impl<'a> Build<'a> {
     pub fn evaluate_build_damage(&self, attack: &Attack) -> i64 {
         let crit = match (attack.damage_calculation(), attack.can_crit) {
             (_, false) | (Minimized, true) => 0,
-            (Min, true) => if self.stats.get_stat(&Critique) < 100 { 0 } else { 100 },
-            (Average, true) => self.stats.get_stat(&Critique),
-            (Max, true) => if self.stats.get_stat(&Critique) > 0 { 100 } else { 0 },
+            (Min, true) => if self.stats.get_stat(&Critique) + attack.base_crit < 100 { 0 } else { 100 },
+            (Average, true) => max(min(self.stats.get_stat(&Critique) + attack.base_crit, 100), 0),
+            (Max, true) => if self.stats.get_stat(&Critique) + attack.base_crit > 0 { 100 } else { 0 },
         };
         let mut damage: i64 = match crit {
-            0 => self.stats.get_stat(&BrutaliteRetenue),
-            100 => self.stats.get_stat(&BrutaliteSevere),
-            _ => (self.stats.get_stat(&Critique) * crit + self.stats.get_stat(&BrutaliteRetenue) * (100 - crit)) / 100,
+            0 => self.stats.get_stat(&BrutaliteRetenue) + attack.brutality_damage(),
+            100 => self.stats.get_stat(&BrutaliteSevere) + attack.brutality_crit_damage(),
+            _ => ((self.stats.get_stat(&BrutaliteSevere) + attack.brutality_crit_damage()) * crit + (self.stats.get_stat(&BrutaliteRetenue) + attack.brutality_damage()) * (100 - crit)) / 100,
         };
-        damage += attack.brutality_damage();
         damage *= (100 + self.stats.get_stat(&BaseStat::BrutaliteLocalisee)) * (100 + self.stats.get_stat(&BaseStat::DoPerFinaux)) * (100 + self.stats.get_stat(&BaseStat::BrutaliteMystique));
         damage /= 100 * 100 * 100;
         damage
@@ -125,17 +127,10 @@ impl<'a> Build<'a> {
     }
 
     pub fn new_with_items(items: [&'a Item<'a>; 16]) -> Self {
-        let mut build = Build { items: item::EMPTY_ITEMS.each_ref(), stats: Stats::new_empty(), player: None, sets: Default::default() };
-        'item_loop: for item in items {
-            let slots = ItemSlot::corresponding_to_item_type(&item.item_type);
-            for slot in slots.iter() {
-                if item.id <= 15 {
-                    build.add_item(item, *slot);
-                    continue 'item_loop;
-                }
-            }
-            if slots.len() > 0 {
-                build.add_item(item, slots[0]);
+        let mut build = Build::new();
+        for (i, item) in items.iter().enumerate() {
+            if item.id > 15 {
+                build.add_item(item, ItemSlot::from_usize(i).unwrap());
             }
         }
         build
@@ -177,6 +172,15 @@ impl<'a> Build<'a> {
 
     pub fn get_item_id(&self) -> [i64; 16] {
         self.items.map(|itm| { itm.id })
+    }
+
+    /// function to use ONLY for test purposes, never use it in real situation
+    pub fn recompute_all_stats(&mut self) {
+        BaseStat::iter().for_each(|bs| self.compute_one_stat(&bs));
+    }
+    /// function to use ONLY for test purposes, never use it in real situation
+    fn compute_one_stat(&mut self, stat: &BaseStat) {
+        self.stats.set_stat(stat, self.items.map(|item| item.stats.get_stat(stat)).iter().sum());
     }
 }
 

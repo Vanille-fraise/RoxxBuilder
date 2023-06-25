@@ -3,6 +3,7 @@ use crate::builder::attack_mod::damage_position::DamagePosition;
 use crate::builder::attack_mod::damage_source::DamageSource;
 use serde::{Serialize, Deserialize};
 use crate::builder::attack_mod::damage_calculation::DamageCalculation;
+use crate::builder::attack_mod::damage_element::DamageElement;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Attack {
@@ -14,6 +15,7 @@ pub struct Attack {
     pub can_crit: bool,
     pub base_crit: i64,
     brutality_damage: i64,
+    brutality_crit_damage: i64,
     damage_calculation: DamageCalculation,
 }
 
@@ -28,6 +30,7 @@ impl Attack {
             can_crit,
             base_crit,
             brutality_damage: -1,
+            brutality_crit_damage: -1,
             damage_calculation,
         };
         attack.compute_brutality_damage();
@@ -44,6 +47,7 @@ impl Attack {
             can_crit: false,
             base_crit: 0,
             brutality_damage: 0,
+            brutality_crit_damage: 0,
             damage_calculation: DamageCalculation::Average,
         }
     }
@@ -80,12 +84,33 @@ impl Attack {
     }
 
     pub fn compute_brutality_damage(&mut self) {
-        let all_lines = self.damages.iter().chain(&self.crit_damages);
         self.brutality_damage = match self.damage_calculation {
-            DamageCalculation::Minimized => {all_lines.map(|l| { l.min_value }).sum() }
-            DamageCalculation::Min => { all_lines.map(|l| { l.min_value }).sum() }
-            DamageCalculation::Average => { all_lines.map(|l| { (l.min_value + l.max_value) / 2 }).sum() }
-            DamageCalculation::Max => { all_lines.map(|l| { l.max_value }).sum() }
+            DamageCalculation::Minimized | DamageCalculation::Min => { self.damages.iter().map(|l| { l.min_value }).sum() }
+            DamageCalculation::Average => { self.damages.iter().map(|l| { (l.min_value + l.max_value) / 2 }).sum() }
+            DamageCalculation::Max => { self.damages.iter().map(|l| { l.max_value }).sum() }
         };
+        self.brutality_crit_damage = match self.damage_calculation {
+            DamageCalculation::Minimized | DamageCalculation::Min => { self.crit_damages.iter().map(|l| { l.min_value }).sum() }
+            DamageCalculation::Average => { self.crit_damages.iter().map(|l| { (l.min_value + l.max_value) / 2 }).sum() }
+            DamageCalculation::Max => { self.crit_damages.iter().map(|l| { l.max_value }).sum() }
+        };
+    }
+    pub fn brutality_crit_damage(&self) -> i64 {
+        self.brutality_crit_damage
+    }
+
+    pub fn get_every_damage_lines(&self) -> Vec<(&DamageElement, i64, bool)> {
+        let mut result = vec![];
+        let all_lines = [(&self.damages, false), (&self.crit_damages, true)];
+        for (lines, is_crit) in all_lines {
+            let mut cur_res: Vec<(&DamageElement, i64, bool)> = match self.damage_calculation() {
+                DamageCalculation::Minimized => { lines.iter().map(|l| { (&l.damage_element, l.min_value, is_crit) }).collect() }
+                DamageCalculation::Min => { lines.iter().map(|l| { (&l.damage_element, l.min_value, is_crit) }).collect() }
+                DamageCalculation::Average => { lines.iter().map(|l| { (&l.damage_element, (l.min_value + l.max_value) / 2, is_crit) }).collect() }
+                DamageCalculation::Max => { lines.iter().map(|l| { (&l.damage_element, l.max_value, is_crit) }).collect() }
+            };
+            result.append(&mut cur_res);
+        }
+        result
     }
 }

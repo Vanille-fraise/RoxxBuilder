@@ -4,7 +4,6 @@ use crate::builder::item_mod::item::Item;
 use crate::builder::item_mod::set::Set;
 use serde::{Serialize, Deserialize};
 use serde_json::Value;
-use crate::builder::attack_mod::damage_calculation::DamageCalculation;
 use crate::builder::item_mod::item_type::ItemType;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -58,9 +57,9 @@ impl<'a> DataContainer<'a> {
         self.sets.push(set);
     }
 
-    pub fn reset_brutality(&mut self, attack: &Attack, calc_type: &DamageCalculation) {
+    pub fn reset_brutality(&mut self, attack: &Attack) {
         for item in self.items.iter_mut() {
-            item.stats.reset_brutality(attack, calc_type);
+            item.stats.reset_brutality(attack);
         }
     }
 }

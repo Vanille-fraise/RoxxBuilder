@@ -1,10 +1,14 @@
-use rand::random;
+use rand;
+use rand::prelude::*;
+use rand::Rng; // 0.8.5
+
 use crate::builder::item_mod::item_type::ItemType;
 use serde::{Deserialize, Serialize};
 use crate::builder::item_mod::item_condition::ItemCondition;
 use crate::builder::item_mod::item_type::ItemType::Amulette;
 use crate::builder::item_mod::set::Set;
 use crate::builder::item_mod::stats::Stats;
+
 
 extern crate serde;
 extern crate serde_json;
@@ -66,7 +70,7 @@ impl<'a> Item<'a> {
             set_id: -1,
             set: None,
             conditions: ItemCondition::None,
-            id: random(),
+            id: thread_rng().gen_range(17..i64::MAX),
         }
     }
     pub fn new_with_stats(stats: Stats) -> Self {

@@ -32,7 +32,7 @@ fn basic_build_test() {
     container.clear_unknown_type();
     let spell = Attack::new(vec![DamageLine::new(DamageAir, 14, 24)], vec![DamageLine::new(DamageAir, 19, 29)], Sort, Distance, true, 20, DamageCalculation::Average);
     let mut roxx_builder = RoxxBuildFinder::new(container, &spell);
-    roxx_builder.calc_type = Max;
+    roxx_builder.set_calc_type(Max);
     let ev = roxx_builder.find_build();
     if PRINT { println!("Nb build tested: {} | Nb items in container: {} | Time: {}s", ev.build_evaluated, roxx_builder.get_data_container().items.len(), ev.search_time.as_secs()); }
     assert_eq!(ev.build.items[SlotCeinture as usize].id, best_id);
