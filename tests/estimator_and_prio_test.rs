@@ -44,7 +44,7 @@ fn full_crap_find_right_comb() {
     let time_limit = 5_000_000_000u128;
     rb.time_limit = time_limit;
     rb.estimator = Some(ItemEstimator::roxx_based_estimation);
-    rb.track_data = false;
+    rb.track_data = true;
     let res = rb.find_build();
     let d = time_limit / 1_000_000;
     println!("Build evaluated: {}", res.build_evaluated);

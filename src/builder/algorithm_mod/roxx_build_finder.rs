@@ -22,7 +22,7 @@ pub struct RoxxBuildFinder<'a> {
 
 #[allow(dead_code)]
 impl<'a> RoxxBuildFinder<'a> {
-    pub fn find_build(&'a self) -> DamageEval { // well, could improve it
+    pub fn find_build(&'a self) -> DamageEval {
         let item_ref: Vec<&Item> = if let Some(f) = self.estimator
         { f(&self.data, &self.attack) } else { self.data.items.iter().collect() };
         let set_ref: Vec<&Set> = self.data.sets.iter().collect();
@@ -36,7 +36,10 @@ impl<'a> RoxxBuildFinder<'a> {
         while let Some(build) = bg.next_build() {
             let eval = build.evaluate_build_damage(&self.attack);
             if self.track_data {
-                let ids_concat = build.items.iter().map(|i| { i.id.to_string() }).fold("".to_string(), |mut s1, s2| {
+                let mut pos = 0;
+                let ids_concat = build.items.iter().map(|item| { item.id.to_string() }).fold("".to_string(), |mut s1, s2| {
+                    s1.push_str(&pos.to_string());
+                    pos += 1;
                     s1.push_str(&s2);
                     s1
                 });
