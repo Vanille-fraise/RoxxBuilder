@@ -4,7 +4,7 @@ use crate::builder::algorithm_mod::build_generator::BuildGenerator;
 use crate::builder::attack_mod::attack::Attack;
 use crate::builder::attack_mod::damage_calculation::DamageCalculation;
 use crate::builder::build_mod::build::Build;
-use crate::builder::build_mod::damage_eval::DamageEval;
+use crate::builder::build_mod::build_search_result::BuildSearchResult;
 use crate::builder::data_mod::data_container::DataContainer;
 use crate::builder::item_mod::item::Item;
 use crate::builder::item_mod::set::Set;
@@ -22,7 +22,7 @@ pub struct RoxxBuildFinder<'a> {
 
 #[allow(dead_code)]
 impl<'a> RoxxBuildFinder<'a> {
-    pub fn find_build(&'a self) -> DamageEval {
+    pub fn find_build(&'a self) -> BuildSearchResult {
         let item_ref: Vec<&Item> = if let Some(f) = self.estimator
         { f(&self.data, &self.attack) } else { self.data.items.iter().collect() };
         let set_ref: Vec<&Set> = self.data.sets.iter().collect();
@@ -71,7 +71,7 @@ impl<'a> RoxxBuildFinder<'a> {
                 fin_item = item;
             }
         }
-        return DamageEval::new(best_eval, final_build, nb_evaluated_builds, now.elapsed(), spares, fin_item);
+        return BuildSearchResult::new(best_eval, final_build, nb_evaluated_builds, now.elapsed(), spares, fin_item);
     }
 
     pub fn new(mut data: DataContainer<'a>, attack: &'a Attack) -> Self {

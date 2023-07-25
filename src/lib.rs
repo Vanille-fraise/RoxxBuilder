@@ -1,6 +1,7 @@
 #![feature(array_methods)]
 
 pub mod builder;
+mod web;
 
 extern crate strum;
 #[macro_use]

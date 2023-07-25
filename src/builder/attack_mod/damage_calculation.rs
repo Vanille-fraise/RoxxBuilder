@@ -7,3 +7,9 @@ pub enum DamageCalculation {
     Average,
     Max,
 }
+
+impl Default for DamageCalculation {
+    fn default() -> Self {
+        DamageCalculation::Average
+    }
+}

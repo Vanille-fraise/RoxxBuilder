@@ -2,7 +2,7 @@ use serde::{Serialize, Deserialize};
 use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat;
 
 #[repr(usize)]
-#[derive(Serialize, Deserialize, Debug, EnumIter)]
+#[derive(Serialize, Deserialize, Debug, EnumIter, Clone)]
 pub enum DamageElement {
     DamageTerre = 0,
     DamageEau,

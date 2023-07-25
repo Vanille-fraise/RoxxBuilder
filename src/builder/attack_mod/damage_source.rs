@@ -5,3 +5,9 @@ pub enum DamageSource {
     Sort,
     Arme,
 }
+
+impl DamageSource {
+    pub fn default() -> Self {
+        DamageSource::Sort
+    }
+}

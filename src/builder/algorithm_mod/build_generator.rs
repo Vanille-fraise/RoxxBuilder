@@ -4,6 +4,9 @@ use crate::builder::item_mod::item::Item;
 use crate::builder::item_mod::item_slot::ItemSlot;
 use crate::builder::item_mod::set::Set;
 use strum::{EnumCount, IntoEnumIterator};
+use crate::builder::algorithm_mod::build_iter::BuildIterator;
+use crate::builder::attack_mod::attack::Attack;
+use crate::builder::data_mod::data_container::DataContainer;
 use crate::builder::item_mod::item_slot::ItemSlot::{SlotDofus2, SlotDofus3, SlotDofus4, SlotDofus5, SlotDofus6, SlotDofusPrysmaradite};
 use crate::builder::item_mod::item_type::ItemType;
 
@@ -125,5 +128,16 @@ impl<'a> BuildGenerator<'a> {
 
     pub fn get_last_item_id(&self) -> i64 {
         return self.organized_items[self.last_pushed_item as usize].last().unwrap().id;
+    }
+}
+
+impl<'a> BuildIterator<'a> for BuildGenerator<'a> {
+    fn new(container: &'a DataContainer, attack: &'a Attack) -> Self {
+        let bg:BuildGenerator = BuildGenerator::new(container.items.iter().collect(), container.sets.iter().collect());
+        return bg;
+    }
+
+    fn next_build(&mut self) -> Option<&Build> {
+        BuildGenerator::next_build(self)
     }
 }

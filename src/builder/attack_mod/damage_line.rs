@@ -1,7 +1,7 @@
 use crate::builder::attack_mod::damage_element::DamageElement;
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct DamageLine {
     pub damage_element: DamageElement,
     pub min_value: i64,
