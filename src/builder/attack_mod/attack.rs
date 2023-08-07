@@ -2,7 +2,6 @@ use crate::builder::attack_mod::damage_line::DamageLine;
 use crate::builder::attack_mod::damage_position::DamagePosition;
 use crate::builder::attack_mod::damage_source::DamageSource;
 use serde::{Serialize, Deserialize};
-use serde_json::Value::Bool;
 use crate::builder::attack_mod::damage_calculation::DamageCalculation;
 use crate::builder::attack_mod::damage_element::DamageElement;
 
@@ -20,10 +19,11 @@ pub struct Attack {
     pub piege: bool,
     #[serde(default = "return_false")]
     pub can_crit: bool,
+    #[serde(default)]
     pub base_crit: i64,
-    #[serde(skip_serializing)]
+    #[serde(skip_serializing, skip_deserializing)]
     brutality_damage: i64,
-    #[serde(skip_serializing)]
+    #[serde(skip_serializing, skip_deserializing)]
     brutality_crit_damage: i64,
     #[serde(default)]
     damage_calculation: DamageCalculation,

@@ -15,7 +15,7 @@ use crate::builder::item_mod::item_type::ItemType;
 use crate::builder::item_mod::stats::Stats;
 
 #[allow(dead_code)]
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub struct Build<'a> {
     pub items: [&'a Item<'a>; 16],
     pub stats: Stats,

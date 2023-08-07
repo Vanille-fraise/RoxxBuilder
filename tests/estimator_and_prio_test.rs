@@ -2,7 +2,6 @@ use std::collections::HashMap;
 use rand::seq::SliceRandom;
 use roxx_builder::builder::item_mod::item::Item;
 use roxx_builder::builder::item_mod::item_type::ItemType;
-use roxx_builder::builder::algorithm_mod::item_estimator::ItemEstimator;
 use roxx_builder::builder::algorithm_mod::roxx_build_finder::RoxxBuildFinder;
 use roxx_builder::builder::attack_mod::attack::Attack;
 use roxx_builder::builder::attack_mod::damage_element::DamageElement;
@@ -40,10 +39,9 @@ fn full_crap_find_right_comb() {
     }
     let mut rng = rand::thread_rng();
     dc.items.shuffle(&mut rng);
-    let mut rb = RoxxBuildFinder::new(dc, &COCO);
+    let mut rb = RoxxBuildFinder::new(dc, COCO.clone());
     let time_limit = 5_000_000_000u128;
     rb.time_limit = time_limit;
-    rb.estimator = Some(ItemEstimator::roxx_based_estimation);
     rb.track_data = true;
     let res = rb.find_build();
     let d = time_limit / 1_000_000;
