@@ -115,7 +115,7 @@ impl<'a> Build<'a> {
     }
     pub fn new() -> Self {
         Build {
-            items: item::EMPTY_ITEMS.each_ref(),
+            items: Item::ref_empty_items(),
             stats: Stats::new_empty(),
             player: None,
             sets: Default::default(),
@@ -123,7 +123,7 @@ impl<'a> Build<'a> {
     }
 
     pub fn new_with_stats(stats: Stats) -> Self {
-        Build { items: item::EMPTY_ITEMS.each_ref(), stats, player: None, sets: Default::default() }
+        Build { items: Item::ref_empty_items(), stats, player: None, sets: Default::default() }
     }
 
     pub fn new_with_items(items: [&'a Item<'a>; 16]) -> Self {
@@ -137,7 +137,7 @@ impl<'a> Build<'a> {
     }
 
     pub fn new_with_item_map(items_map: &'a HashMap<ItemSlot, &Item>) -> Self {
-        let mut clone_of_base_item = item::EMPTY_ITEMS.each_ref();
+        let mut clone_of_base_item : [&Item; 16]= Item::ref_empty_items();
         for (slot, item) in items_map {
             clone_of_base_item[*slot as usize] = item;
         }
@@ -183,4 +183,3 @@ impl<'a> Build<'a> {
         self.stats.set_stat(stat, self.items.map(|item| item.stats.get_stat(stat)).iter().sum());
     }
 }
-

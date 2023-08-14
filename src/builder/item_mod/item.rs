@@ -101,6 +101,15 @@ impl<'a> Item<'a> {
         item.name = String::from("No item");
         item
     }
+
+    pub fn ref_empty_items() -> [&'static Item<'static>; 16] {
+        [
+            &EMPTY_ITEMS[0], &EMPTY_ITEMS[1], &EMPTY_ITEMS[2], &EMPTY_ITEMS[3],
+            &EMPTY_ITEMS[4], &EMPTY_ITEMS[5], &EMPTY_ITEMS[6], &EMPTY_ITEMS[7],
+            &EMPTY_ITEMS[8], &EMPTY_ITEMS[9], &EMPTY_ITEMS[10], &EMPTY_ITEMS[11],
+            &EMPTY_ITEMS[12], &EMPTY_ITEMS[13], &EMPTY_ITEMS[14], &EMPTY_ITEMS[15],
+        ]
+    }
 }
 
 #[derive(PartialEq, Eq, Deserialize, Serialize, Debug)]
