@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use rand;
 use rand::prelude::*;
 use rand::Rng; // 0.8.5
@@ -35,20 +36,20 @@ pub static EMPTY_ITEMS: [Item; 16] = [
 ];
 
 #[derive(PartialEq, Eq, Deserialize, Serialize, Debug)]
-pub struct Item<'a> {
+pub struct Item {
     pub item_type: ItemType,
     pub stats: Stats,
     pub name: String,
     pub lvl: u64,
     pub set_id: i64,
     #[serde(skip_deserializing)]
-    #[serde(default)]
-    pub set: Option<&'a Set>,
+    #[serde(skip_serializing)]
+    pub set: Option<Arc<Set>>,
     pub conditions: ItemCondition,
     pub id: i64,
 }
 
-impl<'a> Item<'a> {
+impl Item {
     pub fn from_serde_value(values: &serde_json::Value) -> Self {
         Item {
             item_type: num::FromPrimitive::from_u64(values["typeId"].as_u64().unwrap_or(0)).unwrap_or(ItemType::Unknown),
@@ -78,7 +79,7 @@ impl<'a> Item<'a> {
         item.stats = stats;
         item
     }
-    pub fn new(item_type: ItemType, stats: Stats, name: String, lvl: u64, set_id: i64, conditions: ItemCondition, item_id: i64, set: Option<&'a Set>) -> Self {
+    pub fn new(item_type: ItemType, stats: Stats, name: String, lvl: u64, set_id: i64, conditions: ItemCondition, item_id: i64, set: Option<Arc<Set>>) -> Self {
         Item {
             item_type,
             stats,
@@ -102,7 +103,7 @@ impl<'a> Item<'a> {
         item
     }
 
-    pub fn ref_empty_items() -> [&'static Item<'static>; 16] {
+    pub fn ref_empty_items() -> [&'static Item; 16] {
         [
             &EMPTY_ITEMS[0], &EMPTY_ITEMS[1], &EMPTY_ITEMS[2], &EMPTY_ITEMS[3],
             &EMPTY_ITEMS[4], &EMPTY_ITEMS[5], &EMPTY_ITEMS[6], &EMPTY_ITEMS[7],

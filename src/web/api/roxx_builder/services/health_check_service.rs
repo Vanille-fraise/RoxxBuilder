@@ -1,5 +1,4 @@
 use std::thread;
-use std::thread::Thread;
 use std::time::Duration;
 use actix_web::{get, Responder, HttpResponse};
 

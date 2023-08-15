@@ -1,3 +1,4 @@
+use std::ops::Deref;
 use crate::builder::algorithm_mod::build_generator::BuildGenerator;
 use crate::builder::algorithm_mod::build_iter::BuildIterator;
 use crate::builder::algorithm_mod::item_estimator::ItemEstimator;
@@ -13,7 +14,7 @@ impl BuildIteratorFactory {
 
     pub fn create<'a>(&'a self, container: &'a DataContainer, attack: &'a Attack) -> Box<dyn BuildIterator + '_> {
         let items = ItemEstimator::roxx_based_estimation(container, attack);
-        let sets = container.sets.iter().collect();
+        let sets = container.sets.iter().map(|s| s.deref()).collect();
         let build_finder = BuildGenerator::new(items, sets);
         Box::new(build_finder)
     }

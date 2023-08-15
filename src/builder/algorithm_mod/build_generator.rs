@@ -10,9 +10,9 @@ use crate::builder::item_mod::item_type::ItemType;
 
 
 pub struct BuildGenerator<'a> {
-    items: Vec<&'a Item<'a>>,
+    items: Vec<&'a Item>,
 
-    organized_items: Vec<Vec<&'a Item<'a>>>,
+    organized_items: Vec<Vec<&'a Item>>,
     sets: Vec<&'a Set>,
     organized_sets: HashMap<i64, &'a Set>,
     cur_build: Build<'a>,

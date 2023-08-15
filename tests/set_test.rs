@@ -19,8 +19,8 @@ fn simple_set_test() {
     item_1.set_id = 1;
     item_2.set_id = 1;
     let set = Set::new(1, vec![Stats::from_map_stats(HashMap::from([(Force, 100)]).iter()), Stats::from_map_stats(HashMap::from([(Force, 1000)]).iter())]);
-    item_1.set = Some(&set);
-    item_2.set = Some(&set);
+    item_1.set = Some(set.clone().into());
+    item_2.set = Some(set.into());
     let mut build = Build::new();
     build.add_item(&item_1, SlotAnneau2);
     set_stat_test(&build, Force, 100, 1, 1, 0);
@@ -34,8 +34,8 @@ fn replacing_set_test() {
     item_1.set_id = 1;
     item_2.set_id = 1;
     let set = Set::new(1, vec![Stats::from_map_stats(HashMap::from([(Force, 0)]).iter()), Stats::from_map_stats(HashMap::from([(Force, 1000)]).iter())]);
-    item_1.set = Some(&set);
-    item_2.set = Some(&set);
+    item_1.set = Some(set.clone().into());
+    item_2.set = Some(set.into());
     let mut build = Build::new();
     build.add_item(&item_1, SlotAnneau1);
     set_stat_test(&build, Force, 0, 1, 1, 0);
@@ -48,16 +48,16 @@ fn multiple_set_test() {
     let (mut item_1, mut item_2) = (Item::default(), Item::default());
     item_1.set_id = 1;
     item_2.set_id = 1;
-    let set_1 = Set::new(1, vec![Stats::from_map_stats(HashMap::from([(Force, 0)]).iter()), Stats::from_map_stats(HashMap::from([(Force, 1000)]).iter())]);
-    item_1.set = Some(&set_1);
-    item_2.set = Some(&set_1);
+    let set = Set::new(1, vec![Stats::from_map_stats(HashMap::from([(Force, 0)]).iter()), Stats::from_map_stats(HashMap::from([(Force, 1000)]).iter())]);
+    item_1.set = Some(set.clone().into());
+    item_2.set = Some(set.into());
 
     let (mut item_3, mut item_4) = (Item::default(), Item::default());
     item_3.set_id = 2;
     item_4.set_id = 2;
     let set_2 = Set::new(2, vec![Stats::from_map_stats(HashMap::from([(Force, 500)]).iter()), Stats::from_map_stats(HashMap::from([(Force, 1500)]).iter())]);
-    item_3.set = Some(&set_2);
-    item_4.set = Some(&set_2);
+    item_3.set = Some(set_2.clone().into());
+    item_4.set = Some(set_2.into());
     let mut build = Build::new();
     build.add_item(&item_1, SlotAnneau1);
     set_stat_test(&build, Force, 0, 1, 1, 0);
@@ -77,8 +77,8 @@ fn removing_set_test() {
     item_1.set_id = 1;
     item_2.set_id = 1;
     let set = Set::new(1, vec![Stats::from_map_stats(HashMap::from([(Force, 100)]).iter()), Stats::from_map_stats(HashMap::from([(Force, 1000)]).iter())]);
-    item_1.set = Some(&set);
-    item_2.set = Some(&set);
+    item_1.set = Some(set.clone().into());
+    item_2.set = Some(set.into());
 
     let mut build = Build::new();
     build.add_item(&item_1, SlotAnneau2);

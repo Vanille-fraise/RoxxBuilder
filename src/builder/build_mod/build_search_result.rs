@@ -6,7 +6,7 @@ use crate::builder::item_mod::item::Item;
 pub struct BuildSearchResult<'a> {
     pub eval: i64,
     pub build: Build<'a>,
-    pub last_item_tested: Option<&'a Item<'a>>,
+    pub last_item_tested: Option<&'a Item>,
     pub build_evaluated: i64,
     pub search_time: Duration,
     pub spares: i64,
@@ -14,7 +14,7 @@ pub struct BuildSearchResult<'a> {
 }
 
 impl<'a> BuildSearchResult<'a> {
-    pub fn new(eval: i64, build: Build<'a>, build_evaluated: i64, search_time: Duration, spares: i64, last_item_tested: Option<&'a Item<'a>>, best_build_position: i64) -> Self {
+    pub fn new(eval: i64, build: Build<'a>, build_evaluated: i64, search_time: Duration, spares: i64, last_item_tested: Option<&'a Item>, best_build_position: i64) -> Self {
         BuildSearchResult {
             eval,
             build,

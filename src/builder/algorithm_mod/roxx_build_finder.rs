@@ -8,8 +8,8 @@ use crate::builder::data_mod::data_container::DataContainer;
 use std::time::Duration;
 use crate::builder::algorithm_mod::build_iter_factory::BuildIteratorFactory;
 
-pub struct RoxxBuildFinder<'a> {
-    data: DataContainer<'a>,
+pub struct RoxxBuildFinder {
+    pub data: DataContainer,
     build_iterator_factory: BuildIteratorFactory,
     pub time_limit: u128,
     calc_type: DamageCalculation,
@@ -17,7 +17,7 @@ pub struct RoxxBuildFinder<'a> {
     pub track_data: bool,
 }
 
-impl<'a> RoxxBuildFinder<'a> {
+impl RoxxBuildFinder {
     pub fn find_build(&self) -> BuildSearchResult {
         let now = Instant::now();
         let mut search_result = BuildSearchResult::new(i64::MIN, Build::new(), 0, Duration::new(0, 0), -1, None, -1);
@@ -72,8 +72,10 @@ impl<'a> RoxxBuildFinder<'a> {
         return search_result;
     }
 
-    pub fn new(mut data: DataContainer<'a>, attack: Attack) -> Self {
+    pub fn new(mut data: DataContainer, attack: Attack) -> Self {
+        data.clear_unknown_type();
         data.reset_brutality(&attack);
+        data.link_item_with_set();
         RoxxBuildFinder {
             data,
             build_iterator_factory: BuildIteratorFactory::new_iterative_factory(),

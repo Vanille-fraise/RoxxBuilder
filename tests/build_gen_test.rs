@@ -40,7 +40,7 @@ fn one_anneau_with_set_item_builds() {
     let mut item = Item::new_from_type(Anneau);
     let set = Set::new(1, vec![Stats::new_empty(), Stats::new_empty()]);
     item.set_id = 1;
-    item.set = Some(&set);
+    item.set = Some(set.into());
     loc_items.push(&item);
     let bg = BuildGenerator::new_with_items(loc_items);
     test_nb_build(bg, 1);
@@ -55,7 +55,7 @@ fn multiple_anneau_with_set_item_builds() {
     let set = Set::new(1, vec![Stats::new_empty(), Stats::new_empty()]);
     item.set_id = 1;
     item.name = "Set anneau".to_string();
-    item.set = Some(&set);
+    item.set = Some(set.into());
     loc_items.push(&item_3);
     loc_items.push(&item_2);
     loc_items.push(&item);
@@ -111,7 +111,7 @@ fn multiple_anneau_with_dofus_set_item_builds() {
     let set = Set::new(1, vec![Stats::new_empty(), Stats::new_empty()]);
     item_1.set_id = 1;
     item_1.name = "1 & Set".to_string();
-    item_1.set = Some(&set);
+    item_1.set = Some(set.into());
     let loc_items = vec![&item_1, &item_2, &item_3, &item_4, &item_5];
     let bg = BuildGenerator::new_with_items(loc_items);
     test_nb_build(bg, 39);

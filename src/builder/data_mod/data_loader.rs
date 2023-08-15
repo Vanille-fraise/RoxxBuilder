@@ -47,9 +47,9 @@ impl DataLoader {
         Ok(res)
     }
 
-    pub fn from_api_response_files<'a>(files_path: Option<String>, sets_path: Option<String>) -> Result<DataContainer<'a>, std::io::Error> {
+    pub fn from_api_response_files<'a>(items_path: Option<String>, sets_path: Option<String>) -> Result<DataContainer, std::io::Error> {
         let mut container = DataContainer::new();
-        for opt_cur_path in vec![(files_path, true), (sets_path, false)] {
+        for opt_cur_path in vec![(items_path, true), (sets_path, false)] {
             if let (Some(cur_path), is_itm) = opt_cur_path {
                 let dir = std::fs::read_dir(cur_path)?;
                 for entry in dir {
@@ -64,13 +64,13 @@ impl DataLoader {
         Ok(container)
     }
 
-    pub fn save_data_container(path: String, data_container: DataContainer) -> Result<(), std::io::Error> {
+    pub fn save_data_container(path: String, data_container: &DataContainer) -> Result<(), std::io::Error> {
         let mut file = File::create(path)?;
         file.write(serde_json::to_string(&data_container)?.as_bytes())?;
         Ok(())
     }
 
-    pub fn from_data_container_file<'a>(path: String) -> Result<DataContainer<'a>, std::io::Error> {
+    pub fn from_data_container_file<'a>(path: String) -> Result<DataContainer, std::io::Error> {
         let container: DataContainer = serde_json::from_str(std::fs::read_to_string(path.as_str())?.as_str())?;
 
         return Ok(container);
@@ -88,7 +88,7 @@ impl DataLoader {
             if item {
                 data_container.add_item_from_value(obj);
             } else {
-                data_container.sets.push(Set::from_serde_value(&obj));
+                data_container.sets.push(Set::from_serde_value(&obj).into());
             }
         }
     }

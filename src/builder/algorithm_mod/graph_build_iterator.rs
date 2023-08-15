@@ -1,8 +1,9 @@
+/*
 use crate::builder::attack_mod::attack::Attack;
 use crate::builder::data_mod::data_container::DataContainer;
-/*
+
 pub struct GraphBuildIterator {
-    organized_items: Vec<Vec<&'a Item<'a>>>,
+    organized_items: Vec<Vec<&'a Item>>,
     organized_sets: HashMap<i64, &'a Set>,
     cur_build: Build<'a>,
     items_i: Vec<usize>,

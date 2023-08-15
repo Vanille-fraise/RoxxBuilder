@@ -17,7 +17,7 @@ use crate::builder::item_mod::stats::Stats;
 #[allow(dead_code)]
 #[derive(PartialEq, Debug, Clone)]
 pub struct Build<'a> {
-    pub items: [&'a Item<'a>; 16],
+    pub items: [&'a Item; 16],
     pub stats: Stats,
     player: Option<Player>,
     pub sets: HashMap<i64 /* id */, usize>,
@@ -70,7 +70,7 @@ impl<'a> Build<'a> {
 
     fn manage_set(&mut self, item: &Item, add: bool) {
         if item.set_id <= 0 { return; }
-        if let Some(s) = item.set {
+        if let Some(s) = &item.set {
             let mut i = 0;
             if add {
                 if self.sets.contains_key(&item.set_id) {
@@ -126,7 +126,7 @@ impl<'a> Build<'a> {
         Build { items: Item::ref_empty_items(), stats, player: None, sets: Default::default() }
     }
 
-    pub fn new_with_items(items: [&'a Item<'a>; 16]) -> Self {
+    pub fn new_with_items(items: [&'a Item; 16]) -> Self {
         let mut build = Build::new();
         for (i, item) in items.iter().enumerate() {
             if item.id > 15 {

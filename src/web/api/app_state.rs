@@ -2,16 +2,15 @@ use std::sync::Mutex;
 use crate::builder::algorithm_mod::roxx_build_finder::RoxxBuildFinder;
 use crate::builder::attack_mod::attack::Attack;
 use crate::builder::data_mod::data_container::DataContainer;
-use crate::builder::data_mod::data_loader::DataLoader;
 use crate::web::api::roxx_builder::data::data_handler::DataHandler;
 use crate::web::api::roxx_builder::models::response_build_data::ResponseBuildData;
 
-pub struct AppState<'a> {
-    pub roxx_build_finder: Mutex<RoxxBuildFinder<'a>>,
+pub struct AppState {
+    pub roxx_build_finder: Mutex<RoxxBuildFinder>,
     data_handler: Mutex<DataHandler>,
 }
 
-impl<'a> AppState<'a> {
+impl AppState {
     pub fn find_build(&self, attack: Attack) -> ResponseBuildData {
         let mut dh = self.data_handler.lock().unwrap();
         let opt_search_res = dh.get_search_result(&attack);
@@ -26,8 +25,8 @@ impl<'a> AppState<'a> {
         }
     }
 
-    pub fn new() -> Self {
-        let container = DataLoader::from_data_container_file("tests/test_files/containers/whole_data_container_to_read".to_string()).unwrap();
+    #[allow(unused)]
+    pub fn new(container: DataContainer) -> Self {
         let mut build_finder =  RoxxBuildFinder::new(container, Attack::default());
         build_finder.time_limit = 6 * 1_000_000_000;
         build_finder.track_data = false;
