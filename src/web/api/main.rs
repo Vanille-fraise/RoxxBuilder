@@ -5,7 +5,7 @@ use crate::web::api::roxx_builder::services::attack_service::post_attack;
 use crate::web::api::roxx_builder::services::health_check_service::{empty_check, health_check};
 
 #[actix_web::main]
-// #[test]
+#[test]
 async fn main() -> std::io::Result<()> {
     let base_data_container = DataManager::retrieve_data().await;
     let app_data = web::Data::new(AppState::new(base_data_container));
