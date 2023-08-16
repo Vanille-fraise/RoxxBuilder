@@ -23,7 +23,7 @@ lazy_static! {
 }
 
 #[test]
-fn cafull_crap_find_right_comb() {
+fn full_crap_find_right_comb() {
     let types: Vec<ItemType> = vec![Amulette, Arc, Ceinture, Bottes, Chapeau, Cape, Familier, Prysmaradite, Trophee, Dofus, Dofus, Trophee, Dofus, Bouclier, Anneau];
     let mut dc = DataContainer::new();
     for t in types.iter() {

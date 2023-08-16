@@ -1,6 +1,6 @@
 pub mod builder;
+pub mod web;
 
-mod web;
 extern crate strum;
 
 #[macro_use]

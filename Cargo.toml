@@ -31,3 +31,6 @@ arrayref = "0.3.7"
 [[bench]]
 name = "hashmap_array_basestats_bench"
 harness = false
+
+[lib]
+doctest = false
