@@ -15,7 +15,6 @@ impl DataHandler {
         false
     }
 
-    #[allow(unused)]
     pub fn new() -> Self {
         DataHandler {
             _db_connexion: "I'm definitely working".to_string(),

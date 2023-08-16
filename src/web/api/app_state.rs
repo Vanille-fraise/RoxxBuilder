@@ -25,7 +25,6 @@ impl AppState {
         }
     }
 
-    #[allow(unused)]
     pub fn new(container: DataContainer) -> Self {
         let mut build_finder =  RoxxBuildFinder::new(container, Attack::default());
         build_finder.time_limit = 6 * 1_000_000_000;

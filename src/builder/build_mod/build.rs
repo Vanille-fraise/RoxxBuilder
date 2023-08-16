@@ -14,7 +14,6 @@ use crate::builder::item_mod::item_slot::ItemSlot;
 use crate::builder::item_mod::item_type::ItemType;
 use crate::builder::item_mod::stats::Stats;
 
-#[allow(dead_code)]
 #[derive(PartialEq, Debug, Clone)]
 pub struct Build<'a> {
     pub items: [&'a Item; 16],
@@ -23,7 +22,6 @@ pub struct Build<'a> {
     pub sets: HashMap<i64 /* id */, usize>,
 }
 
-#[allow(dead_code)]
 impl<'a> Build<'a> {
     pub fn add_item(&mut self, item: &'a Item, item_slot: ItemSlot) -> bool {
         if self.evaluate_hard_cond_and_compatibility_item(item, &item_slot) {

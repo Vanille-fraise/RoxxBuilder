@@ -3,7 +3,6 @@ use strum_macros::EnumIter;
 extern crate num;
 use num_derive::FromPrimitive;
 
-#[allow(dead_code)]
 #[repr(u8)]
 #[derive(Debug, PartialEq, Eq, Hash, Copy, Clone, EnumIter, Deserialize, Serialize, Display, FromPrimitive)]
 pub enum ItemType {

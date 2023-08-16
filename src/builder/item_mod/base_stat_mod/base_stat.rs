@@ -5,7 +5,6 @@ use strum_macros::EnumIter;
 extern crate num;
 
 #[repr(usize)]
-#[allow(dead_code)]
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Deserialize, Serialize, Debug, FromPrimitive, EnumIter, PartialOrd, Ord)]
 pub enum BaseStat {
     // my_item[effects][i][characteristic]
