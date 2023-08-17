@@ -1,10 +1,12 @@
 use std::collections::HashMap;
+use strum::IntoEnumIterator;
 use crate::builder::attack_mod::attack::Attack;
 use crate::builder::build_mod::build::Build;
 use crate::builder::data_mod::data_container::DataContainer;
 use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat;
 use crate::builder::item_mod::item::Item;
 use crate::builder::item_mod::item_slot::ItemSlot;
+use crate::builder::item_mod::item_type::ItemType;
 use crate::builder::item_mod::stats::Stats;
 
 
@@ -22,11 +24,15 @@ impl ItemEstimator {
             build.remove_item(&used_slot);
         }
         estimations.sort_by(|e1, e2| e2.0.cmp(&e1.0));
-        estimations.iter().for_each(|x| res.push(x.1));
-        /* println!("Best estimations:");
-        for re in 0..min(res.len(), 18) {
-            println!("{:<3} {}", re, estimations[re].0);
-        } */
+        let mut by_cat: HashMap<ItemType, Vec<&Item>> = HashMap::new();
+        ItemType::iter().for_each(|is| { by_cat.insert(is, vec![]); });
+        estimations.iter().for_each(|x| { by_cat.get_mut(&x.1.item_type).unwrap().push(x.1); });
+        while res.len() < container.items.len() {
+            ItemType::iter().for_each(|i| {
+                let v = by_cat.get_mut(&i).unwrap();
+                (!v.is_empty()).then(|| res.push(v.remove(0)));
+            });
+        }
         return res;
     }
 }

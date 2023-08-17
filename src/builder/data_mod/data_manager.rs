@@ -44,6 +44,7 @@ impl<'a> DataManager<'a> {
                         }
                     }
                     if changed {
+                        println!("Must reload data from DofusDB API");
                         dc = DataLoader::from_api_response_files(Some(folder_api_items.clone().to_string()),
                                                                  Some(folder_api_sets.clone()))
                             .unwrap_or(DataContainer::new());
