@@ -1,14 +1,11 @@
-use std::cmp::{max, min};
 use std::collections::HashMap;
 use num_traits::FromPrimitive;
 use string_builder::Builder;
 use strum::IntoEnumIterator;
 use crate::builder::attack_mod::attack::Attack;
-use crate::builder::attack_mod::damage_calculation::DamageCalculation::{Average, Max, Min, Minimized};
-use crate::builder::build_mod::player::Player;
+use crate::builder::build_mod::player::SearchOptions;
 use crate::builder::item_mod::item::Item;
 use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat;
-use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat::{BrutaliteRetenue, BrutaliteSevere, Critique};
 use crate::builder::item_mod::item;
 use crate::builder::item_mod::item_slot::ItemSlot;
 use crate::builder::item_mod::item_type::ItemType;
@@ -18,7 +15,7 @@ use crate::builder::item_mod::stats::Stats;
 pub struct Build<'a> {
     pub items: [&'a Item; 16],
     pub stats: Stats,
-    player: Option<Player>,
+    search_options: Option<SearchOptions>,
     pub sets: HashMap<i64 /* id */, usize>,
 }
 
@@ -35,8 +32,8 @@ impl<'a> Build<'a> {
     }
 
     fn evaluate_hard_cond_and_compatibility_item(&self, item: &'a Item, slot: &ItemSlot) -> bool {
-        if let Some(player) = self.player {
-            if player.lvl < item.lvl { return false; }
+        if let Some(opt) = &self.search_options {
+            if opt.player_lvl() < item.lvl { return false; }
         }
         if item.set_id > 0 || item.item_type != ItemType::Anneau {
             for (n, it) in self.items.iter().enumerate() {
@@ -96,32 +93,19 @@ impl<'a> Build<'a> {
     }
 
     pub fn evaluate_build_damage(&self, attack: &Attack) -> i64 {
-        let crit = match (attack.damage_calculation(), attack.can_crit) {
-            (_, false) | (Minimized, true) => 0,
-            (Min, true) => if self.stats.get_stat(&Critique) + attack.base_crit < 100 { 0 } else { 100 },
-            (Average, true) => max(min(self.stats.get_stat(&Critique) + attack.base_crit, 100), 0),
-            (Max, true) => if self.stats.get_stat(&Critique) + attack.base_crit > 0 { 100 } else { 0 },
-        };
-        let mut damage: i64 = match crit {
-            0 => self.stats.get_stat(&BrutaliteRetenue) + attack.brutality_damage(),
-            100 => self.stats.get_stat(&BrutaliteSevere) + attack.brutality_crit_damage(),
-            _ => ((self.stats.get_stat(&BrutaliteSevere) + attack.brutality_crit_damage()) * crit + (self.stats.get_stat(&BrutaliteRetenue) + attack.brutality_damage()) * (100 - crit)) / 100,
-        };
-        damage *= (100 + self.stats.get_stat(&BaseStat::BrutaliteLocalisee)) * (100 + self.stats.get_stat(&BaseStat::DoPerFinaux)) * (100 + self.stats.get_stat(&BaseStat::BrutaliteMystique));
-        damage /= 100 * 100 * 100;
-        damage
+        self.stats.evaluate_damage(attack)
     }
     pub fn new() -> Self {
         Build {
             items: Item::ref_empty_items(),
             stats: Stats::new_empty(),
-            player: None,
+            search_options: None,
             sets: Default::default(),
         }
     }
 
     pub fn new_with_stats(stats: Stats) -> Self {
-        Build { items: Item::ref_empty_items(), stats, player: None, sets: Default::default() }
+        Build { items: Item::ref_empty_items(), stats, search_options: None, sets: Default::default() }
     }
 
     pub fn new_with_items(items: [&'a Item; 16]) -> Self {
@@ -163,7 +147,7 @@ impl<'a> Build<'a> {
         Build {
             items: self.items.clone(),
             stats: self.stats.clone(),
-            player: self.player.clone(),
+            search_options: self.search_options.clone(),
             sets: self.sets.clone(),
         }
     }

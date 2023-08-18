@@ -50,11 +50,13 @@ fn one_anneau_with_set_item_builds() {
 fn multiple_anneau_with_set_item_builds() {
     let mut loc_items = NO_ITEM.clone();
     let mut item = Item::new_from_type(Anneau);
-    let item_2 = Item::new_from_type(Anneau);
-    let item_3 = Item::new_from_type(Arc);
+    let mut item_2 = Item::new_from_type(Anneau);
+    let mut item_3 = Item::new_from_type(Arc);
+    item_3.name = "<ARC>".to_string();
+    item_2.name = "<ANNEAU no set>".to_string();
     let set = Set::new(1, vec![Stats::new_empty(), Stats::new_empty()]);
     item.set_id = 1;
-    item.name = "Set anneau".to_string();
+    item.name = "<ANNEAU with set>".to_string();
     item.set = Some(set.into());
     loc_items.push(&item_3);
     loc_items.push(&item_2);

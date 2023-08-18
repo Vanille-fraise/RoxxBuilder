@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use serde::{Serialize, Deserialize};
 use crate::builder::item_mod::stats::Stats;
 
@@ -23,5 +24,17 @@ impl Set {
             bonus: values["effects"].as_array().unwrap_or(&vec![]).iter().map(Stats::from_effects_json_value).collect(),
             name: values["name"].as_str().unwrap_or("No name found").to_string(),
         }
+    }
+}
+
+impl PartialOrd<Self> for Set {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.id.partial_cmp(&other.id)
+    }
+}
+
+impl Ord for Set {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.id.cmp(&other.id)
     }
 }

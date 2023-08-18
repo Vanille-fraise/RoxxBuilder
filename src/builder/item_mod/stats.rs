@@ -1,4 +1,4 @@
-use std::cmp::max;
+use std::cmp::{max, min};
 use serde::{Deserialize, Serialize};
 
 extern crate serde;
@@ -8,7 +8,8 @@ use crate::builder::attack_mod::attack::Attack;
 use crate::builder::attack_mod::damage_position::DamagePosition;
 use crate::builder::attack_mod::damage_source::DamageSource;
 use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat;
-use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat::{DoPerArme, DoPerDist, DoPerMelee, DoPerSo};
+use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat::{BrutaliteRetenue, BrutaliteSevere, Critique, DoPerArme, DoPerDist, DoPerMelee, DoPerSo};
+use crate::builder::attack_mod::damage_calculation::DamageCalculation::{Minimized, Max, Min, Average};
 
 #[derive(PartialEq, Eq, Deserialize, Serialize, Debug, Clone)]
 pub struct Stats {
@@ -123,5 +124,22 @@ impl Stats {
 
     pub fn brutality_stats(&self) -> [i64; 6] {
         self.brutality_stats
+    }
+
+    pub fn evaluate_damage(&self, attack: &Attack) -> i64 {
+        let crit = match (attack.damage_calculation(), attack.can_crit) {
+            (_, false) | (Minimized, true) => 0,
+            (Min, true) => if self.get_stat(&Critique) + attack.base_crit < 100 { 0 } else { 100 },
+            (Average, true) => max(min(self.get_stat(&Critique) + attack.base_crit, 100), 0),
+            (Max, true) => if self.get_stat(&Critique) + attack.base_crit > 0 { 100 } else { 0 },
+        };
+        let mut damage: i64 = match crit {
+            0 => self.get_stat(&BrutaliteRetenue) + attack.brutality_damage(),
+            100 => self.get_stat(&BrutaliteSevere) + attack.brutality_crit_damage(),
+            _ => ((self.get_stat(&BrutaliteSevere) + attack.brutality_crit_damage()) * crit + (self.get_stat(&BrutaliteRetenue) + attack.brutality_damage()) * (100 - crit)) / 100,
+        };
+        damage *= (100 + self.get_stat(&BaseStat::BrutaliteLocalisee)) * (100 + self.get_stat(&BaseStat::DoPerFinaux)) * (100 + self.get_stat(&BaseStat::BrutaliteMystique));
+        damage /= 100 * 100 * 100;
+        damage
     }
 }

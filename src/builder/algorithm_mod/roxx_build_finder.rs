@@ -5,7 +5,6 @@ use crate::builder::attack_mod::damage_calculation::DamageCalculation;
 use crate::builder::build_mod::build::Build;
 use crate::builder::build_mod::build_search_result::BuildSearchResult;
 use crate::builder::data_mod::data_container::DataContainer;
-use std::time::Duration;
 use crate::builder::algorithm_mod::build_iter_factory::BuildIteratorFactory;
 
 pub struct RoxxBuildFinder {
@@ -20,7 +19,7 @@ pub struct RoxxBuildFinder {
 impl RoxxBuildFinder {
     pub fn find_build(&self) -> BuildSearchResult {
         let now = Instant::now();
-        let mut search_result = BuildSearchResult::new(i64::MIN, Build::new(), 0, Duration::new(0, 0), -1, None, -1);
+        let mut search_result = BuildSearchResult::empty();
         let mut best_build_id: [i64; 16] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
         let mut seen: HashSet<String> = HashSet::new();
         let mut build_iterator = self.build_iterator_factory.create(&self.data, &self.attack);
@@ -53,8 +52,6 @@ impl RoxxBuildFinder {
             opt_build = build_iterator.next_build();
         }
         let mut final_build = Build::new();
-        let fin_item_id = build_iterator.last_item_id();
-        let mut fin_item = &self.data.items[0];
         for item in &self.data.items {
             for (cur_slot, cur_id) in best_build_id.iter().enumerate() {
                 if *cur_id == item.id {
@@ -62,11 +59,7 @@ impl RoxxBuildFinder {
                     break;
                 }
             }
-            if fin_item_id.is_some() && item.id == fin_item_id.unwrap_or(-1) {
-                fin_item = item;
-            }
         }
-        search_result.last_item_tested = Some(fin_item);
         search_result.build = final_build;
         search_result.search_time = now.elapsed();
         return search_result;
