@@ -42,11 +42,11 @@ fn full_crap_find_right_comb() {
     let mut rb = RoxxBuildFinder::new(dc, COCO.clone());
     let time_limit = 5_000_000_000u128;
     rb.time_limit = time_limit;
-    rb.track_data = true;
+    rb.track_data = false;
     let res = rb.find_build();
     let d = time_limit / 1_000_000;
-    println!("Build evaluated: {}", res.build_evaluated);
-    if rb.track_data { println!("Duplicated build tested : {:?}", res.spares); }
+    println!("Build evaluated: {}", res.builds_evaluated);
+    if rb.track_data { println!("Duplicated build tested : {:?}", res.additional_data.get("spares")); }
     assert!(res.search_time.mul_f64(0.8).as_millis() < d);
     assert_eq!(res.eval, 1860);
 }

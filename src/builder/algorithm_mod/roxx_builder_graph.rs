@@ -17,41 +17,53 @@ use crate::builder::item_mod::stats::Stats;
 
 pub struct GraphLooker {
     slugs: [Vec<Slug>; 10],
-    equipped_build: (Slug, [u8; 16]),
+    equipped_build: (Stats, [u8; 16]),
     visited: HashSet<[u8; 16]>,
     neighbors: SortedSet<(i64, [u8; 16])>,
-    attack: Attack,
+    visits_per_slot: usize,
 }
 
 impl GraphLooker {
-    pub fn init_search<'a>(container: &DataContainer, attack: &Attack, search_options: &SearchOptions) -> BuildSearchResult<'a> {
+    pub fn search<'a>(container: &'a DataContainer, attack: &Attack, search_options: &SearchOptions) -> BuildSearchResult<'a> {
         let mut res = BuildSearchResult::empty();
         let mut myself = Self::empty();
         myself.init(container, attack, search_options);
-
+        myself.add_neighbors();
         let mut best_build: [u8; 16] = [255; 16];
         while myself.equip_next_build() {
-            let equipped_damage = myself.equipped_build.0.stats.evaluate_damage(attack);
+            let equipped_damage = myself.equipped_build.0.evaluate_damage(attack);
             if equipped_damage > res.eval {
                 res.eval = equipped_damage;
-                res.best_build_position = res.build_evaluated;
+                res.best_build_position = res.builds_evaluated;
                 best_build.copy_from_slice(&myself.equipped_build.1);
             }
-            res.build_evaluated += 1;
+            res.builds_evaluated += 1;
             myself.add_neighbors();
         }
-
+        let best_ids: Vec<i64> = best_build.iter().enumerate()
+            .map(|(slot, &pos)| myself.slugs[Self::item_slot_to_slug_slot(slot)][pos as usize].id).collect();
+        for (cur_slot, item) in container.get_items_with_ids(&best_ids).iter().enumerate() {
+            res.build.add_item(&item, num::FromPrimitive::from_usize(cur_slot).unwrap());
+        }
         res
+    }
+
+    fn item_slot_to_slug_slot(item_slot: usize) -> usize {
+        if item_slot < 9 {
+            item_slot
+        } else if item_slot == 9 {
+            8
+        } else { 10 }
     }
 
     fn empty() -> Self {
         GraphLooker {
             slugs: [Vec::new(), Vec::new(), Vec::new(), Vec::new(), Vec::new(),
                 Vec::new(), Vec::new(), Vec::new(), Vec::new(), Vec::new()],
-            equipped_build: (Slug::empty(), [255; 16]),
+            equipped_build: (Stats::new_empty(), [255; 16]),
             visited: HashSet::with_capacity(2 ^ 20),
             neighbors: SortedSet::with_capacity(2 ^ 14),
-            attack: Attack::default(),
+            visits_per_slot: 4,
         }
     }
 
@@ -60,18 +72,32 @@ impl GraphLooker {
             return false;
         }
         let cur_build = self.neighbors.pop().unwrap();
+        self.equipped_build.1.copy_from_slice(&cur_build.1);
         for i in 0..16 {
             if self.equipped_build.1[i] != 255 {
-                self.equipped_build.0.stats.add_or_remove_brut_stats(&self.slugs[i][self.equipped_build.1[i] as usize].stats, false);
+                self.equipped_build.0.add_or_remove_brut_stats(&self.slugs[Self::item_slot_to_slug_slot(i)][self.equipped_build.1[i] as usize].stats, false);
             }
             if cur_build.1[i] != 255 {
-                self.equipped_build.0.stats.add_or_remove_brut_stats(&self.slugs[i][cur_build.1[i] as usize].stats, true);
+                self.equipped_build.0.add_or_remove_brut_stats(&self.slugs[i][cur_build.1[i] as usize].stats, true);
             }
         }
         true
     }
 
-    fn add_neighbors(&self) {
+    fn add_neighbors(&mut self) {
+        for (slot, &item_pos) in self.equipped_build.1.iter().enumerate() {
+            let mut cur_stat = self.equipped_build.0.clone();
+            if item_pos != 255 {
+                cur_stat.add_or_remove_brut_stats(&self.slugs[Self::item_slot_to_slug_slot(slot)][item_pos as usize].stats, false);
+            }
+            let mut nb_visited = 0;
+            let mut i = 0;
+            while nb_visited < self.visits_per_slot && i < self.slugs[Self::item_slot_to_slug_slot(slot)].len() {
+                // self.visited
+                // todo: go trough the slugs, check if in visited. If not compute stats & add to neighbors
+                i += 1;
+            }
+        }
         // all the fun is here :D
         // must:
         // - check condition
@@ -80,12 +106,11 @@ impl GraphLooker {
         todo!()
     }
 
-    fn init(&mut self, container: &DataContainer, _attack: &Attack, search_options: &SearchOptions) {
-        // 1. convert all
+    fn init(&mut self, container: &DataContainer, attack: &Attack, search_options: &SearchOptions) {
         let mut all_slugs = vec![];
         let mut by_set: BTreeMap<Arc<Set>, Vec<usize>> = BTreeMap::new();
         for item in &container.items {
-            if are_compatible(item, search_options) {
+            if is_compatible(item, search_options) {
                 let cur_slug = Slug::from_item(item);
                 all_slugs.push(cur_slug);
                 if let Some(set) = &item.set {
@@ -102,36 +127,45 @@ impl GraphLooker {
                 }
             }
         }
-        self.attribute_slugs(all_slugs);
+        self.attribute_slugs(all_slugs, attack);
     }
 
-    fn attribute_slugs(&mut self, all_slugs: Vec<Slug>) {
+    fn attribute_slugs(&mut self, mut all_slugs: Vec<Slug>, attack: &Attack) {
+        for slug in all_slugs.iter_mut() {
+            slug.score = slug.stats.evaluate_damage(attack) / slug.item_slots.len() as i64;
+        }
+        all_slugs.sort();
         for slug in all_slugs.into_iter() {
-            for slot in &slug.item_slots {
-                let a = self.slugs[slot.clone()].clone();
+            for &slot in &slug.item_slots {
+                if self.slugs[slot].len() < 255 {
+                    self.slugs[slot].push(slug.clone());
+                }
             }
         }
+        // could improve with more precise score
     }
 }
 
 #[derive(Eq, PartialEq, Clone)]
 struct Slug {
+    id: i64,
     item_slots: Vec<usize>,
     stats: Stats,
     condition: ItemCondition,
-    // score manager, to stock the score for the prio
     score: i64,
 }
 
 impl Slug {
+    /*
     fn empty() -> Self {
         Slug {
+            id: 0,
             item_slots: vec![],
             stats: Stats::new_empty(),
             condition: ItemCondition::None,
             score: 0,
         }
-    }
+    }*/
 
     fn slot_to_usize(slot: &ItemSlot) -> usize {
         match slot {
@@ -151,6 +185,7 @@ impl Slug {
 
     fn from_item(item: &Item) -> Self {
         Slug {
+            id: item.id,
             item_slots: ItemSlot::corresponding_to_item_type(&item.item_type).iter().map(Self::slot_to_usize).collect(),
             stats: item.stats.clone(),
             condition: item.conditions.clone(),
@@ -161,8 +196,10 @@ impl Slug {
     fn from_set_slugs(slugs: Vec<&Slug>, set: &Set) -> Self {
         let mut stats = Stats::new_empty();
         slugs.iter().for_each(|s| stats.add_or_remove_stats(&s.stats, true));
+        set.bonus.iter().for_each(|s| stats.add_or_remove_stats(&s, true));
         let condition = slugs.iter().map(|slg| slg.condition.clone()).fold(ItemCondition::None, |cond, other| ItemCondition::And(cond.into(), other.clone().into()));
         Self {
+            id: set.id,
             item_slots: slugs.iter().map(|s| s.item_slots.clone()).flatten().unique().collect(),
             stats,
             condition,
@@ -171,11 +208,9 @@ impl Slug {
     }
 }
 
-fn are_compatible(item: &Item, search_options: &SearchOptions) -> bool {
-    if search_options.player_lvl() <= item.lvl { return false; }
-    todo!();
+fn is_compatible(item: &Item, search_options: &SearchOptions) -> bool {
     // todo handle conditions to not test items that needs incompatible conditions (ex. PA == 12 && PA <= 11)
-    true
+    search_options.player_lvl() <= item.lvl
 }
 
 impl PartialOrd<Self> for Slug {

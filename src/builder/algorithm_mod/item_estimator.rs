@@ -15,7 +15,7 @@ pub struct ItemEstimator;
 impl ItemEstimator {
     pub fn roxx_based_estimation<'a>(container: &'a DataContainer, attack: &Attack) -> Vec<&'a Item> {
         let mut res = vec![];
-        let mut build = Build::new_with_stats(Stats::from_map_stats(HashMap::from([(BaseStat::Puissance, 180i64), (BaseStat::DoMulti, 160)]).iter()));
+        let mut build = Build::new_with_stats(Stats::from_map_stats(HashMap::from([(BaseStat::Puissance, 1800i64), (BaseStat::DoMulti, 160)]).iter()));
         let mut estimations = vec![];
         let used_slot = ItemSlot::SlotDofusPrysmaradite;
         for itm in &container.items {
@@ -40,8 +40,6 @@ impl ItemEstimator {
                 }
             }
         }
-        let names : &Vec<&String>=  &res.split_at(32).0.iter().map(|i| &i.name).collect();
-        println!("First 32 items: {:?}", &names);
         return res;
     }
 }

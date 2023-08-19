@@ -34,6 +34,6 @@ fn basic_build_test() {
     let mut roxx_builder = RoxxBuildFinder::new(container, spell);
     roxx_builder.set_calc_type(Max);
     let ev = roxx_builder.find_build();
-    if PRINT { println!("Nb build tested: {} | Nb items in container: {} | Time: {}s", ev.build_evaluated, roxx_builder.get_data_container().items.len(), ev.search_time.as_secs()); }
+    if PRINT { println!("Nb build tested: {} | Nb items in container: {} | Time: {}s", ev.builds_evaluated, roxx_builder.get_data_container().items.len(), ev.search_time.as_secs()); }
     assert_eq!(ev.build.items[SlotCeinture as usize].id, best_id);
 }

@@ -24,6 +24,7 @@ impl RoxxBuildFinder {
         let mut seen: HashSet<String> = HashSet::new();
         let mut build_iterator = self.build_iterator_factory.create(&self.data, &self.attack);
         let mut opt_build = build_iterator.next_build();
+        let mut spares = 0;
         while opt_build.is_some() {
             let build = opt_build.unwrap();
             let eval = build.evaluate_build_damage(&self.attack);
@@ -36,16 +37,16 @@ impl RoxxBuildFinder {
                     s1
                 });
                 if !seen.insert(ids_concat.clone()) {
-                    search_result.spares += 1;
+                    spares += 1;
                 }
             }
-            search_result.build_evaluated += 1;
+            search_result.builds_evaluated += 1;
             if eval > search_result.eval {
                 search_result.eval = eval;
                 best_build_id = build.get_item_id();
-                search_result.best_build_position = search_result.build_evaluated;
+                search_result.best_build_position = search_result.builds_evaluated;
             }
-            if self.time_limit > 0 && search_result.build_evaluated % 256 == 0
+            if self.time_limit > 0 && search_result.builds_evaluated % 256 == 0
                 && now.elapsed().as_nanos() > self.time_limit {
                 break;
             }
@@ -62,6 +63,7 @@ impl RoxxBuildFinder {
         }
         search_result.build = final_build;
         search_result.search_time = now.elapsed();
+        search_result.additional_data.insert("spares".to_string(), spares.to_string());
         return search_result;
     }
 
