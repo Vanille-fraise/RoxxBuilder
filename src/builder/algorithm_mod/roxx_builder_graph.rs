@@ -4,6 +4,7 @@ use std::ops::{Not};
 use std::sync::Arc;
 use combinations::Combinations;
 use itertools::Itertools;
+use serde_json::Value::Array;
 use sorted_vec::partial::SortedSet;
 use crate::builder::attack_mod::attack::Attack;
 use crate::builder::build_mod::build_search_result::BuildSearchResult;
@@ -14,6 +15,9 @@ use crate::builder::item_mod::item_condition::ItemCondition;
 use crate::builder::item_mod::item_slot::ItemSlot;
 use crate::builder::item_mod::set::Set;
 use crate::builder::item_mod::stats::Stats;
+
+const EMPTY: u8 = 255;
+const USED: u8 = 254;
 
 pub struct GraphLooker {
     slugs: [Vec<Slug>; 10],
@@ -29,7 +33,7 @@ impl GraphLooker {
         let mut myself = Self::empty();
         myself.init(container, attack, search_options);
         myself.add_neighbors();
-        let mut best_build: [u8; 16] = [255; 16];
+        let mut best_build: [u8; 16] = [EMPTY; 16];
         while myself.equip_next_build() {
             let equipped_damage = myself.equipped_build.0.evaluate_damage(attack);
             if equipped_damage > res.eval {
@@ -60,7 +64,7 @@ impl GraphLooker {
         GraphLooker {
             slugs: [Vec::new(), Vec::new(), Vec::new(), Vec::new(), Vec::new(),
                 Vec::new(), Vec::new(), Vec::new(), Vec::new(), Vec::new()],
-            equipped_build: (Stats::new_empty(), [255; 16]),
+            equipped_build: (Stats::new_empty(), [EMPTY; 16]),
             visited: HashSet::with_capacity(2 ^ 20),
             neighbors: SortedSet::with_capacity(2 ^ 14),
             visits_per_slot: 4,
@@ -74,10 +78,10 @@ impl GraphLooker {
         let cur_build = self.neighbors.pop().unwrap();
         self.equipped_build.1.copy_from_slice(&cur_build.1);
         for i in 0..16 {
-            if self.equipped_build.1[i] != 255 {
+            if self.equipped_build.1[i] != EMPTY {
                 self.equipped_build.0.add_or_remove_brut_stats(&self.slugs[Self::item_slot_to_slug_slot(i)][self.equipped_build.1[i] as usize].stats, false);
             }
-            if cur_build.1[i] != 255 {
+            if cur_build.1[i] != EMPTY {
                 self.equipped_build.0.add_or_remove_brut_stats(&self.slugs[i][cur_build.1[i] as usize].stats, true);
             }
         }
@@ -143,6 +147,24 @@ impl GraphLooker {
             }
         }
         // could improve with more precise score
+    }
+
+    /**
+    This function change the slots order to make it unique
+    **/
+    fn is_visited(&self, slots: &mut [u8; 16]) -> bool {
+        if slots[8] > slots[9] {
+            (slots[8], slots[9]) = (slots[9], slots[8]);
+        }
+        slots.split_at_mut(10).1.sort();
+        self.visited.contains(slots)
+    }
+
+    /**
+    This function must be called only after is_visited to hae only good values
+    **/
+    fn add_to_visited(&mut self, slots: [u8; 16]) -> bool {
+        self.visited.insert(slots.clone())
     }
 }
 
