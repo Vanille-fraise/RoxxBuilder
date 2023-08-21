@@ -1,8 +1,9 @@
 # RoxxBuilder
 
-Hi, welcome to RoxxBuilder, a 100% open source project developped by myself [@Vanille-fraise](https://github.com/Vanille-fraise/).
-The first tool to generate Dofus buid, that optimize the damage of a given spell.
-
+Hi, welcome to RoxxBuilder, a 100% open source project developped by myself [@Vanille-fraise](https://github.com/Vanille-fraise/).  
+RoxxBuilder is first tool to generate Dofus buid, that optimize the damage of a given spell.  
+This tool is a totally free to use API.  
+To use it contact me via [Discord](discordapp.com/users/pyjamas_sacre) to get the needed informations :)  
 
 ## State of the of app
 
