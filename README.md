@@ -3,7 +3,7 @@
 Hi, welcome to RoxxBuilder, a 100% open source project developped by myself [@Vanille-fraise](https://github.com/Vanille-fraise/).  
 RoxxBuilder is first tool to generate Dofus buid, that optimize the damage of a given spell.  
 This tool is a totally free to use API.  
-To use it contact me via [Discord](discordapp.com/users/pyjamas_sacre) to get the needed informations :)  
+To use it contact me via [Discord](https://discordapp.com/users/480041757862789131) to get the needed informations :)  
 
 ## State of the of app
 
@@ -36,7 +36,7 @@ To get the IP address contact me on Discord. See Author section.
 | `damage_position` | `string` | Value: "**Distance**" or "Melee" |
 | `piege` | `boolean` | Value: true or **false** |
 | `can_crit` | `boolean` | Value: **true** or false |
-| `base_crit` | `integer` | Base crit in percent. Ex: **0**, 5 or 15. |
+| `base_crit` | `integer` | Base crit in percent. Ex: **0**, 5, 15... |
 | `damage_calculation` | `string` | Search calculation type. Value: "Minimized", "Min", "**Average**", "Max".|
 
 Notes: The bold are the default values. A field with default value is optional.
@@ -105,5 +105,5 @@ Body:
 
 - [@Vanille-fraise](https://github.com/Vanille-fraise/)
 - [Youtube newest video](https://www.youtube.com/watch?v=-dAHVCplywU&ab_channel=SuccessFull)
-- [Discord](discordapp.com/users/pyjamas_sacre)
+- [Discord](https://discordapp.com/users/480041757862789131)
 
