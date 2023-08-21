@@ -57,10 +57,10 @@ Body:
 ```json
   {
     "damages": [
-    {"damage_element": "DamageTerre", "min_value" : 81, "max_value" : 100},
+    {"damage_element": "DamageTerre", "min_value" : 81, "max_value" : 100}
     ],
     "crit_damages": [
-    {"damage_element": "DamageTerre", "min_value" : 97, "max_value" : 120},
+    {"damage_element": "DamageTerre", "min_value" : 97, "max_value" : 120}
     ],
     "damage_source": "Sort",
     "damage_position": "Melee",
