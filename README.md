@@ -1,6 +1,7 @@
 # RoxxBuilder
 
-A tool to generate Dofus buid based on a spell to maximise its damage.
+Hi, welcome to RoxxBuilder, a 100% open source project developped by myself [@Vanille-fraise](https://github.com/Vanille-fraise/).
+The first tool to generate Dofus buid, that optimize the damage of a given spell.
 
 
 ## State of the of app
