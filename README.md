@@ -70,6 +70,21 @@ Body:
     "damage_calculation": "Average"
 }
 ```
+Answer:
+```
+{
+    "items_name": ["Collier de Tourthon", "Bottes de Brouce", "Bouclier du Captain Amakna", "Cape au Logis", "Crocobur", "Surpuissant Chacha de Combat (MJ)", "Ceinture de Brouce", "Coiffe du Comte Harebourg", "Annobusé de Maître Jarbo", "", "Vigoureux majeur", "Robuste majeur", "Forcené majeur", "Enragé majeur", "Furibond majeur", "Dofus Pourpre"],
+    "eval": 2858,
+    "last_item_tested": "Baguette Irréelle",
+    "build_evaluated": 12350464,
+    "search_time": {
+        "secs": 6,
+        "nanos": 219811
+    },
+    "spares": -1,
+    "best_build_position": 9226108
+}
+```
 #### 2. Ambuscade
 Request:
 ```http
