@@ -71,7 +71,7 @@ Body:
 }
 ```
 Answer:
-```
+```json
 {
     "items_name": ["Collier de Tourthon", "Bottes de Brouce", "Bouclier du Captain Amakna", "Cape au Logis", "Crocobur", "Surpuissant Chacha de Combat (MJ)", "Ceinture de Brouce", "Coiffe du Comte Harebourg", "Annobusé de Maître Jarbo", "", "Vigoureux majeur", "Robuste majeur", "Forcené majeur", "Enragé majeur", "Furibond majeur", "Dofus Pourpre"],
     "eval": 2858,
