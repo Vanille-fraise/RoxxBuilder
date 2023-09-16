@@ -1,11 +1,11 @@
-use std::cmp::Ordering;
-use std::collections::{BTreeMap, HashSet};
+use std::cmp::{max, Ordering};
+use std::collections::{HashSet};
+use std::collections::btree_map::BTreeMap;
 use std::ops::{Not};
 use std::sync::Arc;
+use std::time;
 use combinations::Combinations;
 use itertools::Itertools;
-use serde_json::Value::Array;
-use sorted_vec::partial::SortedSet;
 use crate::builder::attack_mod::attack::Attack;
 use crate::builder::build_mod::build_search_result::BuildSearchResult;
 use crate::builder::build_mod::player::SearchOptions;
@@ -16,25 +16,31 @@ use crate::builder::item_mod::item_slot::ItemSlot;
 use crate::builder::item_mod::set::Set;
 use crate::builder::item_mod::stats::Stats;
 
-const EMPTY: u8 = 255;
-const USED: u8 = 254;
+const EMPTY: u8 = 254;
+const USED: u8 = 255;
+
+const MIN_SEARCH_TIME: u128 = 1_000;
 
 pub struct GraphLooker {
     slugs: [Vec<Slug>; 10],
     equipped_build: (Stats, [u8; 16]),
     visited: HashSet<[u8; 16]>,
-    neighbors: SortedSet<(i64, [u8; 16])>,
+    neighbors: Vec<(i64, [u8; 16])>,
     visits_per_slot: usize,
 }
 
 impl GraphLooker {
     pub fn search<'a>(container: &'a DataContainer, attack: &Attack, search_options: &SearchOptions) -> BuildSearchResult<'a> {
+        let start = time::Instant::now();
+
+        let search_time = max(MIN_SEARCH_TIME, search_options.search_time_milli());
         let mut res = BuildSearchResult::empty();
         let mut myself = Self::empty();
         myself.init(container, attack, search_options);
-        myself.add_neighbors();
+        myself.add_neighbors(attack);
         let mut best_build: [u8; 16] = [EMPTY; 16];
-        while myself.equip_next_build() {
+        res.additional_data.insert("Preparation time".to_string(), format!("{:?}", start.elapsed()));
+        while myself.equip_next_build() && start.elapsed().as_millis() < search_time {
             let equipped_damage = myself.equipped_build.0.evaluate_damage(attack);
             if equipped_damage > res.eval {
                 res.eval = equipped_damage;
@@ -42,10 +48,12 @@ impl GraphLooker {
                 best_build.copy_from_slice(&myself.equipped_build.1);
             }
             res.builds_evaluated += 1;
-            myself.add_neighbors();
+            myself.add_neighbors(attack);
         }
+        // dbg!(best_build);
+        res.additional_data.insert("Final neighbors size".into(), myself.neighbors.len().to_string());
         let best_ids: Vec<i64> = best_build.iter().enumerate()
-            .map(|(slot, &pos)| myself.slugs[Self::item_slot_to_slug_slot(slot)][pos as usize].id).collect();
+            .map(|(slot, &pos)| if pos >= EMPTY { -1 } else { myself.slugs[Self::item_slot_to_slug_slot(slot)][pos as usize].id }).collect();
         for (cur_slot, item) in container.get_items_with_ids(&best_ids).iter().enumerate() {
             res.build.add_item(&item, num::FromPrimitive::from_usize(cur_slot).unwrap());
         }
@@ -57,7 +65,7 @@ impl GraphLooker {
             item_slot
         } else if item_slot == 9 {
             8
-        } else { 10 }
+        } else { 9 }
     }
 
     fn empty() -> Self {
@@ -66,8 +74,8 @@ impl GraphLooker {
                 Vec::new(), Vec::new(), Vec::new(), Vec::new(), Vec::new()],
             equipped_build: (Stats::new_empty(), [EMPTY; 16]),
             visited: HashSet::with_capacity(2 ^ 20),
-            neighbors: SortedSet::with_capacity(2 ^ 14),
-            visits_per_slot: 4,
+            neighbors: Vec::with_capacity(2 ^ 14),
+            visits_per_slot: 1,
         }
     }
 
@@ -75,39 +83,48 @@ impl GraphLooker {
         if self.neighbors.is_empty() {
             return false;
         }
-        let cur_build = self.neighbors.pop().unwrap();
-        self.equipped_build.1.copy_from_slice(&cur_build.1);
+        let next_build = self.neighbors.remove(0);
         for i in 0..16 {
-            if self.equipped_build.1[i] != EMPTY {
+            if self.equipped_build.1[i] == next_build.1[i] { continue; }
+            if self.equipped_build.1[i] < EMPTY {
                 self.equipped_build.0.add_or_remove_brut_stats(&self.slugs[Self::item_slot_to_slug_slot(i)][self.equipped_build.1[i] as usize].stats, false);
             }
-            if cur_build.1[i] != EMPTY {
-                self.equipped_build.0.add_or_remove_brut_stats(&self.slugs[i][cur_build.1[i] as usize].stats, true);
+            if next_build.1[i] < EMPTY {
+                self.equipped_build.0.add_or_remove_brut_stats(&self.slugs[Self::item_slot_to_slug_slot(i)][next_build.1[i] as usize].stats, true);
             }
         }
+        self.equipped_build.1.copy_from_slice(&next_build.1);
         true
     }
 
-    fn add_neighbors(&mut self) {
+    fn add_neighbors(&mut self, attack: &Attack) {
         for (slot, &item_pos) in self.equipped_build.1.iter().enumerate() {
+            if item_pos == USED { continue; }
             let mut cur_stat = self.equipped_build.0.clone();
-            if item_pos != 255 {
+            if item_pos < EMPTY {
                 cur_stat.add_or_remove_brut_stats(&self.slugs[Self::item_slot_to_slug_slot(slot)][item_pos as usize].stats, false);
             }
+            let eval = cur_stat.evaluate_damage(attack);
             let mut nb_visited = 0;
             let mut i = 0;
             while nb_visited < self.visits_per_slot && i < self.slugs[Self::item_slot_to_slug_slot(slot)].len() {
-                // self.visited
-                // todo: go trough the slugs, check if in visited. If not compute stats & add to neighbors
+                let mut cur_slots = self.equipped_build.1.clone();
+                cur_slots[slot] = i as u8;
+                // Check if the build has been visited
+                if cur_slots[8] > cur_slots[9] {
+                    (cur_slots[8], cur_slots[9]) = (cur_slots[9], cur_slots[8]);
+                }
+                cur_slots.split_at_mut(10).1.sort();
+                self.slugs[Self::item_slot_to_slug_slot(slot)][i].item_slots.iter().for_each(|&s| cur_slots[s] = USED);
+                if self.visited.insert(cur_slots.clone()) {
+                    let to_add = (eval + self.slugs[Self::item_slot_to_slug_slot(slot)][i].score, cur_slots);
+                    let res_pos = self.neighbors.binary_search_by(|elem| elem.0.cmp(&to_add.0).reverse());
+                    self.neighbors.insert(res_pos.unwrap_or_else(|elem| elem), to_add);
+                    nb_visited += 1;
+                }
                 i += 1;
             }
         }
-        // all the fun is here :D
-        // must:
-        // - check condition
-        // - prioritise when there is a condition
-        // - limit the addition with limit size
-        todo!()
     }
 
     fn init(&mut self, container: &DataContainer, attack: &Attack, search_options: &SearchOptions) {
@@ -127,7 +144,7 @@ impl GraphLooker {
             for i in 0..slugs.len() {
                 let combinations = Combinations::new(slugs.clone(), i);
                 for cur_combinations in combinations {
-                    all_slugs.push(Slug::from_set_slugs(cur_combinations.iter().map(|c| &all_slugs[*c]).collect(), set))
+                    all_slugs.push(Slug::from_set(cur_combinations.iter().map(|c| &all_slugs[*c]).collect(), set))
                 }
             }
         }
@@ -136,35 +153,23 @@ impl GraphLooker {
 
     fn attribute_slugs(&mut self, mut all_slugs: Vec<Slug>, attack: &Attack) {
         for slug in all_slugs.iter_mut() {
+            slug.stats.reset_brutality(&attack);
             slug.score = slug.stats.evaluate_damage(attack) / slug.item_slots.len() as i64;
+            // todo: maybe fix for dofus or ring, might be multiple spots
+            // todo: score is added damage + base damage -> mess maybe with the eval
         }
-        all_slugs.sort();
+        all_slugs.sort_by(|e1, e2| e2.score.cmp(&e1.score));
         for slug in all_slugs.into_iter() {
-            for &slot in &slug.item_slots {
-                if self.slugs[slot].len() < 255 {
-                    self.slugs[slot].push(slug.clone());
+            for (pos, &slot) in slug.item_slots.iter().enumerate() {
+                if self.slugs[slot].len() < 254 {
+                    let mut cur_slut = slug.clone();
+                    cur_slut.item_slots.remove(pos);
+                    self.slugs[slot].push(cur_slut);
                 }
             }
         }
         // could improve with more precise score
-    }
-
-    /**
-    This function change the slots order to make it unique
-    **/
-    fn is_visited(&self, slots: &mut [u8; 16]) -> bool {
-        if slots[8] > slots[9] {
-            (slots[8], slots[9]) = (slots[9], slots[8]);
-        }
-        slots.split_at_mut(10).1.sort();
-        self.visited.contains(slots)
-    }
-
-    /**
-    This function must be called only after is_visited to hae only good values
-    **/
-    fn add_to_visited(&mut self, slots: [u8; 16]) -> bool {
-        self.visited.insert(slots.clone())
+        // todo: score that take condition into account
     }
 }
 
@@ -208,21 +213,23 @@ impl Slug {
     fn from_item(item: &Item) -> Self {
         Slug {
             id: item.id,
-            item_slots: ItemSlot::corresponding_to_item_type(&item.item_type).iter().map(Self::slot_to_usize).collect(),
+            item_slots: ItemSlot::corresponding_to_item_type(&item.item_type).iter().map(Self::slot_to_usize).unique().collect(),
             stats: item.stats.clone(),
             condition: item.conditions.clone(),
             score: 0,
         }
     }
 
-    fn from_set_slugs(slugs: Vec<&Slug>, set: &Set) -> Self {
+    fn from_set(slugs: Vec<&Slug>, set: &Set) -> Self {
         let mut stats = Stats::new_empty();
         slugs.iter().for_each(|s| stats.add_or_remove_stats(&s.stats, true));
-        set.bonus.iter().for_each(|s| stats.add_or_remove_stats(&s, true));
+        if slugs.len() > 0 {
+            stats.add_or_remove_stats(&set.bonus[slugs.len() - 1], true);
+        }
         let condition = slugs.iter().map(|slg| slg.condition.clone()).fold(ItemCondition::None, |cond, other| ItemCondition::And(cond.into(), other.clone().into()));
         Self {
             id: set.id,
-            item_slots: slugs.iter().map(|s| s.item_slots.clone()).flatten().unique().collect(),
+            item_slots: slugs.iter().map(|s| s.item_slots.clone()).flatten().collect(),
             stats,
             condition,
             score: 0,
@@ -232,7 +239,8 @@ impl Slug {
 
 fn is_compatible(item: &Item, search_options: &SearchOptions) -> bool {
     // todo handle conditions to not test items that needs incompatible conditions (ex. PA == 12 && PA <= 11)
-    search_options.player_lvl() <= item.lvl
+    // handle white list
+    search_options.player_lvl() >= item.lvl && search_options.black_list().iter().any(|s| &item.id.to_string() == s || &item.name == s).not()
 }
 
 impl PartialOrd<Self> for Slug {
@@ -246,3 +254,4 @@ impl Ord for Slug {
         self.score.cmp(&other.score)
     }
 }
+

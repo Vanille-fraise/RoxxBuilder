@@ -76,6 +76,6 @@ impl DataContainer {
 
     pub fn get_items_with_ids(&self, ids: &Vec<i64>) -> Vec<&Item> {
         let set_ids: Vec<i64> = self.sets.iter().filter(|s| ids.contains(&s.id)).map(|s| s.id).collect();
-        self.items.iter().filter(|&i| set_ids.contains(&i.set.clone().unwrap().id) || ids.contains(&i.id)).collect()
+        self.items.iter().filter(|&i| set_ids.contains(&i.set.clone().map_or(0, |s| s.id)) || ids.contains(&i.id)).collect()
     }
 }

@@ -73,11 +73,11 @@ impl Stats {
     pub fn add_or_remove_brut_stats(&mut self, other_stats: &Stats, add: bool) {
         if add {
             for i in 0..self.brutality_stats.len() {
-                self.brutality_stats[i] += other_stats.base_stats[i];
+                self.brutality_stats[i] += other_stats.brutality_stats[i];
             }
         } else {
             for i in 0..self.brutality_stats.len() {
-                self.brutality_stats[i] -= other_stats.base_stats[i];
+                self.brutality_stats[i] -= other_stats.brutality_stats[i];
             }
         }
     }
