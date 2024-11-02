@@ -1,4 +1,5 @@
 use actix_web::{web, App, HttpServer};
+use actix_cors::Cors;
 use crate::builder::data_mod::data_manager::DataManager;
 use crate::web::api::app_state::AppState;
 use crate::web::api::roxx_builder::services::attack_service::post_attack;
@@ -8,10 +9,10 @@ pub async fn api_main() -> std::io::Result<()> {
     let base_data_container = DataManager::retrieve_data().await;
     let app_data = web::Data::new(AppState::new(base_data_container));
     let port = 8008;
-    let url = "0.0.0.0";
+    let url = "localhost";
     println!("Data loaded, starting server on {}, port {}", url, port);
     HttpServer::new(move || {
         App::new().app_data(app_data.clone()).
-            service(health_check).service(empty_check).service(post_attack)
+            service(empty_check).wrap(Cors::permissive()).service(post_attack).wrap(Cors::permissive()).service(health_check).wrap(Cors::permissive())
     }).bind((url, port))?.run().await
 }
