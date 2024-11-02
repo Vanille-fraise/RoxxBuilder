@@ -98,7 +98,7 @@ impl<'a> Build<'a> {
     pub fn new() -> Self {
         Build {
             items: Item::ref_empty_items(),
-            stats: Stats::new_empty(),
+            stats: Stats::empty(),
             search_options: None,
             sets: Default::default(),
         }
@@ -137,7 +137,10 @@ impl<'a> Build<'a> {
             if !item.name.is_empty() && item.name != "No name" {
                 sb.append("-");
                 sb.append(item.name.clone())
-            };
+            }
+            if item.name.is_empty() {
+                sb.append("-ø");
+            }
         }
         sb.append("]");
         sb.string().unwrap_or("No item".to_string())

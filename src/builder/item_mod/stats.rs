@@ -19,7 +19,7 @@ pub struct Stats {
 }
 
 impl Stats {
-    pub const fn new_empty() -> Self {
+    pub const fn empty() -> Self {
         Stats {
             base_stats: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -27,7 +27,7 @@ impl Stats {
         }
     }
     pub fn from_effects_json_value(value: &serde_json::Value) -> Self {
-        let mut stats = Stats::new_empty();
+        let mut stats = Stats::empty();
         value.as_array().unwrap_or(&mut vec![]).iter().filter(|v| { v["characteristic"].as_i64().unwrap_or(-1) > 0 }).for_each(|v| {
             let stat = BaseStat::from_dofus_db_val(v["characteristic"].as_i64().unwrap());
             let to = v["to"].as_i64().unwrap_or(0);
@@ -84,7 +84,7 @@ impl Stats {
 
     pub fn from_map_stats<'a>(stats_map: impl Iterator<Item=(&'a BaseStat, &'a i64)>) -> Self
     {
-        let mut stats: Self = Self::new_empty();
+        let mut stats: Self = Self::empty();
         for (stat, val) in stats_map {
             stats.set_stat(&stat.clone(), *val);
         }

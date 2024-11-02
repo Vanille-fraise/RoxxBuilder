@@ -61,6 +61,7 @@ impl DataLoader {
                 }
             }
         }
+        container.reset_reference_size();
         Ok(container)
     }
 

@@ -54,5 +54,8 @@ impl SearchOptions {
     pub fn set_search_time_milli(&mut self, millisecond_time_limit: u128) {
         self.search_time_milli = millisecond_time_limit;
     }
+    pub fn set_black_list(&mut self, black_list: Vec<String>) {
+        self.black_list = black_list;
+    }
 }
 

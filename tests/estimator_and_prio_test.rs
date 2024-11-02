@@ -22,8 +22,7 @@ lazy_static! {
     static ref COCO : Attack = Attack::new(vec![DamageLine::new_fix(DamageElement::DamageTerre, 100)], vec![DamageLine::new_fix(DamageElement::DamageTerre, 100)], DamageSource::Sort, DamagePosition::Melee, true, 25, DamageCalculation::Average);
 }
 
-#[test]
-fn full_crap_find_right_comb() {
+pub fn generate_test_dc() -> DataContainer {
     let types: Vec<ItemType> = vec![Amulette, Arc, Ceinture, Bottes, Chapeau, Cape, Familier, Prysmaradite, Trophee, Dofus, Dofus, Trophee, Dofus, Bouclier, Anneau];
     let mut dc = DataContainer::new();
     for t in types.iter() {
@@ -39,8 +38,15 @@ fn full_crap_find_right_comb() {
     }
     let mut rng = rand::thread_rng();
     dc.items.shuffle(&mut rng);
+    dc.link_item_with_set();
+    dc
+}
+
+#[test]
+fn full_crap_find_right_comb() {
+    let dc = generate_test_dc();
     let mut rb = RoxxBuildFinder::new(dc, COCO.clone());
-    let time_limit = 5_000_000_000u128;
+    let time_limit = 50_000_000_000u128;
     rb.time_limit = time_limit;
     rb.track_data = false;
     let res = rb.find_build();

@@ -13,6 +13,7 @@ pub struct DataContainer {
     pub items: Vec<Item>,
     pub sets: Vec<Arc<Set>>,
     pub attacks: Vec<Attack>,
+    pub reference_size: usize,
 }
 
 impl DataContainer {
@@ -21,6 +22,7 @@ impl DataContainer {
             items: vec![],
             sets: vec![],
             attacks: vec![],
+            reference_size: 0,
         }
     }
 
@@ -77,5 +79,9 @@ impl DataContainer {
     pub fn get_items_with_ids(&self, ids: &Vec<i64>) -> Vec<&Item> {
         let set_ids: Vec<i64> = self.sets.iter().filter(|s| ids.contains(&s.id)).map(|s| s.id).collect();
         self.items.iter().filter(|&i| set_ids.contains(&i.set.clone().map_or(0, |s| s.id)) || ids.contains(&i.id)).collect()
+    }
+
+    pub fn reset_reference_size(&mut self) {
+        self.reference_size = self.sets.len() + self.items.len();
     }
 }

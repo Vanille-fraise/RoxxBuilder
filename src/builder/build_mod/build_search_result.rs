@@ -10,10 +10,11 @@ pub struct BuildSearchResult<'a> {
     pub search_time: Duration,
     pub best_build_position: i64,
     pub additional_data: HashMap<String, String>,
+    pub builds_considered: i64,
 }
 
 impl<'a> BuildSearchResult<'a> {
-    pub fn new(eval: i64, build: Build<'a>, builds_evaluated: i64, search_time: Duration, best_build_position: i64, additional_data: HashMap<String, String>) -> Self {
+    pub fn new(eval: i64, build: Build<'a>, builds_evaluated: i64, search_time: Duration, best_build_position: i64, additional_data: HashMap<String, String>, build_considered: i64,) -> Self {
         BuildSearchResult {
             eval,
             build,
@@ -21,10 +22,11 @@ impl<'a> BuildSearchResult<'a> {
             search_time,
             best_build_position,
             additional_data,
+            builds_considered: build_considered,
         }
     }
 
     pub fn empty() -> Self {
-        Self::new(-1, Build::new(), 0, Duration::new(0, 0), -1, HashMap::new())
+        Self::new(-1, Build::new(), 0, Duration::new(0, 0), -1, HashMap::new(), 0)
     }
 }

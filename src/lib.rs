@@ -1,3 +1,5 @@
+#![feature(map_many_mut)]
+
 pub mod builder;
 pub mod web;
 

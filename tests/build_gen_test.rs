@@ -38,7 +38,7 @@ fn one_anneau_item_builds() {
 fn one_anneau_with_set_item_builds() {
     let mut loc_items = NO_ITEM.clone();
     let mut item = Item::new_from_type(Anneau);
-    let set = Set::new(1, vec![Stats::new_empty(), Stats::new_empty()]);
+    let set = Set::new(1, vec![Stats::empty(), Stats::empty()]);
     item.set_id = 1;
     item.set = Some(set.into());
     loc_items.push(&item);
@@ -54,7 +54,7 @@ fn multiple_anneau_with_set_item_builds() {
     let mut item_3 = Item::new_from_type(Arc);
     item_3.name = "<ARC>".to_string();
     item_2.name = "<ANNEAU no set>".to_string();
-    let set = Set::new(1, vec![Stats::new_empty(), Stats::new_empty()]);
+    let set = Set::new(1, vec![Stats::empty(), Stats::empty()]);
     item.set_id = 1;
     item.name = "<ANNEAU with set>".to_string();
     item.set = Some(set.into());
@@ -110,7 +110,7 @@ fn multiple_anneau_with_dofus_set_item_builds() {
     item_4.name = "4".to_string();
     let mut item_5 = Item::new_from_type(Prysmaradite);
     item_5.name = "5".to_string();
-    let set = Set::new(1, vec![Stats::new_empty(), Stats::new_empty()]);
+    let set = Set::new(1, vec![Stats::empty(), Stats::empty()]);
     item_1.set_id = 1;
     item_1.name = "1 & Set".to_string();
     item_1.set = Some(set.into());
