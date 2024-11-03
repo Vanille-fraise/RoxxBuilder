@@ -27,7 +27,7 @@ impl AppState {
 
     pub fn new(container: DataContainer) -> Self {
         let mut build_finder =  RoxxBuildFinder::new(container, Attack::default());
-        build_finder.time_limit = 6 * 1_000_000_000;
+        build_finder.time_limit = 1 * 1_000_000_000; // One second for now, until we can handle multiple request in parallel.
         build_finder.track_data = false;
         AppState {
             roxx_build_finder: Mutex::new(build_finder),
