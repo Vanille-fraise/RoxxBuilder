@@ -17,22 +17,22 @@ extern crate serde_json;
 extern crate num;
 
 pub static EMPTY_ITEMS: [Item; 16] = [
-    Item { item_type: Amulette, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 0, img: String::new(), imgs: Option::None },
-    Item { item_type: ItemType::Bottes, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 1, img: String::new(), imgs: Option::None  },
-    Item { item_type: ItemType::Bouclier, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 2, img: String::new(), imgs: Option::None  },
-    Item { item_type: ItemType::Cape, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 3, img: String::new(), imgs: Option::None },
-    Item { item_type: ItemType::Arc, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 4, img: String::new(), imgs: Option::None },
-    Item { item_type: ItemType::Familier, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 5, img: String::new(), imgs: Option::None },
-    Item { item_type: ItemType::Ceinture, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 6, img: String::new(), imgs: Option::None },
-    Item { item_type: ItemType::Chapeau, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 7, img: String::new(), imgs: Option::None },
-    Item { item_type: ItemType::Anneau, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 8, img: String::new(), imgs: Option::None },
-    Item { item_type: ItemType::Anneau, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 9, img: String::new(), imgs: Option::None },
-    Item { item_type: ItemType::Dofus, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 10, img: String::new(), imgs: Option::None },
-    Item { item_type: ItemType::Dofus, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 11, img: String::new(), imgs: Option::None },
-    Item { item_type: ItemType::Dofus, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 12, img: String::new(), imgs: Option::None },
-    Item { item_type: ItemType::Dofus, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 13, img: String::new(), imgs: Option::None },
-    Item { item_type: ItemType::Dofus, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 14, img: String::new(), imgs: Option::None },
-    Item { item_type: ItemType::Prysmaradite, stats: Stats::new_empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 15, img: String::new(), imgs: Option::None }
+    Item { item_type: Amulette, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 0, img: String::new(), imgs: Option::None },
+    Item { item_type: ItemType::Bottes, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 1, img: String::new(), imgs: Option::None  },
+    Item { item_type: ItemType::Bouclier, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 2, img: String::new(), imgs: Option::None  },
+    Item { item_type: ItemType::Cape, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 3, img: String::new(), imgs: Option::None },
+    Item { item_type: ItemType::Arc, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 4, img: String::new(), imgs: Option::None },
+    Item { item_type: ItemType::Familier, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 5, img: String::new(), imgs: Option::None },
+    Item { item_type: ItemType::Ceinture, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 6, img: String::new(), imgs: Option::None },
+    Item { item_type: ItemType::Chapeau, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 7, img: String::new(), imgs: Option::None },
+    Item { item_type: ItemType::Anneau, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 8, img: String::new(), imgs: Option::None },
+    Item { item_type: ItemType::Anneau, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 9, img: String::new(), imgs: Option::None },
+    Item { item_type: ItemType::Dofus, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 10, img: String::new(), imgs: Option::None },
+    Item { item_type: ItemType::Dofus, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 11, img: String::new(), imgs: Option::None },
+    Item { item_type: ItemType::Dofus, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 12, img: String::new(), imgs: Option::None },
+    Item { item_type: ItemType::Dofus, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 13, img: String::new(), imgs: Option::None },
+    Item { item_type: ItemType::Dofus, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 14, img: String::new(), imgs: Option::None },
+    Item { item_type: ItemType::Prysmaradite, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 15, img: String::new(), imgs: Option::None }
 ];
 
 #[derive(PartialEq, Eq, Deserialize, Serialize, Debug)]
@@ -71,7 +71,7 @@ impl Item {
     pub fn default() -> Self {
         Item {
             item_type: Amulette,
-            stats: Stats::new_empty(),
+            stats: Stats::empty(),
             name: String::from("No name"),
             names: None,
             lvl: 200,
