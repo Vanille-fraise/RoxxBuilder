@@ -1,0 +1,15 @@
+{
+    "data":{
+        "spells": [
+            {
+                "breed_id": 1,
+                "breed_name": "Pandawa",
+                "spell_id": 206,
+                "spell_name": "Paume Explosive",
+                "spell_levels": [
+                    attacks...
+                ]
+            }
+        ]
+    }
+}

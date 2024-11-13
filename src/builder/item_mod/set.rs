@@ -3,6 +3,7 @@ use serde::{Serialize, Deserialize};
 use crate::builder::item_mod::stats::Stats;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Eq, PartialEq)]
+#[serde(rename_all = "camelCase")]
 pub struct Set {
     pub id: i64,
     pub bonus: Vec<Stats>,

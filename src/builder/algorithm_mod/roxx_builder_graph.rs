@@ -8,7 +8,7 @@ use combinations::Combinations;
 use itertools::Itertools;
 use crate::builder::attack_mod::attack::Attack;
 use crate::builder::build_mod::build_search_result::BuildSearchResult;
-use crate::builder::build_mod::player::SearchOptions;
+use crate::builder::player_mod::player::SearchOptions;
 use crate::builder::data_mod::data_container::DataContainer;
 use crate::builder::item_mod::item::Item;
 use crate::builder::item_mod::item_condition::ItemCondition;

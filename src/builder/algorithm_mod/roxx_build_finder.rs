@@ -70,7 +70,7 @@ impl RoxxBuildFinder {
     pub fn new(mut data: DataContainer, attack: Attack) -> Self {
         data.clear_unknown_type();
         data.reset_brutality(&attack);
-        data.link_item_with_set();
+        data.link_sub_data();
         RoxxBuildFinder {
             data,
             build_iterator_factory: BuildIteratorFactory::new_iterative_factory(),
@@ -81,12 +81,12 @@ impl RoxxBuildFinder {
         }
     }
 
-    pub fn set_attack(&mut self, attack: Attack) {
+    pub fn set_attack(& mut self, attack: Attack) {
         self.attack = attack;
         self.set_brutality_estimation();
     }
 
-    pub fn set_calc_type(&mut self, calc_type: DamageCalculation) {
+    pub fn set_calc_type(& mut self, calc_type: DamageCalculation) {
         self.calc_type = calc_type;
         self.set_brutality_estimation();
     }

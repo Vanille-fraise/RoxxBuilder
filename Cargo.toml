@@ -31,6 +31,7 @@ sorted-vec = "0.8.2"
 combinations = "0.1.0"
 itertools = "0.9.0"
 actix-cors = "0.7"
+serde_repr = "0.1.19"
 
 [[bench]]
 name = "hashmap_array_basestats_bench"

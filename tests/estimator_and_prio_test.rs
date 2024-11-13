@@ -38,7 +38,7 @@ pub fn generate_test_dc() -> DataContainer {
     }
     let mut rng = rand::thread_rng();
     dc.items.shuffle(&mut rng);
-    dc.link_item_with_set();
+    dc.link_sub_data();
     dc
 }
 

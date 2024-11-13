@@ -11,7 +11,7 @@ use roxx_builder::builder::attack_mod::damage_line::DamageLine;
 use roxx_builder::builder::attack_mod::damage_position::DamagePosition;
 use roxx_builder::builder::attack_mod::damage_source::DamageSource;
 use roxx_builder::builder::attack_mod::damage_calculation::DamageCalculation;
-use roxx_builder::builder::build_mod::player::SearchOptions;
+use roxx_builder::builder::pplayer_mod::player::SearchOptions;
 use roxx_builder::builder::data_mod::data_container::DataContainer;
 use roxx_builder::builder::data_mod::data_manager::DataManager;
 use roxx_builder::builder::item_mod::base_stat_mod::base_stat::BaseStat;
@@ -113,7 +113,7 @@ fn full_crap_item_one_amazing_set_test() {
     dc.items.push(item);
     dc.items.push(item2);
     dc.sets.push(set.into());
-    dc.link_item_with_set();
+    dc.link_sub_data();
 
     for i in 0..5000usize {
         let mut item = Item::new_with_stats(Stats::from_map_stats(HashMap::from([(BaseStat::DoMulti, (i % 27) as i64), (BaseStat::Puissance, (i % 117) as i64)]).iter()));
@@ -151,7 +151,7 @@ pub fn generate_test_dc() -> DataContainer {
     }
     let mut rng = rand::thread_rng();
     dc.items.shuffle(&mut rng);
-    dc.link_item_with_set();
+    dc.link_sub_data();
     dc
 }
 
@@ -174,7 +174,7 @@ async fn real_item_coherent_result_test() {
     println!("Data container loaded in: {}ms", time.elapsed().as_millis());
     let mut rng = rand::thread_rng();
     dc.items.shuffle(&mut rng);
-    dc.link_item_with_set();
+    dc.link_sub_data();
     let mut search_option = SearchOptions::empty();
     search_option.set_search_time_milli(10_000);
     search_option.set_black_list(BLACK_LIST.clone());

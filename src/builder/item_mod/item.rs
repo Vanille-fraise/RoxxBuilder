@@ -35,7 +35,8 @@ pub static EMPTY_ITEMS: [Item; 16] = [
     Item { item_type: ItemType::Prysmaradite, stats: Stats::empty(), name: String::new(), names: Option::None, lvl: 1, set_id: 0, set: None, conditions: ItemCondition::None, id: 15, img: String::new(), imgs: Option::None }
 ];
 
-#[derive(PartialEq, Eq, Deserialize, Serialize, Debug)]
+#[derive(PartialEq, Eq, Deserialize, Serialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct Item {
     pub item_type: ItemType,
     pub stats: Stats,
@@ -43,8 +44,7 @@ pub struct Item {
     pub names: Option<HashMap<String, String>>,
     pub lvl: u64,
     pub set_id: i64,
-    #[serde(skip_deserializing)]
-    #[serde(skip_serializing)]
+    #[serde(skip_deserializing, skip_serializing)]
     pub set: Option<Arc<Set>>,
     pub conditions: ItemCondition,
     pub id: i64,

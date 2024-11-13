@@ -3,7 +3,7 @@ use num_traits::FromPrimitive;
 use string_builder::Builder;
 use strum::IntoEnumIterator;
 use crate::builder::attack_mod::attack::Attack;
-use crate::builder::build_mod::player::SearchOptions;
+use crate::builder::player_mod::player::SearchOptions;
 use crate::builder::item_mod::item::Item;
 use crate::builder::item_mod::base_stat_mod::base_stat::BaseStat;
 use crate::builder::item_mod::item;

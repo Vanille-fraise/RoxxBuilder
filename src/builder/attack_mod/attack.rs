@@ -1,37 +1,63 @@
 use crate::builder::attack_mod::damage_line::DamageLine;
 use crate::builder::attack_mod::damage_position::DamagePosition;
 use crate::builder::attack_mod::damage_source::DamageSource;
+use rand::random;
 use serde::{Serialize, Deserialize};
 use crate::builder::attack_mod::damage_calculation::DamageCalculation;
 use crate::builder::attack_mod::damage_element::DamageElement;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct Attack {
-    #[serde(default)]
-    damages: Vec<DamageLine>,
-    #[serde(default)]
-    crit_damages: Vec<DamageLine>,
+    pub id: i64,
+    #[serde(rename = "effects")]
+    pub damages: Vec<DamageLine>,
+    #[serde(rename = "criticalEffect")]
+    pub crit_damages: Vec<DamageLine>,
     #[serde(default = "DamageSource::default")]
     pub damage_source: DamageSource,
     #[serde(default = "DamagePosition::default")]
     pub damage_position: DamagePosition,
-    #[serde(default)]
+    #[serde(rename = "needFreeTrapCell")]
     pub piege: bool,
-    #[serde(default = "return_false")]
-    pub can_crit: bool,
     #[serde(default)]
+    pub can_crit: bool,
+    #[serde(rename = "criticalHitProbability")]
     pub base_crit: i64,
     #[serde(skip_serializing, skip_deserializing)]
-    brutality_damage: i64,
+    pub brutality_damage: i64,
     #[serde(skip_serializing, skip_deserializing)]
-    brutality_crit_damage: i64,
+    pub brutality_crit_damage: i64,
     #[serde(default)]
-    damage_calculation: DamageCalculation,
+    pub damage_calculation: DamageCalculation,
+
+    pub ap_cost: i64,
+    pub min_player_level: i64,
+    pub spell_id: i64,
 }
+
+pub static EMPTY_ATTACK: Attack = Attack {
+    id: -1,
+    damages: vec![],
+    crit_damages: vec![],
+    damage_source: DamageSource::Sort,
+    damage_position: DamagePosition::Distance,
+    piege: false,
+    can_crit: false,
+    base_crit: 0,
+    brutality_damage: 0,
+    brutality_crit_damage: 0,
+    damage_calculation: DamageCalculation::Average,
+    ap_cost: 1,
+    min_player_level: 1,
+    spell_id: -1,
+};
+
 
 impl Attack {
     pub fn new(damages: Vec<DamageLine>, crit_damages: Vec<DamageLine>, damage_source: DamageSource, damage_position: DamagePosition, can_crit: bool, base_crit: i64, damage_calculation: DamageCalculation) -> Self {
         let mut attack = Attack {
+            id: random(),
             damages,
             crit_damages,
             damage_source,
@@ -42,6 +68,9 @@ impl Attack {
             brutality_damage: -1,
             brutality_crit_damage: -1,
             damage_calculation,
+            ap_cost: 1,
+            min_player_level: 1,
+            spell_id: -1,
         };
         attack.compute_brutality_damage();
         attack
@@ -49,6 +78,7 @@ impl Attack {
 
     pub fn default() -> Self {
         Attack {
+            id: random(),
             damages: vec![],
             crit_damages: vec![],
             damage_source: DamageSource::Sort,
@@ -59,6 +89,9 @@ impl Attack {
             brutality_damage: 0,
             brutality_crit_damage: 0,
             damage_calculation: DamageCalculation::Average,
+            ap_cost: 1,
+            min_player_level: 1,
+            spell_id: -1,
         }
     }
 
@@ -123,8 +156,12 @@ impl Attack {
         }
         result
     }
-}
 
-fn return_false() -> bool {
-    false
+    pub fn fix_damage_lines_and_crit_lines(&mut self){
+        self.damages.retain(|line: &DamageLine| !line.has_no_damage());
+        self.damages.iter_mut().for_each(DamageLine::fix_values);
+
+        self.crit_damages.retain(|line: &DamageLine| !line.has_no_damage());
+        self.crit_damages.iter_mut().for_each(DamageLine::fix_values);
+    }
 }

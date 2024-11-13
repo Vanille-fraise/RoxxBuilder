@@ -1,0 +1,338 @@
+{
+    "total": 19,
+    "limit": 1,
+    "skip": 0,
+    "data": [
+        {
+            "_id": "612d5ab5a57e7800b365afb6",
+            "statsPointsForStrength": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    100,
+                    2
+                ],
+                [
+                    200,
+                    3
+                ],
+                [
+                    300,
+                    4
+                ]
+            ],
+            "statsPointsForIntelligence": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    100,
+                    2
+                ],
+                [
+                    200,
+                    3
+                ],
+                [
+                    300,
+                    4
+                ]
+            ],
+            "statsPointsForChance": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    100,
+                    2
+                ],
+                [
+                    200,
+                    3
+                ],
+                [
+                    300,
+                    4
+                ]
+            ],
+            "statsPointsForAgility": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    100,
+                    2
+                ],
+                [
+                    200,
+                    3
+                ],
+                [
+                    300,
+                    4
+                ]
+            ],
+            "statsPointsForVitality": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "statsPointsForWisdom": [
+                [
+                    0,
+                    3
+                ]
+            ],
+            "breedSpellsId": [
+                12983,
+                12978,
+                12984,
+                12976,
+                12981,
+                12979,
+                12977,
+                12993,
+                12995,
+                13010,
+                12994,
+                12986,
+                13007,
+                14434,
+                13020,
+                12992,
+                12990,
+                12991,
+                12987,
+                12985,
+                12988,
+                12982
+            ],
+            "maleColors": [
+                16765564,
+                7098157,
+                15972912,
+                5468254,
+                7098157
+            ],
+            "femaleColors": [
+                16103775,
+                6833184,
+                13661190,
+                13661190,
+                6963462
+            ],
+            "id": 1,
+            "shortNameId": 685,
+            "shortName": {
+                "de": "Féca",
+                "en": "Feca",
+                "es": "Feca",
+                "fr": "Féca",
+                "it": "Feca",
+                "pt": "Feca",
+                "id": 685
+            },
+            "longNameId": 116103,
+            "longName": {
+                "de": "Fécas Schild",
+                "en": "Feca's Shield",
+                "es": "El Escudo de Feca",
+                "fr": "Le bouclier Féca",
+                "it": "Lo Scudo di Feca",
+                "pt": "O escudo do Feca",
+                "id": 116103
+            },
+            "descriptionId": 305968,
+            "description": {
+                "de": "Fécas sind loyale Beschützer und Meister der Defensive. Darum werden sie in jeder Abenteurergruppe geschätzt und geehrt. Doch haben sie nicht nur mächtige Schutzzauber zu ihrer Verfügung, sondern haben auch die Magie mächtiger Siegel gemeistert. Sobald es hart auf hart kommt, zeichnen die Fécas ihre Glyphen auf den Boden!",
+                "en": "Fecas are faithful protectors, always on the defensive. They hold an important place in groups of adventurers because of their protective powers enabling them to take massive hits in stride. They're also experts in the art of magic signs - when there's going to be a fight, the Fecas get out their glyphs!",
+                "es": "Los fecas son leales protectores que siempre están en guardia. Los grupos de aventureros se los rifan por sus armaduras elementales, además de por su capacidad de encajar golpes duros. Son maestros del arte de los símbolos mágicos: unos defensores fuera de serie que sacan sus glifos cuando hay guerra.",
+                "fr": "Les Fécas sont de loyaux protecteurs toujours sur la défensive. Ils sont appréciés dans les groupes d'aventuriers pour leurs armures élémentaires et leur capacité à encaisser les coups durs. Ils sont également maîtres dans l'art des signes magiques : quand il va y avoir du grabuge, les Fécas sortent leurs glyphes !",
+                "it": "I Feca sono leali protettori, sempre sulla difensiva. Sono molto apprezzati dai gruppi di avventurieri per le loro armature elementali e per la loro capacità di incassare colpi. Sono anche maestri nell'arte dei segni magici: quando ci sono guai in vista, i Feca tirano fuori i loro glifi!",
+                "pt": "Os Fecas são protetores leais e ficam sempre na defensiva. Eles são muito apreciados pelos grupos de aventureiros graças às suas armaduras elementares capazes de suportar até mesmo os golpes mais pesados. São também mestres na arte dos símbolos mágicos: ao primeiro sinal de briga, os Fecas já sacam seus glifos!",
+                "id": 305968
+            },
+            "gameplayDescriptionId": 598583,
+            "gameplayDescription": {
+                "de": "Beschützer",
+                "en": "Protector",
+                "es": "Protector",
+                "fr": "Protecteur",
+                "it": "Protettore",
+                "pt": "Protetor",
+                "id": 598583
+            },
+            "gameplayClassDescriptionId": 1076523,
+            "gameplayClassDescription": {
+                "de": "<title iconSpellId=\"12982\"><b>Schutz</b></title>\nDie Fécas können sich selbst und ihre Verbündeten auf verschiedene Arten schützen:\n\n<li>Schadensminderung um einen festen Wert oder einen Prozentsatz</li><li>Verringerung gegnerischer Attribute</li><li>Unverwundbarkeit im Fernkampf oder Nahkampf</li><li>Beschwörung von Schilden, die Schaden blocken oder abfangen</li>\n\n<title iconSpellId=\"12988\"><b>Glyphen</b></title>\nGlyphen sind Gegenstände auf dem Boden, die keine Hindernisse darstellen. Sie werden auf freien Feldern platziert.\nDie Fécas verfügen über zwei Arten von Glyphen. Jede Art von Glyphe kann maximal einmal pro Runde platziert werden.\n\n<subtitle iconSpellId=\"12992\"><b>Elementarglyphen</b></subtitle>\nHierbei handelt es sich um Aurenglyphen, die sowohl bei Verbündeten als auch bei Gegnern einen Malus bewirken, wenn sie sich im Wirkungsbereich der Glyphe befinden.\nAußerdem fügen sie Gegnern Schaden zu, wenn diese ihre Runde innerhalb des Wirkungsbereichs beginnen.\nNutzt die Zauber <b>Vermenschwandlung</b> oder <b>Vorwarnung</b>, um die Elementarglyphen zu aktivieren und allen Gegnern im Inneren Sofortschaden zuzufügen.\n\n<subtitle iconSpellId=\"12991\"><b>Unterstützungsglyphen und Glyphen mit mehreren Elementen</b></subtitle>\nDiese Kategorie umfasst mehrere Glyphen mit unterschiedlichen Funktionen, die vor allem die Mobilität von Verbündeten und/oder Gegnern betreffen oder in allen Elementen Schaden verursachen.\n\n<title iconSpellId=\"29073\"><b>Der Hirtenstern</b></title>\nWenn ein Féca sich in seinen Elementarglyphen aufhält, erhält er Resistenzen im Element der Glyphe(n).\nDieser Bonus kann nicht zerstreut werden und kann auf Verbündete übertragen werden.\n<li>Erd-Panzer: +25 % Erde</li><li>Flammender Panzer: +25 % Feuer</li><li>Panzer der Fluten: +25 % Wasser</li><li>Wirbelwind-Panzer: +25 % Luft</li>\n\n<title iconSpellId=\"12983\"><b>Der Erd-Féca</b></title>\nDas Element des Herbstes, der Wälder und des sesshaften Hirten.\n<li>AP-Fesseln und Versammeln im Nahkampf</li>\n\n<title iconSpellId=\"13014\"><b>Der Feuer-Féca</b></title>\nDas Element des Sommers, der drückenden Hitze und des wachsamen Hirten.\n<li>BP-Fesseln und Fernkampf-Heranziehen</li>\n\n<title iconSpellId=\"13015\"><b>Der Wasser-Féca</b></title>\nDas Element des Winters, des Regens und des wandernden Hirten.\n<li>RW-Fesseln, Ausweichen und Entfernung im Fernkampf</li>\n\n<title iconSpellId=\"13011\"><b>Der Luft-Féca</b></title>\nDas Element des Frühlings, der sattgrünen Wiesen und des pfeifenden Hirten.\n<li>Mikro-Platzierung und Modulation von Schaden mit kurzer Reichweite</li>",
+                "en": "<title iconSpellId=\"12982\"><b>Protection</b></title>\nFecas can protect themselves and their allies in several different ways:\n\n<li>Fixed or percentage damage reduction</li><li>Reduction of enemy characteristics</li><li>Long-distance or close-combat invulnerability</li><li>Summon Shields that can block or intercept damage</li>\n\n<title iconSpellId=\"12988\"><b>Glyphs</b></title>\nGlyphs are items on the ground that are not obstacles. They are placed on free cells.\nTwo types of glyphs are available to Fecas. Each type of glyph can be placed a maximum of once per turn.\n\n<subtitle iconSpellId=\"12992\"><b>Elemental Glyphs</b></subtitle>\nThese are glyph-auras, and they apply penalties to allies and enemies while they are in the glyph's area of effect.\nThey also deal damage to enemies starting their turn inside this area.\nUsing the <b>Greener Pastures</b> or <b>Reinforced Protection</b> spells to activate elemental glyphs inflicts immediate damage on all enemies inside the glyphs.\n\n<subtitle iconSpellId=\"12991\"><b>Utility and Multi-Element Glyphs</b></subtitle>\nThis category includes several glyphs that have different functions and notably affect allies' and/or enemies' mobility or inflict damage in all elements.\n\n<title iconSpellId=\"29073\"><b>Shepherd's Star</b></title>\nAs long as a Feca is within their elemental glyph(s), they gain resistance in the element of the glyph(s).\nThis state cannot be dissipated and can be transferred to an ally.\n<li>Earth Armour: +25% Earth</li><li>Glowing Armour: +25% Fire</li><li>Aqueous Armour: +25% Water</li><li>Wind Armour: +25% Air</li>\n\n<title iconSpellId=\"12983\"><b>Earth Fecas</b></title>\nThe path of autumn, forests and the sedentary shepherd.\n<li>AP debuff and melee grouping</li>\n\n<title iconSpellId=\"13014\"><b>Fire Fecas</b></title>\nThe path of summer, blazing midday sun and the vigilant shepherd.\n<li>MP debuff and ranged attraction</li>\n\n<title iconSpellId=\"13015\"><b>Water Fecas</b></title>\nThe path of winter, rain and the wandering shepherd.\n<li>Range debuff, dodge and ranged distancing</li>\n\n<title iconSpellId=\"13011\"><b>Air Fecas</b></title>\nThe path of spring, lush meadows and the whistling shepherd.\n<li>Micro-positioning and adjustment of short-range damage</li>",
+                "es": "<title iconSpellId=\"12982\"><b>Las protecciones</b></title>\nLos fecas pueden protegerse a sí mismos y a sus aliados de varias maneras diferentes:\n\n<li>Reducción de daños, fija o en porcentaje</li><li>Reducción de las características enemigas</li><li>Invulnerabilidad a distancia o en CaC</li><li>Invocación de escudos que pueden bloquear o interceptar los daños</li>\n\n<title iconSpellId=\"12988\"><b>Los glifos</b></title>\nLos glifos son objetos que están en el suelo sin ser obstáculos. Se colocan en las casillas libres del terreno.\nLos fecas tienen dos tipos de glifos a su disposición. Cada tipo de glifo puede ponerse una vez por turno como máximo.\n\n<subtitle iconSpellId=\"12992\"><b>Los glifos elementales</b></subtitle>\nSon glifos aura, es decir, glifos que aplican malus a los aliados y a los enemigos que estén en la zona de efecto del glifo.\nTambién infligen daños a los enemigos que empiecen su turno en su interior.\nUtilizar los hechizos <b>Trashumancia</b> o <b>Posición Defensiva</b> para activar los glifos elementales ocasiona daños inmediatos a todos los enemigos en su interior.\n\n<subtitle iconSpellId=\"12991\"><b>Los glifos utilitarios y multielementales</b></subtitle>\nEsta categoría agrupa varios glifos con funcionamientos diferentes, que afectan concretamente a la movilidad de los aliados y/o de los enemigos, o infligen daños en todos los elementos.\n\n<title iconSpellId=\"29073\"><b>La estrella del Pastor</b></title>\nMientras un feca esté en sus glifos elementales, gana resistencias en el elemento del glifo o glifos.\nEste bonus no se puede disipar y puede transmitirse a un aliado.\n<li>Armadura Terrestre: +25% de tierra</li><li>Armadura Incandescente: +25% de fuego</li><li>Armadura Acuosa: +25% de agua</li><li>Armadura Ventisca: +25% de aire</li>\n\n<title iconSpellId=\"12983\"><b>El feca de tierra</b></title>\nLa vía del otoño, de los bosques y del pastor sedentario.\n<li>Traba de PA y agrupamiento en cuerpo a cuerpo</li>\n\n<title iconSpellId=\"13014\"><b>El feca de fuego</b></title>\nLa vía del verano, del sol de justicia y del pastor vigilante.\n<li>Traba de PM y atracción a distancia</li>\n\n<title iconSpellId=\"13015\"><b>El feca de agua</b></title>\nLa vía del invierno, de la lluvia y del pastor caminante.\n<li>Traba de AL, huida y alejamiento a distancia</li>\n\n<title iconSpellId=\"13011\"><b>El feca de aire</b></title>\nLa vía de la primavera, de las verdes praderas y del pastor silbador.\n<li>Microposicionamiento y modulación de los daños a corto alcance</li>",
+                "fr": "<title iconSpellId=\"12982\"><b>Les Protections</b></title>\nLes Fécas peuvent se protéger eux-mêmes et leurs alliés de plusieurs manières différentes :\n\n<li>Réduction de dommages, fixe ou en pourcentage</li><li>Réduction des caractéristiques adverses</li><li>Invulnérabilité à distance ou en mêlée</li><li>Invocation de Boucliers qui peuvent bloquer ou intercepter les dommages</li>\n\n<title iconSpellId=\"12988\"><b>Les Glyphes</b></title>\nLes glyphes sont des objets au sol qui ne sont pas des obstacles. Ils se posent sur les cellules libres du terrain.\nLes Fécas ont à leur disposition deux types de glyphes. Chaque type de glyphe peut être posé au maximum une fois par tour.\n\n<subtitle iconSpellId=\"12992\"><b>Les Glyphes élémentaires</b></subtitle>\nCe sont des glyphes-aura, c'est-à-dire des glyphes qui appliquent des malus aux alliés et aux ennemis tant qu'ils sont dans la zone d'effet du glyphe.\nIls infligent également des dommages aux ennemis qui commencent leur tour à l'intérieur.\nUtiliser les sorts <b>Transhumance</b> ou <b>Mise en Garde</b> pour activer les glyphes élémentaires occasionne des dommages immédiats à tous les ennemis à l'intérieur.\n\n<subtitle iconSpellId=\"12991\"><b>Les glyphes utilitaires et multi-élémentaires</b></subtitle>\nCette catégorie regroupe plusieurs Glyphes avec des fonctionnements différents, qui affectent notamment la mobilité des alliés et/ou des ennemis ou infligent des dommages dans tous les éléments.\n\n<title iconSpellId=\"29073\"><b>L'Étoile du Berger</b></title>\nTant qu'un Féca est dans ses glyphes élémentaires, il gagne des résistances dans l'élément du ou des glyphes.\nCe bonus n'est pas dissipable, et peut être transmis à un allié.\n<li>Armure Terrestre : +25% Terre</li><li>Armure Incandescente : +25% Feu</li><li>Armure Aqueuse : +25% Eau</li><li>Armure Venteuse : +25% Air</li>\n\n<title iconSpellId=\"12983\"><b>Le Féca Terre</b></title>\nLa voie de l'automne, des forêts et du berger sédentaire.\n<li>Entrave PA et regroupement en mêlée</li>\n\n<title iconSpellId=\"13014\"><b>Le Féca Feu</b></title>\nLa voie de l'été, du soleil de plomb et du berger vigilant.\n<li>Entrave PM et attirance à distance</li>\n\n<title iconSpellId=\"13015\"><b>Le Féca Eau</b></title>\nLa voie de l'hiver, de la pluie et du berger randonneur.\n<li>Entrave PO, fuite et éloignement à distance</li>\n\n<title iconSpellId=\"13011\"><b>Le Féca Air</b></title>\nLa voie du printemps, des prairies verdoyantes et du berger siffloteur.\n<li>Micro-placement et modulation des dommages à courte portée</li>",
+                "it": "[!] <title iconSpellId=\"12982\"><b>Protection</b></title>\nFecas can protect themselves and their allies in several different ways:\n\n<li>Fixed or percentage damage reduction</li><li>Reduction of enemy characteristics</li><li>Long-distance or close-combat invulnerability</li><li>Summon Shields that can block or intercept damage</li>\n\n<title iconSpellId=\"12988\"><b>Glyphs</b></title>\nGlyphs are items on the ground that are not obstacles. They are placed on free cells.\nTwo types of glyphs are available to Fecas. Each type of glyph can be placed a maximum of once per turn.\n\n<subtitle iconSpellId=\"12992\"><b>Elemental Glyphs</b></subtitle>\nThese are glyph-auras, and they apply penalties to allies and enemies while they are in the glyph's area of effect.\nThey also deal damage to enemies starting their turn inside this area.\nUsing the <b>Greener Pastures</b> or <b>Reinforced Protection</b> spells to activate elemental glyphs inflicts immediate damage on all enemies inside the glyphs.\n\n<subtitle iconSpellId=\"12991\"><b>Utility and Multi-Element Glyphs</b></subtitle>\nThis category includes several glyphs that have different functions and notably affect allies' and/or enemies' mobility or inflict damage in all elements.\n\n<title iconSpellId=\"29073\"><b>Shepherd's Star</b></title>\nAs long as a Feca is within their elemental glyph(s), they gain resistance in the element of the glyph(s).\nThis state cannot be dissipated and can be transferred to an ally.\n<li>Earth Armour: +25% Earth</li><li>Glowing Armour: +25% Fire</li><li>Aqueous Armour: +25% Water</li><li>Wind Armour: +25% Air</li>\n\n<title iconSpellId=\"12983\"><b>Earth Fecas</b></title>\nThe path of autumn, forests and the sedentary shepherd.\n<li>AP debuff and melee grouping</li>\n\n<title iconSpellId=\"13014\"><b>Fire Fecas</b></title>\nThe path of summer, blazing midday sun and the vigilant shepherd.\n<li>MP debuff and ranged attraction</li>\n\n<title iconSpellId=\"13015\"><b>Water Fecas</b></title>\nThe path of winter, rain and the wandering shepherd.\n<li>Range debuff, dodge and ranged distancing</li>\n\n<title iconSpellId=\"13011\"><b>Air Fecas</b></title>\nThe path of spring, lush meadows and the whistling shepherd.\n<li>Micro-positioning and adjustment of short-range damage</li>",
+                "pt": "<title iconSpellId=\"12982\"><b>As proteções</b></title>\nOs Fecas conseguem proteger a si mesmos e aos aliados de muitas maneiras diferentes:\n\n<li>Redução de danos, fixa ou porcentagem</li><li>Redução das características adversas</li><li>Invulnerabilidade a distância ou no corpo a corpo</li><li>Invocação de escudos que podem bloquear ou interceptar os danos</li>\n\n<title iconSpellId=\"12988\"><b>Glifos</b></title>\nGlifos são itens no chão que não são obstáculos. Eles são colocados em células livres do campo de batalha.\nOs Fecas têm dois tipos de glifos à disposição. Cada tipo de glifo pode ser colocado no máximo uma vez por turno.\n\n<subtitle iconSpellId=\"12992\"><b>Glifos elementares</b></subtitle>\nSão glifos-aura, ou seja, glifos que aplicam penalidades aos aliados e inimigos enquanto estão na sua zona de efeito.\nEles também infligem danos aos inimigos que começam seu turno dentro deles.\nUtilizar os feitiços <b>Transumância</b> ou <b>Advertência</b> para ativar os glifos elementares inflige danos imediatos a todos os inimigos no interior.\n\n<subtitle iconSpellId=\"12991\"><b>Glifos utilitários e multielementares</b></subtitle>\nEssa categoria reúne vários glifos com funcionamentos diferentes, que afetam principalmente a mobilidade dos aliados e/ou dos inimigos ou infligem danos em todos os elementos.\n\n<title iconSpellId=\"29073\"><b>Estrela do Pastor</b></title>\nEnquanto o Feca estiver em seus glifos elementares, ele ganha resistências nos elementos desses glifos.\nEsse bônus não é dissipável e pode ser transmitido a um aliado.\n<li>Armadura Terrestre: +25% de terra</li><li>Armadura Incandescente: +25% de fogo</li><li>Armadura Aquosa: +25% de água</li><li>Armadura Ventosa: +25% de ar</li>\n\n<title iconSpellId=\"12983\"><b>O Feca de terra</b></title>\nA via do outono, das florestas e do pastor sedentário.\n<li>Entrave PA e agrupamento no corpo a corpo</li>\n\n<title iconSpellId=\"13014\"><b>O Feca de fogo</b></title>\nA via do verão, do sol a pino e do pastor vigilante.\n<li>Entrave PM e atração a distância</li>\n\n<title iconSpellId=\"13015\"><b>O Feca de água</b></title>\nA via do inverno, da chuva e do pastor andarilho.\n<li>Entrave AL, fuga e afastamento a distância</li>\n\n<title iconSpellId=\"13011\"><b>O Feca de ar</b></title>\nA via da primavera, das pradarias verdejantes e do pastor assobiante.\n<li>Microposicionamento e ajuste dos danos a curto alcance</li>",
+                "id": 1076523
+            },
+            "maleLook": "{1|10||135}",
+            "femaleLook": "{1|11||125}",
+            "creatureBonesId": 15,
+            "maleArtwork": 198,
+            "femaleArtwork": 199,
+            "breedRoles": [
+                {
+                    "_id": "66e95388cc8b710013c92278",
+                    "breedId": 1,
+                    "roleId": 1,
+                    "descriptionId": 1004987,
+                    "description": {
+                        "de": "Entzieht Attribute sowie Aktionspunkte, Bewegungspunkte und Reichweite mit Zaubern und Glyphen.",
+                        "en": "Steals characteristics and removes Action Points, Movement Points and range with their spells and glyphs.",
+                        "es": "Roba características y retira puntos de acción, de movimiento y alcance con sus hechizos y sus glifos.",
+                        "fr": "Vole des caractéristiques et retire des points d'action, de mouvement, et de la portée avec ses sorts et ses glyphes.",
+                        "it": "[!] Steals characteristics and removes Action Points, Movement Points and range with their spells and glyphs.",
+                        "pt": "Rouba características e retira pontos de ação, de movimento e alcance com seus feitiços e glifos.",
+                        "id": 1004987
+                    },
+                    "value": 7,
+                    "order": 3
+                },
+                {
+                    "_id": "66e95388cc8b710013c92279",
+                    "breedId": 1,
+                    "roleId": 2,
+                    "descriptionId": 1004996,
+                    "description": {
+                        "de": "Hält über Zauber und Glyphen Kontakt zum Gegner.",
+                        "en": "Uses their spells and glyphs to keep opponents adjacent to them.",
+                        "es": "Mantiene a sus contrincantes en contacto con sus hechizos y sus glifos.",
+                        "fr": "Maintient ses adversaires au contact avec ses sorts et ses glyphes.",
+                        "it": "[!] Uses their spells and glyphs to keep opponents adjacent to them.",
+                        "pt": "Mantém seus adversários em contato com seus feitiços e glifos.",
+                        "id": 1004996
+                    },
+                    "value": 8,
+                    "order": 2
+                },
+                {
+                    "_id": "66e95388cc8b710013c9227a",
+                    "breedId": 1,
+                    "roleId": 3,
+                    "descriptionId": 1007811,
+                    "description": {
+                        "de": "Verringert den von Verbündeten erlittenen Schaden und den durch Gegner verursachten Schaden. Platziert schützende Schilde.",
+                        "en": "Reduces damage suffered by their allies and damage inflicted by their opponents. Places protective shields.",
+                        "es": "Reduce el daño recibido por sus aliados y los daños infligidos por sus adversarios. Pone escudos que protegen.",
+                        "fr": "Réduit les dommages subis par ses alliés et les dommages occasionnés par ses adversaires. Pose des boucliers qui protègent.",
+                        "it": "[!] Reduces damage suffered by their allies and damage inflicted by their opponents. Places protective shields.",
+                        "pt": "Reduz os danos sofridos pelos aliados e os danos infligidos pelos adversários. Coloca escudos que protegem.",
+                        "id": 1007811
+                    },
+                    "value": 8,
+                    "order": 1
+                },
+                {
+                    "_id": "66e95388cc8b710013c9227b",
+                    "breedId": 1,
+                    "roleId": 4,
+                    "descriptionId": 506469,
+                    "description": {
+                        "de": "Rolle",
+                        "en": "Role",
+                        "es": "Rol",
+                        "fr": "Rôle",
+                        "it": "Ruolo",
+                        "pt": "Função",
+                        "id": 506469
+                    },
+                    "value": 0,
+                    "order": -1
+                },
+                {
+                    "_id": "66e95388cc8b710013c9227c",
+                    "breedId": 1,
+                    "roleId": 5,
+                    "descriptionId": 506473,
+                    "description": {
+                        "de": "Rolle",
+                        "en": "Role",
+                        "es": "Rol",
+                        "fr": "Rôle",
+                        "it": "Ruolo",
+                        "pt": "Função",
+                        "id": 506473
+                    },
+                    "value": 7,
+                    "order": -1
+                },
+                {
+                    "_id": "66e95388cc8b710013c9227d",
+                    "breedId": 1,
+                    "roleId": 6,
+                    "descriptionId": 506517,
+                    "description": {
+                        "de": "Rolle",
+                        "en": "Role",
+                        "es": "Rol",
+                        "fr": "Rôle",
+                        "it": "Ruolo",
+                        "pt": "Função",
+                        "id": 506517
+                    },
+                    "value": 4,
+                    "order": -1
+                },
+                {
+                    "_id": "66e95388cc8b710013c9227e",
+                    "breedId": 1,
+                    "roleId": 7,
+                    "descriptionId": 506472,
+                    "description": {
+                        "de": "Rolle",
+                        "en": "Role",
+                        "es": "Rol",
+                        "fr": "Rôle",
+                        "it": "Ruolo",
+                        "pt": "Função",
+                        "id": 506472
+                    },
+                    "value": 2,
+                    "order": -1
+                },
+                {
+                    "_id": "66e95388cc8b710013c9227f",
+                    "breedId": 1,
+                    "roleId": 8,
+                    "descriptionId": 506468,
+                    "description": {
+                        "de": "Rolle",
+                        "en": "Role",
+                        "es": "Rol",
+                        "fr": "Rôle",
+                        "it": "Ruolo",
+                        "pt": "Função",
+                        "id": 506468
+                    },
+                    "value": 3,
+                    "order": -1
+                }
+            ],
+            "spawnMap": 153092354,
+            "complexity": 2,
+            "sortIndex": 10,
+            "createdAt": "2021-08-30T22:24:53.874Z",
+            "updatedAt": "2024-09-17T10:01:44.684Z",
+            "__v": 0,
+            "img": "https://api.dofusdb.fr/img/breeds/symbol_1.png",
+            "imgTransparent": "https://api.dofusdb.fr/img/breeds/logo_transparent_1.png",
+            "heads": {
+                "male": "https://api.dofusdb.fr/img/heads/SmallHead_10.png",
+                "female": "https://api.dofusdb.fr/img/heads/SmallHead_11.png"
+            }
+        }
+    ]
+}

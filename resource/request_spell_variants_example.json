@@ -1,0 +1,117 @@
+{
+    "total": 1,
+    "limit": 10,
+    "skip": 0,
+    "data": [
+        {
+            "_id": "5fac18a6e3ad7d5467a0be97",
+            "spellIds": [
+                12781,
+                12815
+            ],
+            "id": 201,
+            "breedId": 12,
+            "createdAt": "2020-11-11T17:00:22.195Z",
+            "updatedAt": "2022-09-16T14:11:53.282Z",
+            "__v": 0,
+            "_include": [
+                "spells"
+            ],
+            "spells": [
+                {
+                    "_id": "61225508da0fe92b4f247f89",
+                    "spellLevels": [
+                        40644,
+                        61177,
+                        61178
+                    ],
+                    "id": 12781,
+                    "nameId": 966953,
+                    "name": {
+                        "de": "Explosive Handfläche",
+                        "en": "Explosive Palm",
+                        "es": "Palma Explosiva",
+                        "fr": "Paume Explosive",
+                        "it": "Palmo Esplosivo",
+                        "pt": "Palma Explosiva",
+                        "id": 966953
+                    },
+                    "descriptionId": 1079608,
+                    "description": {
+                        "de": "Verursacht Feuerschaden.\nDie AP-Kosten des Zaubers werden nach dem ersten Wirken erhöht.\n\n• Wenn der Zaubernde Nüchtern ist: In der aktuellen Runde erstreckt sich der Wirkungsbereich über einen Kreis von 2 Feldern.\n• Wenn der Zaubernde Betrunken ist: Der Zauberschaden wird in der aktuellen Runde erhöht.\nJeder Effekt ist einmal kumulierbar.\n\nDer Schaden hat keine Wirkung auf den Zaubernden.",
+                        "en": "Inflicts Fire damage.\nThe spell's AP cost increases after the first time it is cast.\n\n• If the caster is Sober: the area of effect becomes a 2-cell circle for the current turn.\n• If the caster is Drunk: spell damage is increased for the current turn.\nEach effect can be stacked one time.\n\nThe damage does not affect the caster.",
+                        "es": "Ocasiona daños de fuego.\nEl coste en PA del hechizo aumenta tras el primer lanzamiento.\n\n• Si el lanzador está sobrio: la zona de efecto pasa a ser un círculo de 2 casillas durante el turno actual.\n• Si el lanzador está borracho: aumenta los daños del hechizo durante el turno actual.\nCada efecto se acumula una vez.\n\nLos daños no afectan al lanzador.",
+                        "fr": "Occasionne des dommages Feu.\nLe coût en PA du sort est augmenté après le premier lancer.\n\n• Si le lanceur est Sobre : la zone d'effet devient un cercle de 2 cases pour le tour en cours.\n• Si le lanceur est Saoul : les dommages du sort sont augmentés pour le tour en cours.\nChaque effet est cumulable une fois.\n\nLes dommages n'affectent pas le lanceur.",
+                        "it": "Causa danni Fuoco. \nL'area di effetto diventa un cerchio di 2 caselle per i lanci successivi per il turno in corso.\n\nSe il lanciatore è affetto dallo stato Ubriaco: causa danni Fuoco. \nI danni dell'incantesimo sono aumentati per il turno in corso.\n\nNon influisce sul lanciatore.",
+                        "pt": "Inflige danos de fogo.\nO custo em PA do feitiço aumenta após o primeiro lançamento.\n\n• Se o lançador estiver Sóbrio: a zona de efeito vira um círculo de 2 células no turno em andamento.\n• Se o lançador estiver Bêbado: os danos do feitiço aumentam no turno em andamento.\nCada efeito pode acumular uma vez.\n\nOs danos não afetam o lançador.",
+                        "id": 1079608
+                    },
+                    "typeId": 12,
+                    "order": 1,
+                    "scriptParams": "animId:7,targetGfxId:21201",
+                    "scriptParamsCritical": "animId:7,targetGfxId:21201",
+                    "scriptId": 1,
+                    "scriptIdCritical": 1,
+                    "iconId": 12343,
+                    "verbose_cast": true,
+                    "default_zone": "P",
+                    "bypassSummoningLimit": false,
+                    "canAlwaysTriggerSpells": false,
+                    "adminName": null,
+                    "createdAt": "2021-08-22T13:45:44.835Z",
+                    "updatedAt": "2024-09-17T10:19:21.829Z",
+                    "__v": 0,
+                    "defaultPreviewZone": "P",
+                    "verboseCast": true,
+                    "img": "https://api.dofusdb.fr/img/spells/sort_12343.png"
+                },
+                {
+                    "_id": "61225509da0fe92b4f247fab",
+                    "spellLevels": [
+                        40720,
+                        61176
+                    ],
+                    "id": 12815,
+                    "nameId": 797412,
+                    "name": {
+                        "de": "Destillation",
+                        "en": "Distillation",
+                        "es": "Destilación",
+                        "fr": "Distillation",
+                        "it": "Distillazione",
+                        "pt": "Destilação",
+                        "id": 797412
+                    },
+                    "descriptionId": 1079630,
+                    "description": {
+                        "de": "Verursacht Wasserschaden und versetzt die Gegner im Wirkungsgebiet in den Zustand „Destillation“.\n• Wendet zu Beginn der Runde 2 Runden lang ein zeitverzögertes Wassergift im Wirkungsbereich an.\n• Giftschaden ist in der zweiten Runde deutlich wichtiger.\nGifte werden nicht erneut auf die Ziele angewendet, die sich bereits im Zustand „Destillation“ befinden.\n\nWenn der Zaubernde Betrunken ist: Verursacht Wasserschaden im Wirkungsbereich.\n\nHat keine Wirkung auf den Zaubernden.",
+                        "en": "Inflicts Water damage and applies the Distillation state on enemies in an area of effect:\n• Applies a start-of-turn delayed Water poison in an area of effect for 2 turns.\n• The poison's damage is greater on the second turn.\nThe poisons are not reapplied to targets already in the Distillation state.\n\nIf the caster is Drunk: inflicts Water damage in an area of effect.\n\nDoes not affect the caster.",
+                        "es": "Ocasiona daños de agua y aplica el estado Destilación a los enemigos en zona:\n• Aplica un veneno de agua de inicio de turno con efecto retardado en zona en 2 turnos.\n• Los daños del veneno son más importantes en el segundo turno.\nLos venenos no se vuelven a aplicar en los objetivos que ya estén bajo el estado Destilación.\n\nSi el lanzador está borracho: ocasiona daños de agua en zona.\n\nNo afecta al lanzador.",
+                        "fr": "Occasionne des dommages Eau et applique l'état Distillation sur les ennemis en zone :\n• Applique un poison Eau de début de tour à retardement en zone sur 2 tours.\n• Les dommages du poison sont plus importants sur le deuxième tour.\nLes poisons ne sont pas réappliqués sur les cibles déjà dans l'état Distillation.\n\nSi le lanceur est Saoul : occasionne des dommages Eau en zone.\n\nN'affecte pas le lanceur.",
+                        "it": "Causa danni Acqua ad area.\nCausa danni Acqua supplementari a scoppio ritardato ad area su 2 turni. Questi danni aumentano a ogni turno.\n\nSe il lanciatore è affetto dallo stato Ubriaco: causa danni Acqua ad area.\n\nNon influisce sul lanciatore.",
+                        "pt": "Inflige danos de água e aplica o estado Destilação nos inimigos na zona:\n• Aplica um veneno de água de início de turno tardiamente em zona durante 2 turnos.\n• Os danos do veneno aumentam no segundo turno.\nOs venenos não serão reaplicados nos alvos já no estado Destilação.\n\nSe o lançador estiver Bêbado: inflige danos de água em zona.\n\nNão afeta o lançador.",
+                        "id": 1079630
+                    },
+                    "typeId": 583,
+                    "order": 0,
+                    "scriptParams": "animId:7,targetGfxId:4562",
+                    "scriptParamsCritical": "animId:7,targetGfxId:4562",
+                    "scriptId": 1,
+                    "scriptIdCritical": 1,
+                    "iconId": 12372,
+                    "verbose_cast": true,
+                    "default_zone": "",
+                    "bypassSummoningLimit": false,
+                    "canAlwaysTriggerSpells": false,
+                    "adminName": null,
+                    "createdAt": "2021-08-22T13:45:45.385Z",
+                    "updatedAt": "2024-06-18T12:42:45.977Z",
+                    "__v": 0,
+                    "defaultPreviewZone": "",
+                    "verboseCast": true,
+                    "img": "https://api.dofusdb.fr/img/spells/sort_12372.png"
+                }
+            ]
+        }
+    ]
+}

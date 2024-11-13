@@ -76,7 +76,7 @@ async fn load_whole_data_container() -> Result<(), Box<dyn Error>> {
 
 #[actix_rt::test]
 async fn small_set_api_call() {
-    let res = DataLoader::create_files_from_dofus_db_api_with_call_limit("tests/test_files/sets/small_api_call".to_string(), 20, "item-sets".to_string()).await;
+    let res = DataLoader::create_files_from_dofus_db_api_with_call_limit("tests/test_files/sets/small_api_call".to_string(), 20, "item-sets".to_string(), false).await;
     assert!(res.is_ok())
 }
 

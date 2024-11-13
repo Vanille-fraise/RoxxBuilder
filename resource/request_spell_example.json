@@ -1,0 +1,50 @@
+{
+    "_id": "61225306da0fe92b4f24595d",
+    "spellLevels": [
+        1001,
+        1002,
+        1003,
+        1004,
+        1005,
+        10642
+    ],
+    "id": 201,
+    "nameId": 62977,
+    "name": {
+        "de": "Kuss des Tofu",
+        "en": "Tofu Kiss",
+        "es": "Pico de Tofu",
+        "fr": "Béco du Tofu",
+        "it": "Becco del Tofu",
+        "pt": "Bitoca do Tofu",
+        "id": 62977
+    },
+    "descriptionId": 208865,
+    "description": {
+        "de": "[UNKNOWN_TEXT_ID_208865]",
+        "en": "[UNKNOWN_TEXT_ID_208865]",
+        "es": "[UNKNOWN_TEXT_ID_208865]",
+        "fr": "[UNKNOWN_TEXT_ID_208865]",
+        "it": "[UNKNOWN_TEXT_ID_208865]",
+        "pt": "[UNKNOWN_TEXT_ID_208865]",
+        "id": 208865
+    },
+    "typeId": 425,
+    "order": 0,
+    "scriptParams": "animId:0",
+    "scriptParamsCritical": "animId:0",
+    "scriptId": 1,
+    "scriptIdCritical": 1,
+    "iconId": 10075,
+    "verbose_cast": true,
+    "default_zone": null,
+    "bypassSummoningLimit": false,
+    "canAlwaysTriggerSpells": false,
+    "adminName": null,
+    "createdAt": "2021-08-22T13:37:10.741Z",
+    "updatedAt": "2024-03-26T12:06:35.372Z",
+    "__v": 0,
+    "defaultPreviewZone": null,
+    "verboseCast": true,
+    "img": "https://api.dofusdb.fr/img/spells/sort_10075.png"
+}
