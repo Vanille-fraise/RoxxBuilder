@@ -1,3 +1,4 @@
+use crate::builder::attack_mod::attack::Attack;
 use crate::builder::data_mod::data_container::DataContainer;
 use crate::builder::item_mod::set::Set;
 use serde_json::Value;
@@ -163,7 +164,11 @@ impl DataLoader {
                 DataType::ItemSet => data_container.sets.push(Set::from_serde_value(&obj).into()),
                 DataType::Breed => data_container.breeds.push(serde_json::from_value(obj).unwrap()),
                 DataType::SpellVariant => data_container.spell_variants.push(serde_json::from_value(obj).unwrap()),
-                DataType::SpellLevel => data_container.attacks.push(serde_json::from_value(obj).unwrap()),
+                DataType::SpellLevel => {
+                    let mut attack: Attack = serde_json::from_value(obj).unwrap();
+                    attack.fix_damage_lines_and_crit_lines();
+                    data_container.attacks.push(attack.into());
+                },
                 DataType::Version => data_container.version = obj.as_str().unwrap().to_string(),
             }
         }

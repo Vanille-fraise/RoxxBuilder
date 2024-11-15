@@ -131,7 +131,7 @@ impl<'a> DataManager<'a> {
         }
         if !from_data_container_file || reloaded_from_api {
             if DATA_MANAGER.clear_unknown_items {
-                dc.clear_unknown_type();
+                dc.clear_unknown_type_items();
             }
             if DATA_MANAGER.clear_not_breeds_attacks {
                 dc.clear_not_breeds_attacks();
@@ -143,6 +143,7 @@ impl<'a> DataManager<'a> {
                 println!("New data container built.");
             }
         }
+        dc.link_sub_data();
         println!("Data container version: {}", dc.version);
         return dc;
     }

@@ -170,7 +170,7 @@ fn full_crap_find_right_comb_graph_version() {
 async fn real_item_coherent_result_test() {
     let time = Instant::now();
     let mut dc = DataManager::retrieve_data().await;
-    dc.clear_unknown_type();
+    dc.clear_unknown_type_items();
     println!("Data container loaded in: {}ms", time.elapsed().as_millis());
     let mut rng = rand::thread_rng();
     dc.items.shuffle(&mut rng);

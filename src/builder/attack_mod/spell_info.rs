@@ -10,9 +10,9 @@ pub struct SpellInfo {
     id: i64,
     #[serde(rename = "spellLevels")]
     pub spell_levels_id: Vec<i64>,
-    #[serde(rename = "name", deserialize_with = "utils::deserialize_to_string_map")]
+    #[serde(alias = "name", deserialize_with = "utils::deserialize_to_string_map")]
     pub names: HashMap<String, String>,
     pub img: String,
-    #[serde(skip_deserializing)]
+    #[serde(default)]
     pub attacks: Vec<Arc<Attack>>,
 }

@@ -32,7 +32,7 @@ impl <'a> DataContainer{
         }
     }
 
-    pub fn clear_unknown_type(&mut self) {
+    pub fn clear_unknown_type_items(&mut self) {
         let mut i = 0;
         while i < self.items.len() {
             if self.items[i].item_type == ItemType::Unknown {
@@ -40,7 +40,7 @@ impl <'a> DataContainer{
             } else { i += 1; }
         }
     }
-
+    
     pub fn link_sub_data(&'a mut self) {
         let mut set_map: HashMap<i64, Arc<Set>> = HashMap::default();
         for set in self.sets.iter() {

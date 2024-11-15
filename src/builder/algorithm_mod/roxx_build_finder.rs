@@ -68,7 +68,7 @@ impl RoxxBuildFinder {
     }
 
     pub fn new(mut data: DataContainer, attack: Attack) -> Self {
-        data.clear_unknown_type();
+        data.clear_unknown_type_items();
         data.reset_brutality(&attack);
         data.link_sub_data();
         RoxxBuildFinder {

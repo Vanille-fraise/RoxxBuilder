@@ -1,0 +1,52 @@
+{
+    "damages": [
+        {
+            "damageElement": "DamageTerre",
+            "minValue": 9,
+            "maxValue": 11
+        },
+        {
+            "damageElement": "DamageFeu",
+            "minValue": 9,
+            "maxValue": 11
+        },
+        {
+            "damageElement": "DamageEau",
+            "minValue": 9,
+            "maxValue": 11
+        },
+        {
+            "damageElement": "DamageAir",
+            "minValue": 9,
+            "maxValue": 11
+        }
+    ],
+    "critDamages": [
+        {
+            "damageElement": "DamageTerre",
+            "minValue": 16,
+            "maxValue": 21
+        },
+        {
+            "damageElement": "DamageFeu",
+            "minValue": 16,
+            "maxValue": 21
+        },
+        {
+            "damageElement": "DamageEau",
+            "minValue": 16,
+            "maxValue": 21
+        },
+        {
+            "damageElement": "DamageAir",
+            "minValue": 16,
+            "maxValue": 25
+        }
+    ],
+    "damageSource": "Sort",
+    "damagePosition": "Melee",
+    "piege": false,
+    "canCrit": false,
+    "criticalHitProbability": -1,
+    "damageCalculation": "Average"
+}

@@ -6,7 +6,7 @@ use crate::builder::utils_mod::utils;
 #[serde(rename_all = "camelCase")]
 pub struct Breed {
     pub id: i64,
-    #[serde(rename = "shortName", deserialize_with = "utils::deserialize_to_string_map")]
+    #[serde(alias = "shortName", deserialize_with = "utils::deserialize_to_string_map")]
     pub names: HashMap<String, String>,
     pub img: String,
     pub img_transparent: String,

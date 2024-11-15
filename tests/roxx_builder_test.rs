@@ -29,7 +29,7 @@ fn basic_build_test() {
     container.items.push(best_item);
 
     container.items.push(bad_item2);
-    container.clear_unknown_type();
+    container.clear_unknown_type_items();
     let spell = Attack::new(vec![DamageLine::new(DamageAir, 14, 24)], vec![DamageLine::new(DamageAir, 19, 29)], Sort, Distance, true, 20, DamageCalculation::Average);
     let mut roxx_builder = RoxxBuildFinder::new(container, spell);
     roxx_builder.set_calc_type(Max);

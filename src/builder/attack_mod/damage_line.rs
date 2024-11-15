@@ -6,15 +6,17 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct DamageLine {
-    #[serde(rename = "effectElement")]
+    #[serde(alias = "effectElement")]
     pub damage_element: DamageElement,
 
+    #[serde(default)]
     // Idk what to do with it yet, but it might be usefull later for heal, do pou, best or worst element
     pub effect_id: i64,
-    #[serde(rename = "diceNum")]
+    #[serde(alias = "diceNum")]
     pub min_value: i64,
-    #[serde(rename = "diceSide")]
+    #[serde(alias = "diceSide")]
     pub max_value: i64,
+    #[serde(default)]
     pub for_client_only: bool,
 }
 

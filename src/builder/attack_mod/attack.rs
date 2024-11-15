@@ -9,20 +9,21 @@ use crate::builder::attack_mod::damage_element::DamageElement;
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Attack {
+    #[serde(default)]
     pub id: i64,
-    #[serde(rename = "effects")]
+    #[serde(alias = "effects")]
     pub damages: Vec<DamageLine>,
-    #[serde(rename = "criticalEffect")]
+    #[serde(alias = "criticalEffect")]
     pub crit_damages: Vec<DamageLine>,
     #[serde(default = "DamageSource::default")]
     pub damage_source: DamageSource,
     #[serde(default = "DamagePosition::default")]
     pub damage_position: DamagePosition,
-    #[serde(rename = "needFreeTrapCell")]
+    #[serde(alias = "needFreeTrapCell")]
     pub piege: bool,
     #[serde(default)]
     pub can_crit: bool,
-    #[serde(rename = "criticalHitProbability")]
+    #[serde(alias = "criticalHitProbability")]
     pub base_crit: i64,
     #[serde(skip_serializing, skip_deserializing)]
     pub brutality_damage: i64,
@@ -31,8 +32,11 @@ pub struct Attack {
     #[serde(default)]
     pub damage_calculation: DamageCalculation,
 
+    #[serde(default)]
     pub ap_cost: i64,
+    #[serde(default)]
     pub min_player_level: i64,
+    #[serde(default)]
     pub spell_id: i64,
 }
 
@@ -138,6 +142,7 @@ impl Attack {
             DamageCalculation::Max => { self.crit_damages.iter().map(|l| { l.max_value }).sum() }
         };
     }
+    
     pub fn brutality_crit_damage(&self) -> i64 {
         self.brutality_crit_damage
     }
