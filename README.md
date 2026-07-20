@@ -25,92 +25,102 @@ It should improve the quality of the result build.
 #### Retrive a build
 
 ```http
-  POST http://{replace_with_ip:port}/roxx-builder/attack
+  POST http://{replace_with_ip:port}/api/evaluate-attack
 ```
 To get the IP address contact me on Discord. See Author section.
+
+Other endpoints:
+```http
+  GET http://{replace_with_ip:port}/api/breeds         # list of breeds
+  GET http://{replace_with_ip:port}/api/attacks        # list of spell variants with their spell levels
+  GET http://{replace_with_ip:port}/api/roxx-builder   # health check
+```
+
 | Request parameters | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `damages` | `[*Damage_line*]` | The non-crit lines of your attack. |
-| `crit_damages` | `[*Damage_line*]` | The crit lines of your attack. |
-| `damage_source` | `string` | Value: "**Sort**" or "Arme" |
-| `damage_position` | `string` | Value: "**Distance**" or "Melee" |
+| `critDamages` | `[*Damage_line*]` | The crit lines of your attack. |
+| `damageSource` | `string` | Value: "**Sort**" or "Arme" |
+| `damagePosition` | `string` | Value: "**Distance**" or "Melee" |
 | `piege` | `boolean` | Value: true or **false** |
-| `can_crit` | `boolean` | Value: **true** or false |
-| `base_crit` | `integer` | Base crit in percent. Ex: **0**, 5, 15... |
-| `damage_calculation` | `string` | Search calculation type. Value: "Minimized", "Min", "**Average**", "Max".|
+| `canCrit` | `boolean` | Value: **true** or false |
+| `criticalHitProbability` | `integer` | Base crit in percent. Ex: **0**, 5, 15... |
+| `damageCalculation` | `string` | Search calculation type. Value: "Minimized", "Min", "**Average**", "Max".|
 
 Notes: The bold are the default values. A field with default value is optional.
 
 | **Damage_line:** | Type | Description |
 | :-------- | :------- | :------------------------- |
-| `damage_element` | `string` | Value: "DamageEau", "DamageFeu", "DamageTerre", "DamageAir".|
-| `min_value` | `integer` | Lower bound of the damage line. |
-| `max_value` | `integer` | Upper bound of the damage line. |
+| `damageElement` | `integer` | Element id: **0** = Neutre, **1** = Terre, **2** = Feu, **3** = Eau, **4** = Air.|
+| `minValue` | `integer` | Lower bound of the damage line. |
+| `maxValue` | `integer` | Upper bound of the damage line. |
 
 ## API - Usage/Examples
 #### 1. Colère de IOP
 Request:
 ```http
-  POST http://{replace_with_ip:port}/roxx-builder/attack
+  POST http://{replace_with_ip:port}/api/evaluate-attack
 ```
 Body:
 ```json
   {
     "damages": [
-    {"damage_element": "DamageTerre", "min_value" : 81, "max_value" : 100}
+    {"damageElement": 1, "minValue" : 81, "maxValue" : 100}
     ],
-    "crit_damages": [
-    {"damage_element": "DamageTerre", "min_value" : 97, "max_value" : 120}
+    "critDamages": [
+    {"damageElement": 1, "minValue" : 97, "maxValue" : 120}
     ],
-    "damage_source": "Sort",
-    "damage_position": "Melee",
+    "damageSource": "Sort",
+    "damagePosition": "Melee",
     "piege": false,
-    "can_crit": true,
-    "base_crit": 25,
-    "damage_calculation": "Average"
+    "canCrit": true,
+    "criticalHitProbability": 25,
+    "damageCalculation": "Average"
 }
 ```
-Answer:
+Answer (trimmed: `items` contains the full item details per slot):
 ```json
 {
-    "items_name": ["Collier de Tourthon", "Bottes de Brouce", "Bouclier du Captain Amakna", "Cape au Logis", "Crocobur", "Surpuissant Chacha de Combat (MJ)", "Ceinture de Brouce", "Coiffe du Comte Harebourg", "Annobusé de Maître Jarbo", "", "Vigoureux majeur", "Robuste majeur", "Forcené majeur", "Enragé majeur", "Furibond majeur", "Dofus Pourpre"],
-    "eval": 2858,
-    "last_item_tested": "Baguette Irréelle",
-    "build_evaluated": 12350464,
-    "search_time": {
-        "secs": 6,
-        "nanos": 219811
-    },
-    "spares": -1,
-    "best_build_position": 9226108
+    "status": "success",
+    "data": {
+        "items_name": ["Collier de Tourthon", "Bottes de Brouce", "Paravoile de Mama Ayuto", "Noblesse de Jahash Jurgen", "Jugement de Thanatena", "Surpuissant Chacha de Combat (MJ)", "Ceinture Volkorne", "Coiffe du Comte Harebourg", "Annobusé de Maître Jarbo", "", "Vigoureux majeur", "Forcené majeur", "Enragé", "Enragé majeur", "Furibond majeur", "Robuste majeur"],
+        "eval": 2546,
+        "builds_evaluated": 217344,
+        "search_time": {
+            "secs": 1,
+            "nanos": 1727083
+        },
+        "best_build_position": 81919,
+        "items": { "...": "per-slot item details (type, names, lvl, img...)" }
+    }
 }
 ```
 #### 2. Ambuscade
 Request:
 ```http
-  POST http://{replace_with_ip:port}/roxx-builder/attack
+  POST http://{replace_with_ip:port}/api/evaluate-attack
 ```
 Body:
 ```json
-{
+  {
     "damages": [
-    {"damage_element": "DamageEau", "min_value" : 10, "max_value" : 12},
-    {"damage_element": "DamageTerre", "min_value" : 10, "max_value" : 12},
-    {"damage_element": "DamageFeu", "min_value" : 10, "max_value" : 12},
-    {"damage_element": "DamageAir", "min_value" : 10, "max_value" : 12}
+    {"damageElement": 3, "minValue" : 10, "maxValue" : 12},
+    {"damageElement": 1, "minValue" : 10, "maxValue" : 12},
+    {"damageElement": 2, "minValue" : 10, "maxValue" : 12},
+    {"damageElement": 4, "minValue" : 10, "maxValue" : 12}
     ],
-    "crit_damages": [
-    {"damage_element": "DamageEau", "min_value" : 12, "max_value" : 14},
-    {"damage_element": "DamageTerre", "min_value" : 12, "max_value" : 14},
-    {"damage_element": "DamageFeu", "min_value" : 12, "max_value" : 14},
-    {"damage_element": "DamageAir", "min_value" : 12, "max_value" : 14}
+    "critDamages": [
+    {"damageElement": 3, "minValue" : 12, "maxValue" : 14},
+    {"damageElement": 1, "minValue" : 12, "maxValue" : 14},
+    {"damageElement": 2, "minValue" : 12, "maxValue" : 14},
+    {"damageElement": 4, "minValue" : 12, "maxValue" : 14}
     ],
-    "damage_source": "Sort",
-    "damage_position": "Distance",
+    "damageSource": "Sort",
+    "damagePosition": "Distance",
     "piege": false,
-    "can_crit": true,
-    "base_crit": 5,
-    "damage_calculation": "Average"
+    "canCrit": true,
+    "criticalHitProbability": 5,
+    "damageCalculation": "Average"
 }
 ```
 

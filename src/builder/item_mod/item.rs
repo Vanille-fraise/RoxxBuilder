@@ -58,14 +58,14 @@ impl Item {
             item_type: num::FromPrimitive::from_u64(values["typeId"].as_u64().unwrap_or(0)).unwrap_or(ItemType::Unknown),
             stats: Stats::from_effects_json_value(&values["effects"]),
             name: String::from(values["name"]["fr"].as_str().unwrap_or("No Name")),
-            names: Option::Some(values["name"].as_object().unwrap().iter().filter(|(_, value)| value.is_string()).map(|(key, value)| (key.clone(), value.as_str().unwrap().to_string())).collect()),
+            names: values["name"].as_object().map(|name_obj| name_obj.iter().filter(|(_, value)| value.is_string()).map(|(key, value)| (key.clone(), value.as_str().unwrap().to_string())).collect()),
             lvl: values["level"].as_u64().unwrap_or(1),
             set_id: values["itemSetId"].as_i64().unwrap_or(-1),
             set: None,
-            conditions: ItemCondition::from_dofus_db_str(values["criteria"].as_str().unwrap_or("")),
+            conditions: ItemCondition::from_dofus_db_str(values["criterions"].as_str().or_else(|| values["criteria"].as_str()).unwrap_or("")),
             id: values["id"].as_i64().unwrap_or(0),
             img: String::from(values["img"].as_str().unwrap_or("")),
-            imgs: Some(values["imgset"].as_array().unwrap().iter().filter_map(|val| Some((val["size"].as_i64().unwrap(), val["url"].as_str().unwrap().to_string()))).collect()),
+            imgs: values["imgset"].as_array().map(|imgset| imgset.iter().filter_map(|val| Some((val["size"].as_i64().unwrap(), val["url"].as_str().unwrap().to_string()))).collect()),
         }
     }
     pub fn default() -> Self {

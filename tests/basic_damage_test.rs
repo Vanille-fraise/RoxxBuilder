@@ -20,7 +20,7 @@ fn base_damage_test_with_and_without_damage() {
     let elem_damage = 10;
     item.stats.set_stat(&BaseStat::DoAir, elem_damage);
 
-    let damage_line = DamageLine { damage_element: DamageElement::DamageAir, min_value: 10, max_value: 10 };
+    let damage_line = DamageLine::new_fix(DamageElement::DamageAir, 10);
     let attack: Attack = Attack::new(vec![damage_line], vec![], DamageSource::Sort, DamagePosition::Distance, false, 0, Average);
     // println!("Attack - Brut: {:?}, Brut crit: {:?}", attack.brutality_damage(), attack.brutality_crit_damage());
     item.stats.reset_brutality(&attack);

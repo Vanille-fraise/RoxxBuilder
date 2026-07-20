@@ -23,7 +23,7 @@ impl Set {
         Set {
             id: values["id"].as_i64().unwrap_or(-1),
             bonus: values["effects"].as_array().unwrap_or(&vec![]).iter().map(Stats::from_effects_json_value).collect(),
-            name: values["name"].as_str().unwrap_or("No name found").to_string(),
+            name: values["name"]["fr"].as_str().or_else(|| values["name"].as_str()).unwrap_or("No name found").to_string(),
         }
     }
 }

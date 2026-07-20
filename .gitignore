@@ -1,6 +1,5 @@
 # Rust files
 /target
-Cargo.lock
 
 # Loaded files
 resource/data

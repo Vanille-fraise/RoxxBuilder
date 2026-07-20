@@ -11,7 +11,7 @@ use roxx_builder::builder::attack_mod::damage_line::DamageLine;
 use roxx_builder::builder::attack_mod::damage_position::DamagePosition;
 use roxx_builder::builder::attack_mod::damage_source::DamageSource;
 use roxx_builder::builder::attack_mod::damage_calculation::DamageCalculation;
-use roxx_builder::builder::pplayer_mod::player::SearchOptions;
+use roxx_builder::builder::player_mod::player::SearchOptions;
 use roxx_builder::builder::data_mod::data_container::DataContainer;
 use roxx_builder::builder::data_mod::data_manager::DataManager;
 use roxx_builder::builder::item_mod::base_stat_mod::base_stat::BaseStat;
