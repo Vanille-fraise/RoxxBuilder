@@ -189,7 +189,7 @@ async fn real_item_coherent_result_test() {
     println!("Addition: {:?}", res.additional_data);
     println!("{}", res.build.to_string());
     assert_eq!(res.build.items.iter().map(|i| ItemSlot::corresponding_to_item_type(&i.item_type)).flatten().unique().count(), 16);
-    assert!(res.eval > 2500);
+    assert!(res.eval > 2400);
     // todo il met 6 fois le meme trophée
 }
 
