@@ -23,7 +23,7 @@ const MIN_SEARCH_TIME: u128 = 1_000;
 pub struct GraphLooker {
     slugs: [Vec<Slug>; 10],
     equipped_build: (Stats, [u8; 16]),
-    visited: HashSet<[u8; 16]>,
+    visited: HashSet<[u8; 16], foldhash::fast::FixedState>,
     neighbors: BinaryHeap<(i64, [u8; 16])>,
     visits_per_slot: usize,
     computed_min_score: i64,
@@ -72,8 +72,8 @@ impl GraphLooker {
             slugs: [Vec::new(), Vec::new(), Vec::new(), Vec::new(), Vec::new(),
                 Vec::new(), Vec::new(), Vec::new(), Vec::new(), Vec::new()],
             equipped_build: (Stats::empty(), [EMPTY; 16]),
-            visited: HashSet::with_capacity(2 ^ 20),
-            neighbors: BinaryHeap::with_capacity(2 ^ 14),
+            visited: HashSet::with_capacity_and_hasher(1 << 20, foldhash::fast::FixedState::default()),
+            neighbors: BinaryHeap::with_capacity(1 << 14),
             visits_per_slot: 1,
             computed_min_score: i64::MIN,
         }
