@@ -7,6 +7,7 @@ edition = "2021"
 [dev-dependencies]
 plotters = "0.3.2"
 criterion = "0.3"
+pprof = { version = "0.14", features = ["flamegraph"] }
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

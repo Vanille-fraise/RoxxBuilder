@@ -11,6 +11,7 @@ Data comes from the dofus-db API (https://api.dofusdb.fr) and is cached under `r
 - Run (from repo root, fetches dofus-db data on version change): `cargo run --release` → serves on `localhost:8008`
 - CLI args are parsed with clap in `src/cli.rs` (parsed once in `main`, globally available via `cli::args()`); `-v` / `--verbose` enables verbose output — use the `vprintln!` macro instead of `println!` for verbose-only messages
 - Test: `cargo test --release` (search-quality tests are time-limited and need release speed; two of them — `estimator_and_prio_test::full_crap_find_right_comb` and `roxx_builder_graph_test::real_item_coherent_result_test` — assert heuristic convergence thresholds and may fail without indicating a regression)
+- Profile the graph search on real data with the COCO spell (writes `target/flamegraph-coco.svg` via pprof): `RUSTFLAGS="-C force-frame-pointers=yes -Cdebuginfo=1" cargo run --release --example profile_coco` (frame pointers are required; changing RUSTFLAGS triggers a full rebuild)
 - `Cargo.lock` is committed: keep it up to date.
 
 ## Git policy for agents
