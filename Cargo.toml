@@ -32,6 +32,7 @@ combinations = "0.1.0"
 itertools = "0.9.0"
 actix-cors = "0.7"
 serde_repr = "0.1.19"
+clap = { version = "4", features = ["derive"] }
 
 [[bench]]
 name = "hashmap_array_basestats_bench"

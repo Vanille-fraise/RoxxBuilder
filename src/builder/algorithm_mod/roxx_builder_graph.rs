@@ -53,7 +53,7 @@ impl GraphLooker {
         res.additional_data.insert("Final neighbors size".into(), myself.neighbors.len().to_string());
         let best_ids = best_build.iter().enumerate().map(|(item_type, item_pos)| (item_pos < &EMPTY).then(|| myself.slugs[Self::item_slot_to_slug_slot(item_type)][*item_pos as usize].item_ids.clone()).unwrap_or(vec![])).flatten().collect();
         container.get_items_with_ids(&best_ids).iter().enumerate().for_each(|(cur_slot, item)| {
-            println!("{}", &item.name);
+            crate::vprintln!("{} : {}", cur_slot, &item.name);
             res.build.add_item(&item, num::FromPrimitive::from_usize(cur_slot).unwrap());
         });
         res

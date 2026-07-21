@@ -86,7 +86,7 @@ impl<'a> DataManager<'a> {
             std::fs::create_dir_all(Path::new(&folder_data_container).parent().unwrap());
 
         let start = Instant::now();
-        println!("Building data container.");
+        crate::vprintln!("Building data container.");
         let mut res_dc = DataLoader::from_data_container_file(folder_data_container.clone());
         if res_dc.is_err() {
             res_dc = res_dc.inspect_err(|e| {
@@ -99,14 +99,14 @@ impl<'a> DataManager<'a> {
             DataLoader::from_api_response_files(DataType::data_types_to_load())
                 .unwrap_or(DataContainer::new()),
         );
-        println!("Data container built in {:?}.", start.elapsed());
+        crate::vprintln!("Data container built in {:?}.", start.elapsed());
         let mut reloaded_from_api = false;
         if DATA_MANAGER.reload {
             let tots = DataLoader::get_version_dofus_db_api().await;
             match tots {
                 Ok(version) => {
                     if dc.version != version {
-                        println!("Every data needs to be fetched from DofusDB for the new version {} => {}!", dc.version, version);
+                        crate::vprintln!("Every data needs to be fetched from DofusDB for the new version {} => {}!", dc.version, version);
                         reloaded_from_api = true;
                         for data_type in DataType::data_types_to_load() {
                             let fetch_start = Instant::now();
@@ -118,9 +118,9 @@ impl<'a> DataManager<'a> {
                                     data_type.is_raw_data()
                                 )
                                 .await;
-                            println!("Fetched {:?} in {:?}.", data_type, fetch_start.elapsed())
+                            crate::vprintln!("Fetched {:?} in {:?}.", data_type, fetch_start.elapsed())
                         }
-                        println!("Building data container with new data.");
+                        crate::vprintln!("Building data container with new data.");
                         dc = DataLoader::from_api_response_files(DataType::data_types_to_load())
                             .unwrap_or(DataContainer::new());
                         dc.version = version;
@@ -140,11 +140,11 @@ impl<'a> DataManager<'a> {
             if save_res.is_err() {
                 println!("Could not save the new loaded files");
             } else {
-                println!("New data container built.");
+                crate::vprintln!("New data container built.");
             }
         }
         dc.link_sub_data();
-        println!("Data container version: {}", dc.version);
+        crate::vprintln!("Data container version: {}", dc.version);
         return dc;
     }
 }
