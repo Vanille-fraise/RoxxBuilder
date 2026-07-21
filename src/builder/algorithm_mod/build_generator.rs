@@ -88,7 +88,7 @@ impl<'a> BuildGenerator<'a> {
         }
     }
 
-    pub fn next_build(&mut self) -> Option<&Build> {
+    pub fn next_build(&mut self) -> Option<&Build<'_>> {
         let dofus_slots = vec![SlotDofus2, SlotDofus3, SlotDofus4, SlotDofus5, SlotDofus6];
         'main_loop: loop {
             for type_i in 0..self.items_i.len() {
@@ -134,7 +134,7 @@ impl<'a> BuildGenerator<'a> {
 }
 
 impl <'a> BuildIterator for BuildGenerator<'a>{
-    fn next_build(&mut self) -> Option<&Build> {
+    fn next_build(&mut self) -> Option<&Build<'_>> {
         BuildGenerator::next_build(self)
     }
 }

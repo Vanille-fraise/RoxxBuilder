@@ -40,9 +40,8 @@ fn add_base_stats_btree(nb_stats: u32, nb_loops: u32) {
 }
 
 fn add_base_stats_array(nb_stats: u32, nb_loops: u32) {
-    let mut stats: [i64; 256] = [10; 256];
+    let stats: [i64; 256] = [10; 256];
     let to_add: Vec<usize> = (0..nb_stats as usize).collect();
-    stats = stats;
     let mut stats_to_add: [i64; 256] = [10; 256];
     for _nb_loop in 0..nb_loops {
         for st in to_add.iter() {

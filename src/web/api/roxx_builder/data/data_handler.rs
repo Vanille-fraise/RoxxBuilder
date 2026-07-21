@@ -6,7 +6,7 @@ pub struct DataHandler {
 }
 
 impl DataHandler {
-    pub fn get_search_result(&self, _attack: &Attack) -> Option<BuildSearchResult> {
+    pub fn get_search_result(&self, _attack: &Attack) -> Option<BuildSearchResult<'_>> {
         None
     }
 

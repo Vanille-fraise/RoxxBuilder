@@ -124,9 +124,3 @@ impl Item {
         ]
     }
 }
-
-#[derive(PartialEq, Eq, Deserialize, Serialize, Debug)]
-struct IntermediaryStruct {
-    id: i64,
-    item_type: isize
-}

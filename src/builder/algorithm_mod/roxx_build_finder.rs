@@ -17,7 +17,7 @@ pub struct RoxxBuildFinder {
 }
 
 impl RoxxBuildFinder {
-    pub fn find_build(&self) -> BuildSearchResult {
+    pub fn find_build(&self) -> BuildSearchResult<'_> {
         let now = Instant::now();
         let mut search_result = BuildSearchResult::empty();
         let mut best_build_id: [i64; 16] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
