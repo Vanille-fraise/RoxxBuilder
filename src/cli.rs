@@ -40,3 +40,13 @@ macro_rules! vprintln {
         }
     };
 }
+
+/// Like `print!`, but prints only when the `-v` / `--verbose` CLI flag is set.
+#[macro_export]
+macro_rules! vprint {
+    ($($arg:tt)*) => {
+        if $crate::cli::is_verbose() {
+            print!($($arg)*);
+        }
+    };
+}
