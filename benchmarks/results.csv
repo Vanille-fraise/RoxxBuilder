@@ -1,0 +1,3 @@
+datetime_utc,git_commit,label,search_time_ms,builds_evaluated,builds_considered,builds_per_sec,eval,preparation_ms,final_neighbors,pprof_samples,flamegraph_file
+2026-07-21_16-53-05,5f07d14,baseline-siphash-xor-capacity,10000,1054221,285365647,105422,2476,14.05,6263807,8610,flamegraph-baseline-siphash-xor-capacity-2026-07-21_16-53-05.svg
+2026-07-21_16-53-31,cb821c7-dirty,foldhash-1M-capacity,10000,1609436,476031170,160943,2476,15.03,9928376,8809,flamegraph-foldhash-1M-capacity-2026-07-21_16-53-31.svg

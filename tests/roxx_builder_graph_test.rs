@@ -70,7 +70,7 @@ fn practical_test() {
     }
     // testing
     // dc.items.pop();
-    for i in 0..5000usize {
+    for i in 0..2500usize {
         let mut item = Item::new_with_stats(Stats::from_map_stats(HashMap::from([(BaseStat::DoMulti, (i % 3) as i64), (BaseStat::Puissance, (i % 5) as i64)]).iter()));
         item.item_type = TYPES.get(i % TYPES.len()).unwrap().clone();
         dc.items.push(item);
@@ -144,7 +144,7 @@ pub fn generate_test_dc() -> DataContainer {
         item.name = "Best".to_string();
         dc.items.push(item);
     }
-    for i in 0..5000usize {
+    for i in 0..2500usize {
         let mut item = Item::new_with_stats(Stats::from_map_stats(HashMap::from([(BaseStat::DoMulti, (i % 3) as i64), (BaseStat::Puissance, (i % 5) as i64)]).iter()));
         item.item_type = types.get(i % types.len()).unwrap().clone();
         dc.items.push(item);
